@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Cloud, CloudOff, LogIn, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 import { firebaseReady } from '@/data/firebase';
-import { signInWithGoogle, signOutUser } from '@/data/sync';
+import { authErrorMessage, signInWithGoogle, signOutUser } from '@/data/sync';
 import { useT } from '@/i18n';
 import { useStore } from '@/store/useStore';
 import { Button } from '@/components/ui/Button';
@@ -19,10 +19,11 @@ export function AuthControl() {
   async function handleSignIn() {
     setBusy(true);
     try {
-      // signInWithGoogle navigates away; setBusy(false) only on error.
+      // signInWithGoogle navigates away on success; setBusy(false) only on error.
       await signInWithGoogle();
-    } catch {
-      toast.error(t.signIn + ' failed. Please try again.');
+    } catch (err) {
+      // Surface the real Firebase cause (also logged to the console).
+      toast.error(authErrorMessage(err));
       setBusy(false);
     }
   }

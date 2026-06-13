@@ -82,13 +82,55 @@ export async function handleRedirectResult(): Promise<User | null> {
  * including desktop Chrome with third-party cookies disabled and all
  * mobile browsers). The sign-in completes on the return page load when
  * handleRedirectResult() is called.
+ *
+ * Rejects (before navigating) on configuration problems such as an
+ * unauthorized domain or a disabled provider — the caller surfaces the cause
+ * via `authErrorMessage`.
  */
 export async function signInWithGoogle(): Promise<void> {
-  if (!auth) return;
+  if (!auth) throw new Error('auth/not-initialized');
   const provider = new GoogleAuthProvider();
   // Ensure the account chooser always appears so the user can switch accounts.
   provider.setCustomParameters({ prompt: 'select_account' });
   await signInWithRedirect(auth, provider);
+}
+
+/**
+ * Map a Firebase Auth error to a human-readable, actionable message and log the
+ * raw code to the console for diagnostics. Covers the configuration mistakes
+ * that fail identically on desktop and mobile (unauthorized domain, provider
+ * not enabled) plus network/cancellation cases.
+ */
+export function authErrorMessage(err: unknown): string {
+  const code = (err as { code?: string })?.code ?? '';
+  const message = (err as { message?: string })?.message ?? String(err);
+  console.error('[Auth] sign-in error:', code || '(no code)', message);
+
+  switch (code) {
+    case 'auth/unauthorized-domain':
+      return 'This domain is not authorized. Add it in Firebase → Authentication → Settings → Authorized domains.';
+    case 'auth/operation-not-allowed':
+      return 'Google sign-in is not enabled. Turn it on in Firebase → Authentication → Sign-in method → Google.';
+    case 'auth/configuration-not-found':
+      return 'Firebase Auth is not set up. Enable Google sign-in and verify your config values.';
+    case 'auth/invalid-api-key':
+    case 'auth/api-key-not-valid.-please-pass-a-valid-api-key.':
+      return 'The Firebase API key is invalid. Check your VITE_FIREBASE_* values.';
+    case 'auth/network-request-failed':
+      return 'Network error reaching Firebase. Check your connection and try again.';
+    case 'auth/popup-blocked':
+      return 'The browser blocked the sign-in window.';
+    case 'auth/cancelled-popup-request':
+    case 'auth/popup-closed-by-user':
+    case 'auth/user-cancelled':
+      return 'Sign-in was cancelled.';
+    case 'auth/not-initialized':
+      return 'Cloud sync is not configured for this build.';
+    default:
+      return code
+        ? `Sign-in failed (${code}).`
+        : 'Sign-in failed. Please try again.';
+  }
 }
 
 export async function signOutUser(): Promise<void> {
