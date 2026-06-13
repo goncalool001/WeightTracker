@@ -8,6 +8,7 @@ import {
   periodAverages,
   weeklyAverages,
 } from '@/domain';
+import { useT } from '@/i18n';
 import { useStore } from './useStore';
 import type {
   GoalProjection,
@@ -68,9 +69,21 @@ export function useGoalProjection(): GoalProjection | null {
   );
 }
 
-/** Generated analytical insights (full dataset + goal). */
+/** Generated analytical insights (full dataset + goal), locale-aware. */
 export function useInsights(): Insight[] {
   const entries = useStore((s) => s.entries);
   const goal = useStore((s) => s.goalWeight);
-  return useMemo(() => buildInsights({ entries, goal }), [entries, goal]);
+  const locale = useStore((s) => s.locale);
+  const t = useT();
+  return useMemo(
+    () =>
+      buildInsights({
+        entries,
+        goal,
+        strings: t.insights,
+        fmtDate: t.fmtDate,
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [entries, goal, locale],
+  );
 }

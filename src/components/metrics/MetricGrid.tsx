@@ -7,7 +7,8 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { RATE_BAND, WEEK_BAND } from '@/lib/constants';
-import { formatDate, formatDeltaWeight, formatWeight } from '@/lib/format';
+import { formatDeltaWeight, formatWeight } from '@/lib/format';
+import { useT } from '@/i18n';
 import { useGoalProjection, useMetrics } from '@/store/selectors';
 import { MetricCard, type Tone } from './MetricCard';
 
@@ -20,6 +21,7 @@ function lossTone(delta: number, band: number): Tone {
 
 /** The responsive KPI strip derived from the full dataset. */
 export function MetricGrid() {
+  const t = useT();
   const m = useMetrics();
   const projection = useGoalProjection();
 
@@ -29,31 +31,29 @@ export function MetricGrid() {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
       <MetricCard
-        label="Total entries"
+        label={t.totalEntries}
         value={String(m.totalEntries)}
         icon={<CalendarDays className="h-4 w-4" />}
       />
 
       <MetricCard
-        label="Latest"
+        label={t.latest}
         value={m.latest ? formatWeight(m.latest.weight) : '—'}
-        sub={m.latest ? formatDate(m.latest.date) : undefined}
+        sub={m.latest ? t.fmtDate(m.latest.date) : undefined}
         icon={<Scale className="h-4 w-4" />}
       />
 
       <MetricCard
-        label="This week"
+        label={t.thisWeek}
         value={m.thisWeek ? formatWeight(m.thisWeek.average) : '—'}
-        sub={m.thisWeek ? `${m.thisWeek.measurements}× measured` : undefined}
+        sub={m.thisWeek ? t.measuredN(m.thisWeek.measurements) : undefined}
         icon={<CalendarDays className="h-4 w-4" />}
       />
 
       <MetricCard
-        label="vs last week"
+        label={t.vsLastWeek}
         value={m.vsLastWeek ? formatWeight(m.vsLastWeek.average) : '—'}
-        sub={
-          m.vsLastWeek ? formatDeltaWeight(m.vsLastWeek.delta) : 'need 2+ weeks'
-        }
+        sub={m.vsLastWeek ? formatDeltaWeight(m.vsLastWeek.delta) : t.need2Weeks}
         tone={m.vsLastWeek ? lossTone(m.vsLastWeek.delta, WEEK_BAND) : 'neutral'}
         icon={
           m.vsLastWeek && m.vsLastWeek.delta > 0 ? (
@@ -65,7 +65,7 @@ export function MetricGrid() {
       />
 
       <MetricCard
-        label="Since week 1"
+        label={t.sinceWeek1}
         value={m.sinceStart ? formatDeltaWeight(m.sinceStart.delta) : '—'}
         sub={
           m.sinceStart
@@ -77,7 +77,7 @@ export function MetricGrid() {
       />
 
       <MetricCard
-        label="Rate"
+        label={t.rate}
         value={
           m.ratePerWeek == null
             ? '—'
@@ -85,9 +85,9 @@ export function MetricGrid() {
         }
         sub={
           projection
-            ? `goal ~${formatDate(projection.date)}`
+            ? t.goalAround(t.fmtDate(projection.date))
             : m.ratePerWeek != null
-              ? 'trend rate of change'
+              ? t.trendRate
               : undefined
         }
         tone={rateTone}

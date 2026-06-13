@@ -3,25 +3,26 @@ import { Cloud, CloudOff, LogIn, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 import { firebaseReady } from '@/data/firebase';
 import { signInWithGoogle, signOutUser } from '@/data/sync';
+import { useT } from '@/i18n';
 import { useStore } from '@/store/useStore';
 import { Button } from '@/components/ui/Button';
 
 /** Header control for cloud sync: sign in/out + a live sync indicator. */
 export function AuthControl() {
+  const t = useT();
   const user = useStore((s) => s.user);
   const online = useStore((s) => s.online);
   const [busy, setBusy] = useState(false);
 
-  // Cloud sync not configured for this deployment — stay silent (local-only).
   if (!firebaseReady) return null;
 
   async function handleSignIn() {
     setBusy(true);
     try {
+      // signInWithGoogle navigates away; setBusy(false) only on error.
       await signInWithGoogle();
     } catch {
-      toast.error('Sign-in failed. Please try again.');
-    } finally {
+      toast.error(t.signIn + ' failed. Please try again.');
       setBusy(false);
     }
   }
@@ -30,7 +31,7 @@ export function AuthControl() {
     return (
       <Button variant="secondary" size="sm" onClick={handleSignIn} disabled={busy}>
         <LogIn className="h-4 w-4" />
-        <span className="hidden sm:inline">Sign in</span>
+        <span className="hidden sm:inline">{t.signIn}</span>
       </Button>
     );
   }
@@ -40,7 +41,7 @@ export function AuthControl() {
   return (
     <div className="flex items-center gap-2">
       <span
-        title={online ? 'Synced' : 'Offline — changes will sync when back online'}
+        title={online ? t.syncedMsg : t.offlineMsg}
         className={online ? 'text-good' : 'text-muted'}
       >
         {online ? (
@@ -67,8 +68,8 @@ export function AuthControl() {
         variant="ghost"
         size="sm"
         onClick={() => void signOutUser()}
-        aria-label="Sign out"
-        title="Sign out"
+        aria-label={t.signOut}
+        title={t.signOut}
         className="h-9 w-9 px-0"
       >
         <LogOut className="h-4 w-4" />

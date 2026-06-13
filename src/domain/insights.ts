@@ -1,21 +1,51 @@
-import { differenceInCalendarDays, parseISO } from 'date-fns';
-import { formatDate } from '@/lib/format';
+import { differenceInCalendarDays, format, parseISO } from 'date-fns';
 import { goalProjection } from './projection';
 import { weeklyAverages } from './weekly';
 import { monthlyPeriods, weeklyPeriods } from './periods';
-import type { Insight, WeightEntry } from '@/types';
+import type { Insight, InsightStrings, WeightEntry } from '@/types';
 
 /**
- * Insight generator. The goal is an *analytical layer* on top of the data:
- * each insight is a full-sentence observation that surfaces a pattern, trend or
- * achievement not already obvious from the KPI cards. Quality over quantity —
- * an insight is only emitted when the data supports it and it's noteworthy.
+ * Insight generator. Each insight is a full-sentence observation that surfaces
+ * a pattern, trend or achievement not already obvious from the KPI cards.
+ * Text is produced by the caller-supplied `strings` object so the domain
+ * stays locale-agnostic.
  */
 
+/** Fallback English string factories (used by tests and as default). */
+const defaultStrings: InsightStrings = {
+  reachedGoal: (g) => `You've reached your goal of ${g} kg — nice work.`,
+  goalPace: (g, date, weeks) =>
+    `At your current pace, you'll reach ${g} kg around ${date} — about ${weeks} week${weeks === 1 ? '' : 's'} away.`,
+  progress: (pct, start, goal) =>
+    `You're ${pct}% of the way from your start (${start} kg) to your goal (${goal} kg).`,
+  windowLost: (kg, days) => `You've lost ${kg} over the last ${days} days.`,
+  windowGained: (kg, days) => `You've gained ${kg} over the last ${days} days.`,
+  accelAccel: (recent, prior) =>
+    `Your weight loss is accelerating — ${recent} in the last 30 days vs ${prior} the 30 days before.`,
+  accelSlow: (recent, prior) =>
+    `Your weight loss is slowing — ${recent} in the last 30 days vs ${prior} the 30 days before.`,
+  consistency: (drops, m) =>
+    `Weight decreased in ${drops} of your last ${m} measurements.`,
+  bestWeek: (start, end, kg) =>
+    `Your fastest week was ${start} – ${end}, down ${kg}.`,
+  contribution: (pct) =>
+    `The last 14 days account for ${pct}% of your total weight loss.`,
+  compareStronger: (thisRate, lastRate) =>
+    `This month's pace (${thisRate} kg/wk) is stronger than last month's (${lastRate} kg/wk).`,
+  compareWeaker: (thisRate, lastRate) =>
+    `This month's pace (${thisRate} kg/wk) is weaker than last month's (${lastRate} kg/wk).`,
+};
+
+const defaultFmtDate = (iso: string) =>
+  format(parseISO(iso), 'dd MMM yyyy');
+
 export interface InsightInput {
-  /** Full dataset, ascending by date. */
   entries: WeightEntry[];
   goal: number | null;
+  /** Locale-specific string factories. Defaults to English. */
+  strings?: InsightStrings;
+  /** Locale-aware ISO→human date formatter. Defaults to English. */
+  fmtDate?: (iso: string) => string;
 }
 
 /** The most recent entry on or before the given ISO date, or null. */
@@ -64,14 +94,19 @@ function absKg(n: number): string {
 }
 
 export function buildInsights(input: InsightInput): Insight[] {
-  const { entries, goal } = input;
+  const {
+    entries,
+    goal,
+    strings: s = defaultStrings,
+    fmtDate = defaultFmtDate,
+  } = input;
   if (entries.length < 2) return [];
 
   const insights: Insight[] = [];
   const weights = entries.map((e) => e.weight);
   const current = weights[weights.length - 1];
   const start = weights[0];
-  const totalLoss = start - current; // positive = net loss
+  const totalLoss = start - current;
   const spanDays = differenceInCalendarDays(
     parseISO(entries[entries.length - 1].date),
     parseISO(entries[0].date),
@@ -79,7 +114,7 @@ export function buildInsights(input: InsightInput): Insight[] {
 
   const weekly = weeklyAverages(entries);
 
-  // 1 · Goal pace / ETA — distinct from the rate KPI: gives a calendar date.
+  // 1 · Goal pace / ETA
   if (goal != null) {
     const reached =
       (start > goal && current <= goal) || (start < goal && current >= goal);
@@ -88,7 +123,7 @@ export function buildInsights(input: InsightInput): Insight[] {
         id: 'goal-reached',
         icon: 'goalPace',
         tone: 'good',
-        text: `You've reached your goal of ${goal.toFixed(1)} kg — nice work.`,
+        text: s.reachedGoal(goal.toFixed(1)),
       });
     } else {
       const projection = goalProjection(weekly, goal);
@@ -98,15 +133,13 @@ export function buildInsights(input: InsightInput): Insight[] {
           id: 'goal-pace',
           icon: 'goalPace',
           tone: 'accent',
-          text: `At your current pace, you'll reach ${goal.toFixed(1)} kg around ${formatDate(
-            projection.date,
-          )} — about ${weeks} week${weeks === 1 ? '' : 's'} away.`,
+          text: s.goalPace(goal.toFixed(1), fmtDate(projection.date), weeks),
         });
       }
     }
   }
 
-  // 2 · Progress toward goal (%) with a bar — adds context KPIs don't show.
+  // 2 · Progress toward goal (%) with a bar
   if (goal != null && start !== goal) {
     const pct = Math.min(
       100,
@@ -117,30 +150,30 @@ export function buildInsights(input: InsightInput): Insight[] {
         id: 'progress',
         icon: 'progress',
         tone: 'accent',
-        text: `You're ${pct.toFixed(0)}% of the way from your start (${start.toFixed(
-          1,
-        )} kg) to your goal (${goal.toFixed(1)} kg).`,
+        text: s.progress(pct.toFixed(0), start.toFixed(1), goal.toFixed(1)),
         progress: pct,
       });
     }
   }
 
-  // 3 · Change over a meaningful window (largest standard window the data spans).
+  // 3 · Change over a meaningful window
   const window = [90, 60, 30].find((d) => spanDays >= d);
   if (window) {
     const change = changeOverDays(entries, window);
     if (change && Math.abs(change.delta) >= 0.3) {
-      const verb = change.delta < 0 ? 'lost' : 'gained';
       insights.push({
         id: 'window',
         icon: 'window',
         tone: change.delta < 0 ? 'good' : 'bad',
-        text: `You've ${verb} ${absKg(change.delta)} over the last ${window} days.`,
+        text:
+          change.delta < 0
+            ? s.windowLost(absKg(change.delta), window)
+            : s.windowGained(absKg(change.delta), window),
       });
     }
   }
 
-  // 4 · Acceleration — compare the last 30 days to the 30 before that.
+  // 4 · Acceleration — compare the last 30 days to the 30 before
   if (spanDays >= 60) {
     const latestISO = entries[entries.length - 1].date;
     const at0 = entries[entries.length - 1];
@@ -157,18 +190,16 @@ export function buildInsights(input: InsightInput): Insight[] {
             id: 'accel',
             icon: 'accel',
             tone: accelerating ? 'good' : 'neutral',
-            text: `Your weight loss is ${
-              accelerating ? 'accelerating' : 'slowing'
-            } — ${absKg(recent)} in the last 30 days vs ${absKg(
-              prior,
-            )} the 30 days before.`,
+            text: accelerating
+              ? s.accelAccel(absKg(recent), absKg(prior))
+              : s.accelSlow(absKg(recent), absKg(prior)),
           });
         }
       }
     }
   }
 
-  // 5 · Direction consistency over recent measurements.
+  // 5 · Direction consistency over recent measurements
   if (entries.length >= 4) {
     const m = Math.min(10, entries.length - 1);
     const recent = weights.slice(-(m + 1));
@@ -181,12 +212,12 @@ export function buildInsights(input: InsightInput): Insight[] {
         id: 'consistency',
         icon: 'consistency',
         tone: 'good',
-        text: `Weight decreased in ${drops} of your last ${m} measurements.`,
+        text: s.consistency(drops, m),
       });
     }
   }
 
-  // 6 · Fastest weight-loss week.
+  // 6 · Fastest weight-loss week
   const wp = weeklyPeriods(entries);
   if (wp.length >= 2) {
     let bestIdx = 1;
@@ -204,14 +235,12 @@ export function buildInsights(input: InsightInput): Insight[] {
         id: 'best',
         icon: 'best',
         tone: 'good',
-        text: `Your fastest week was ${formatDate(w.start)} – ${formatDate(
-          w.end,
-        )}, down ${absKg(bestDelta)}.`,
+        text: s.bestWeek(fmtDate(w.start), fmtDate(w.end), absKg(bestDelta)),
       });
     }
   }
 
-  // 7 · Recent contribution to total loss.
+  // 7 · Recent contribution to total loss
   if (totalLoss > 0.5 && spanDays > 14) {
     const recent14 = changeOverDays(entries, 14);
     if (recent14 && recent14.delta < 0) {
@@ -221,21 +250,18 @@ export function buildInsights(input: InsightInput): Insight[] {
           id: 'contribution',
           icon: 'contribution',
           tone: 'accent',
-          text: `The last 14 days account for ${pct.toFixed(
-            0,
-          )}% of your total weight loss.`,
+          text: s.contribution(pct.toFixed(0)),
         });
       }
     }
   }
 
-  // 8 · This month's pace vs last month's.
+  // 8 · This month's pace vs last month's
   const mp = monthlyPeriods(entries);
   if (mp.length >= 2) {
     const thisM = mp[mp.length - 1];
     const lastM = mp[mp.length - 2];
-    const thisRate = (thisM.average - lastM.average) / 4.345; // kg/week-ish
-    // Approx previous-month rate from the month before, if present.
+    const thisRate = (thisM.average - lastM.average) / 4.345;
     if (mp.length >= 3) {
       const prevM = mp[mp.length - 3];
       const lastRate = (lastM.average - prevM.average) / 4.345;
@@ -247,11 +273,15 @@ export function buildInsights(input: InsightInput): Insight[] {
             id: 'compare',
             icon: 'compare',
             tone: stronger ? 'good' : 'neutral',
-            text: `This month's pace (${thisRate.toFixed(
-              2,
-            )} kg/wk) is ${stronger ? 'stronger' : 'weaker'} than last month's (${lastRate.toFixed(
-              2,
-            )} kg/wk).`,
+            text: stronger
+              ? s.compareStronger(
+                  thisRate.toFixed(2),
+                  lastRate.toFixed(2),
+                )
+              : s.compareWeaker(
+                  thisRate.toFixed(2),
+                  lastRate.toFixed(2),
+                ),
           });
         }
       }

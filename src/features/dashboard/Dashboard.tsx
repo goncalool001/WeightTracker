@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { RANGE_OPTIONS } from '@/lib/constants';
-import { formatDateLong } from '@/lib/format';
+import { useT } from '@/i18n';
 import { useStore } from '@/store/useStore';
 import {
   useFilteredEntries,
@@ -23,27 +22,14 @@ import { GoalControl } from '@/features/log-entry/GoalControl';
 import { EmptyState } from './EmptyState';
 import type { Granularity, Overlay, RangeKey } from '@/types';
 
-const OVERLAY_OPTIONS: { value: Overlay; label: string }[] = [
-  { value: 'trend', label: 'Trend' },
-  { value: 'ma', label: '7-day avg' },
-];
-
-const GRANULARITY_OPTIONS: { value: Granularity; label: string }[] = [
-  { value: 'weekly', label: 'Weekly' },
-  { value: 'monthly', label: 'Monthly' },
-];
-
-const RANGE_SEGMENTS = RANGE_OPTIONS.map((r) => ({
-  value: r.key,
-  label: r.label,
-}));
-
 /** The full analytics dashboard, laid out as a vertical, web-first page. */
 export function Dashboard() {
+  const t = useT();
   const totalEntries = useStore((s) => s.entries.length);
   const goalWeight = useStore((s) => s.goalWeight);
   const overlay = useStore((s) => s.overlay);
   const range = useStore((s) => s.range);
+  const showLabels = useStore((s) => s.showLabels);
   const setOverlay = useStore((s) => s.setOverlay);
   const setRange = useStore((s) => s.setRange);
   const setGranularity = useStore((s) => s.setGranularity);
@@ -54,16 +40,37 @@ export function Dashboard() {
   const periods = usePeriods();
   const projection = useGoalProjection();
 
-  const periodNoun = granularity === 'monthly' ? 'Monthly' : 'Weekly';
+  const periodTitle =
+    granularity === 'monthly' ? t.monthlyAvg : t.weeklyAvg;
+  const periodTableTitle =
+    granularity === 'monthly' ? t.monthlyAvgs : t.weeklyAvgs;
 
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
   function confirmDelete() {
     if (!pendingDelete) return;
     deleteEntry(pendingDelete);
-    toast.success(`Deleted entry for ${formatDateLong(pendingDelete)}`);
+    toast.success(t.toastDeleted(t.fmtDateLong(pendingDelete)));
     setPendingDelete(null);
   }
+
+  const OVERLAY_OPTIONS: { value: Overlay; label: string }[] = [
+    { value: 'trend', label: t.overlayTrend },
+    { value: 'ma', label: t.overlayMa },
+  ];
+
+  const GRANULARITY_OPTIONS: { value: Granularity; label: string }[] = [
+    { value: 'weekly', label: t.granWeekly },
+    { value: 'monthly', label: t.granMonthly },
+  ];
+
+  const RANGE_SEGMENTS: { value: RangeKey; label: string }[] = [
+    { value: '7d', label: t.range7d },
+    { value: '30d', label: t.range30d },
+    { value: '90d', label: t.range90d },
+    { value: 'ytd', label: t.rangeYtd },
+    { value: 'all', label: t.rangeAll },
+  ];
 
   return (
     <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-4 py-6 sm:px-6 lg:gap-8">
@@ -80,28 +87,28 @@ export function Dashboard() {
         <EmptyState />
       ) : (
         <>
-          {/* Range scope control (applies to charts, insights & tables) */}
+          {/* Range scope control */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-lg font-bold text-text">Trends</h2>
+              <h2 className="text-lg font-bold text-text">{t.trends}</h2>
               <p className="text-xs text-muted">
-                Showing {filtered.length} of {totalEntries} entries
+                {t.showingOf(filtered.length, totalEntries)}
               </p>
             </div>
             <Segmented
-              ariaLabel="Time range"
+              ariaLabel={t.trends}
               options={RANGE_SEGMENTS}
               value={range}
               onChange={(v: RangeKey) => setRange(v)}
             />
           </div>
 
-          {/* 3 · Daily Weight chart — full width */}
+          {/* 3 · Daily Weight chart */}
           <Panel
-            title="Daily weight"
+            title={t.dailyWeight}
             actions={
               <Segmented
-                ariaLabel="Daily overlay"
+                ariaLabel={t.overlayTrend}
                 options={OVERLAY_OPTIONS}
                 value={overlay}
                 onChange={(v: Overlay) => setOverlay(v)}
@@ -114,6 +121,8 @@ export function Dashboard() {
                 entries={filtered}
                 goalWeight={goalWeight}
                 overlay={overlay}
+                showLabels={showLabels}
+                t={t}
               />
             </div>
           </Panel>
@@ -121,12 +130,12 @@ export function Dashboard() {
           {/* 4 · Insights */}
           <InsightsPanel />
 
-          {/* 5 · Weekly / Monthly average chart — full width */}
+          {/* 5 · Weekly / Monthly average chart */}
           <Panel
-            title={`${periodNoun} average`}
+            title={periodTitle}
             actions={
               <Segmented
-                ariaLabel="Aggregation granularity"
+                ariaLabel={t.granWeekly}
                 options={GRANULARITY_OPTIONS}
                 value={granularity}
                 onChange={(v: Granularity) => setGranularity(v)}
@@ -140,17 +149,19 @@ export function Dashboard() {
                 goalWeight={goalWeight}
                 projection={projection}
                 granularity={granularity}
+                showLabels={showLabels}
+                t={t}
               />
             </div>
           </Panel>
 
-          {/* 6 · Daily Log table — full width */}
-          <Panel title="Daily log" bodyClassName="p-0">
+          {/* 6 · Daily Log table */}
+          <Panel title={t.dailyLog} bodyClassName="p-0">
             <DailyTable entries={filtered} onDelete={setPendingDelete} />
           </Panel>
 
-          {/* 7 · Weekly / Monthly averages table — full width */}
-          <Panel title={`${periodNoun} averages`} bodyClassName="p-0">
+          {/* 7 · Period averages table */}
+          <Panel title={periodTableTitle} bodyClassName="p-0">
             <PeriodTable periods={periods} granularity={granularity} />
           </Panel>
         </>
@@ -158,13 +169,14 @@ export function Dashboard() {
 
       <ConfirmDialog
         open={pendingDelete !== null}
-        title="Delete entry?"
+        title={t.deleteTitle}
         description={
           pendingDelete
-            ? `Delete the entry for ${formatDateLong(pendingDelete)}? This cannot be undone.`
+            ? t.deleteDesc(t.fmtDateLong(pendingDelete))
             : ''
         }
-        confirmLabel="Delete"
+        confirmLabel={t.deleteBtn}
+        cancelLabel={t.cancelBtn}
         destructive
         onConfirm={confirmDelete}
         onOpenChange={(o) => !o && setPendingDelete(null)}

@@ -3,8 +3,10 @@ import { APP_TITLE } from '@/lib/constants';
 import { FileControls } from '@/features/file/FileControls';
 import { AuthControl } from '@/features/auth/AuthControl';
 import { ThemeToggle } from './ThemeToggle';
+import { LanguagePicker } from './LanguagePicker';
+import { LabelToggle } from './LabelToggle';
 
-/** Sticky app header: brand, Excel import/export, theme toggle. */
+/** Sticky app header: brand, Excel import/export, settings, auth. */
 export function Header() {
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-bg/80 backdrop-blur-md">
@@ -21,6 +23,8 @@ export function Header() {
         <div className="flex items-center gap-2">
           <FileControls />
           <AuthControl />
+          <LanguagePicker />
+          <LabelToggle />
           <ThemeToggle />
         </div>
       </div>

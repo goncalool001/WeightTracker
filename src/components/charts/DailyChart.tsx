@@ -1,19 +1,21 @@
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
 import type { EChartsOption, SeriesOption } from 'echarts';
 import { format } from 'date-fns';
 import { dayOffsets, linearFit, movingAverage, predict } from '@/domain';
 import { MAX_POINT_LABELS, MA_WINDOW } from '@/lib/constants';
-import { formatDate } from '@/lib/format';
+import type { T } from '@/i18n';
 import type { Overlay, WeightEntry } from '@/types';
 import { useChartTokens } from './chartTokens';
-import { paddedYRange } from './paddedRange';
+import { niceYAxis } from './paddedRange';
 import { EmptyChart } from './EmptyChart';
+import { BaseChart } from './BaseChart';
 
 interface DailyChartProps {
   entries: WeightEntry[];
   goalWeight: number | null;
   overlay: Overlay;
+  showLabels: boolean;
+  t: T;
 }
 
 /** `rgb(r,g,b)` → `rgba(r,g,b,a)`. */
@@ -22,18 +24,18 @@ const rgba = (c: string, a: number) =>
 
 /** Interactive daily-weight line chart: gradient area, theme-aware value
  *  chips, a rich tooltip, a high-contrast trend/MA overlay and a goal line. */
-export function DailyChart({ entries, goalWeight, overlay }: DailyChartProps) {
-  const t = useChartTokens();
+export function DailyChart({ entries, goalWeight, overlay, showLabels, t }: DailyChartProps) {
+  const tok = useChartTokens();
 
   const option = useMemo<EChartsOption>(() => {
     const weights = entries.map((e) => e.weight);
-    const { min, max } = paddedYRange(weights, goalWeight);
-    const showLabels = entries.length <= MAX_POINT_LABELS;
+    const { min, max, interval } = niceYAxis(weights, goalWeight);
+    const canShowLabels = showLabels && entries.length <= MAX_POINT_LABELS;
 
     const chipLabel = {
-      color: t.labelText,
-      backgroundColor: t.labelBg,
-      borderColor: t.labelBorder,
+      color: tok.labelText,
+      backgroundColor: tok.labelBg,
+      borderColor: tok.labelBorder,
       borderWidth: 1,
       padding: [3, 5] as [number, number],
       borderRadius: 4,
@@ -47,27 +49,24 @@ export function DailyChart({ entries, goalWeight, overlay }: DailyChartProps) {
         name: 'Daily',
         type: 'line',
         smooth: 0.35,
-        showSymbol: showLabels,
+        showSymbol: canShowLabels,
         symbolSize: 7,
         data: entries.map((e) => [e.date, e.weight]),
-        itemStyle: { color: t.line, borderColor: t.plotBg, borderWidth: 1.5 },
-        lineStyle: { color: t.line, width: 2.5 },
+        itemStyle: { color: tok.line, borderColor: tok.plotBg, borderWidth: 1.5 },
+        lineStyle: { color: tok.line, width: 2.5 },
         areaStyle: {
           color: {
             type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 0,
-            y2: 1,
+            x: 0, y: 0, x2: 0, y2: 1,
             colorStops: [
-              { offset: 0, color: rgba(t.line, 0.28) },
-              { offset: 1, color: rgba(t.line, 0.02) },
+              { offset: 0, color: rgba(tok.line, 0.28) },
+              { offset: 1, color: rgba(tok.line, 0.02) },
             ],
           },
         },
         emphasis: { focus: 'series', scale: 1.5 },
         label: {
-          show: showLabels,
+          show: canShowLabels,
           position: 'top',
           distance: 8,
           formatter: (p: any) => Number(p.value[1]).toFixed(1),
@@ -78,13 +77,13 @@ export function DailyChart({ entries, goalWeight, overlay }: DailyChartProps) {
             ? {
                 silent: true,
                 symbol: 'none',
-                lineStyle: { color: t.goal, type: 'dashed', width: 2 },
+                lineStyle: { color: tok.goal, type: 'dashed', width: 2 },
                 label: {
                   formatter: `Goal ${goalWeight.toFixed(1)} kg`,
                   position: 'insideEndTop',
-                  color: t.goal,
-                  backgroundColor: t.labelBg,
-                  borderColor: t.labelBorder,
+                  color: tok.goal,
+                  backgroundColor: tok.labelBg,
+                  borderColor: tok.labelBorder,
                   borderWidth: 1,
                   padding: [3, 6],
                   borderRadius: 4,
@@ -97,17 +96,16 @@ export function DailyChart({ entries, goalWeight, overlay }: DailyChartProps) {
       },
     ];
 
-    // Overlay: trend line OR moving average (mutually exclusive).
     if (overlay === 'ma' && entries.length >= 3) {
       const ma = movingAverage(weights, MA_WINDOW);
       series.push({
-        name: `${MA_WINDOW}-day avg`,
+        name: t.overlayMa,
         type: 'line',
         smooth: 0.4,
         showSymbol: false,
         data: entries.map((e, i) => [e.date, Number(ma[i].toFixed(2))]),
-        lineStyle: { color: t.ma, width: 3 },
-        itemStyle: { color: t.ma },
+        lineStyle: { color: tok.ma, width: 3 },
+        itemStyle: { color: tok.ma },
         emphasis: { focus: 'series' },
         z: 2,
       });
@@ -115,12 +113,12 @@ export function DailyChart({ entries, goalWeight, overlay }: DailyChartProps) {
       const xs = dayOffsets(entries.map((e) => e.date));
       const trend = predict(linearFit(xs, weights), xs);
       series.push({
-        name: 'Trend',
+        name: t.overlayTrend,
         type: 'line',
         showSymbol: false,
         data: entries.map((e, i) => [e.date, Number(trend[i].toFixed(2))]),
-        lineStyle: { color: t.trend, width: 3, type: 'dashed' },
-        itemStyle: { color: t.trend },
+        lineStyle: { color: tok.trend, width: 3, type: 'dashed' },
+        itemStyle: { color: tok.trend },
         emphasis: { focus: 'series' },
         z: 2,
       });
@@ -132,50 +130,48 @@ export function DailyChart({ entries, goalWeight, overlay }: DailyChartProps) {
       legend: {
         top: 6,
         right: 6,
-        textStyle: { color: t.axis, fontSize: 12 },
+        textStyle: { color: tok.axis, fontSize: 12 },
         icon: 'roundRect',
         itemWidth: 14,
         itemHeight: 8,
       },
       tooltip: {
         trigger: 'axis',
-        backgroundColor: t.tooltipBg,
-        borderColor: t.labelBorder,
+        backgroundColor: tok.tooltipBg,
+        borderColor: tok.labelBorder,
         borderWidth: 1,
         padding: [8, 12],
-        textStyle: { color: t.tooltipText, fontSize: 12 },
+        textStyle: { color: tok.tooltipText, fontSize: 12 },
         extraCssText:
           'border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.18);',
         axisPointer: {
           type: 'line',
-          lineStyle: { color: t.axis, width: 1, type: 'dashed' },
+          lineStyle: { color: tok.axis, width: 1, type: 'dashed' },
         },
         formatter: (params: any) => {
           const items = Array.isArray(params) ? params : [params];
           const date = items[0].data[0] as string;
-          const header = formatDate(date);
+          const header = t.fmtDate(date);
           const row = (a: string, b: string, color?: string) =>
             `<div style="display:flex;justify-content:space-between;gap:18px;line-height:1.7">` +
             `<span>${a}</span><span style="font-weight:700${
               color ? `;color:${color}` : ''
             }">${b}</span></div>`;
 
-          // Weight + delta vs the previous measurement for the daily series.
           const idx = entries.findIndex((e) => e.date === date);
           const weight = entries[idx]?.weight ?? Number(items[0].data[1]);
-          let body = row('Weight', `${weight.toFixed(1)} kg`);
+          let body = row(t.weightLbl, `${weight.toFixed(1)} kg`);
           if (idx > 0) {
             const delta = weight - entries[idx - 1].weight;
             const color =
-              delta < -0.001 ? t.good : delta > 0.001 ? t.bad : t.tooltipText;
+              delta < -0.001 ? tok.good : delta > 0.001 ? tok.bad : tok.tooltipText;
             body += row(
-              'Delta',
+              t.deltaLbl,
               `${delta > 0 ? '+' : ''}${delta.toFixed(1)} kg`,
               color,
             );
           }
 
-          // Any overlay series (trend / moving average).
           const overlays = items
             .filter((p: any) => p.seriesName !== 'Daily')
             .map((p: any) =>
@@ -191,10 +187,10 @@ export function DailyChart({ entries, goalWeight, overlay }: DailyChartProps) {
       },
       xAxis: {
         type: 'time',
-        axisLine: { lineStyle: { color: t.grid } },
+        axisLine: { lineStyle: { color: tok.grid } },
         axisTick: { show: false },
         axisLabel: {
-          color: t.axis,
+          color: tok.axis,
           fontSize: 12,
           hideOverlap: true,
           formatter: (val: any) => format(new Date(val), 'dd MMM'),
@@ -203,27 +199,37 @@ export function DailyChart({ entries, goalWeight, overlay }: DailyChartProps) {
       },
       yAxis: {
         type: 'value',
-        min: Number(min.toFixed(1)),
-        max: Number(max.toFixed(1)),
-        axisLabel: { color: t.axis, fontSize: 12, formatter: '{value} kg' },
-        splitLine: { lineStyle: { color: t.grid, type: 'dashed' } },
+        min,
+        max,
+        interval,
+        axisLabel: {
+          color: tok.axis,
+          fontSize: 12,
+          formatter: '{value} kg',
+          showMinLabel: false,
+          showMaxLabel: false,
+        },
+        splitLine: { lineStyle: { color: tok.grid, type: 'dashed' } },
       },
+      // Sliderless zoom/pan: wheel + pinch to zoom, drag to pan. The reset
+      // affordance lives in BaseChart.
+      dataZoom: [
+        {
+          type: 'inside',
+          xAxisIndex: 0,
+          zoomOnMouseWheel: true,
+          moveOnMouseWheel: false,
+          moveOnMouseMove: true,
+          filterMode: 'filter',
+        },
+      ],
       series,
     };
-  }, [entries, goalWeight, overlay, t]);
+  }, [entries, goalWeight, overlay, showLabels, tok, t]);
 
   if (entries.length === 0) {
-    return (
-      <EmptyChart message="No data in this range — add an entry to begin." />
-    );
+    return <EmptyChart message={t.noChartData} />;
   }
 
-  return (
-    <ReactECharts
-      option={option}
-      notMerge
-      style={{ height: '100%', width: '100%' }}
-      opts={{ renderer: 'canvas' }}
-    />
-  );
+  return <BaseChart option={option} resetLabel={t.resetZoom} />;
 }

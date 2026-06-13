@@ -1,6 +1,7 @@
 import { sequentialDeltas } from '@/domain';
 import { cn } from '@/lib/cn';
-import { formatDate, formatDelta, formatWeight } from '@/lib/format';
+import { formatDelta, formatWeight } from '@/lib/format';
+import { useT } from '@/i18n';
 import type { DeltaDirection, Granularity, PeriodAverage } from '@/types';
 
 const deltaColor: Record<DeltaDirection, string> = {
@@ -10,7 +11,6 @@ const deltaColor: Record<DeltaDirection, string> = {
 };
 
 interface PeriodTableProps {
-  /** Range-scoped period averages, ascending; numbers are dataset-based. */
   periods: PeriodAverage[];
   granularity: Granularity;
 }
@@ -18,16 +18,16 @@ interface PeriodTableProps {
 /** Period-average table — newest first, with dataset-based numbering and
  *  period-over-period deltas. Works for both weekly and monthly granularity. */
 export function PeriodTable({ periods, granularity }: PeriodTableProps) {
-  const unit = granularity === 'monthly' ? 'Month' : 'Week';
+  const t = useT();
+  const isMonthly = granularity === 'monthly';
+  const unitCol = isMonthly ? t.monthCol : t.weekCol;
+  const emptyMsg = isMonthly ? t.noMonthlyData : t.noWeeklyData;
+
   const deltas = sequentialDeltas(periods.map((p) => p.average));
   const rows = periods.map((p, i) => ({ ...p, ...deltas[i] })).reverse();
 
   if (rows.length === 0) {
-    return (
-      <p className="p-4 text-sm text-muted">
-        No {unit.toLowerCase()}ly data in this range.
-      </p>
-    );
+    return <p className="p-4 text-sm text-muted">{emptyMsg}</p>;
   }
 
   return (
@@ -36,10 +36,10 @@ export function PeriodTable({ periods, granularity }: PeriodTableProps) {
         <thead className="sticky top-0 z-10 bg-surface-2 text-xs text-muted">
           <tr>
             <th className="px-3 py-2 text-left font-semibold">#</th>
-            <th className="px-3 py-2 text-left font-semibold">{unit}</th>
-            <th className="px-3 py-2 text-right font-semibold">Avg</th>
-            <th className="px-3 py-2 text-right font-semibold">Change</th>
-            <th className="px-3 py-2 text-right font-semibold">Entries</th>
+            <th className="px-3 py-2 text-left font-semibold">{unitCol}</th>
+            <th className="px-3 py-2 text-right font-semibold">{t.avgCol}</th>
+            <th className="px-3 py-2 text-right font-semibold">{t.changeCol}</th>
+            <th className="px-3 py-2 text-right font-semibold">{t.entriesLbl}</th>
           </tr>
         </thead>
         <tbody>
@@ -50,9 +50,9 @@ export function PeriodTable({ periods, granularity }: PeriodTableProps) {
             >
               <td className="px-3 py-2 text-left text-muted">{r.number}</td>
               <td className="px-3 py-2 text-left text-text">
-                {granularity === 'monthly'
+                {isMonthly
                   ? r.label
-                  : `${formatDate(r.start)} – ${formatDate(r.end)}`}
+                  : `${t.fmtDate(r.start)} – ${t.fmtDate(r.end)}`}
               </td>
               <td className="px-3 py-2 text-right font-semibold text-text">
                 {formatWeight(r.average, 2)}
@@ -73,8 +73,7 @@ export function PeriodTable({ periods, granularity }: PeriodTableProps) {
         </tbody>
       </table>
       <p className="px-3 py-2 text-right text-xs text-muted">
-        {periods.length} {unit.toLowerCase()}
-        {periods.length === 1 ? '' : 's'} shown
+        {t.periodsShown(periods.length, isMonthly ? 'month' : 'week')}
       </p>
     </div>
   );

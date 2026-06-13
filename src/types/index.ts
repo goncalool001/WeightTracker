@@ -118,6 +118,25 @@ export interface Insight {
 /** UI colour theme. */
 export type Theme = 'light' | 'dark';
 
+/** Locale-specific string factories for the Insight generator. */
+export interface InsightStrings {
+  reachedGoal: (g: string) => string;
+  goalPace: (g: string, date: string, weeks: number) => string;
+  progress: (pct: string, startKg: string, goalKg: string) => string;
+  windowLost: (kg: string, days: number) => string;
+  windowGained: (kg: string, days: number) => string;
+  accelAccel: (recent: string, prior: string) => string;
+  accelSlow: (recent: string, prior: string) => string;
+  consistency: (drops: number, m: number) => string;
+  bestWeek: (start: string, end: string, kg: string) => string;
+  contribution: (pct: string) => string;
+  compareStronger: (thisRate: string, lastRate: string) => string;
+  compareWeaker: (thisRate: string, lastRate: string) => string;
+}
+
+/** App language / UI locale. */
+export type Locale = 'en' | 'pt';
+
 /** The signed-in user (for cloud sync), or null when signed out. */
 export interface SyncUser {
   uid: string;
@@ -134,5 +153,7 @@ export interface PersistedState {
   range: RangeKey;
   granularity: Granularity;
   theme: Theme;
+  locale: Locale;
+  showLabels: boolean;
   seeded: boolean;
 }

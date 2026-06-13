@@ -15,6 +15,7 @@ import {
 } from '@/data/sync';
 import type {
   Granularity,
+  Locale,
   Overlay,
   PersistedState,
   RangeKey,
@@ -45,6 +46,8 @@ interface AppState extends PersistedState {
   setRange: (range: RangeKey) => void;
   setGranularity: (granularity: Granularity) => void;
   setTheme: (theme: Theme) => void;
+  setLocale: (locale: Locale) => void;
+  setShowLabels: (show: boolean) => void;
 
   // ── sync (applied from the cloud; do NOT echo back) ───────
   setUser: (user: SyncUser | null) => void;
@@ -63,6 +66,12 @@ function defaultTheme(): Theme {
   return 'dark';
 }
 
+/** Labels are hidden by default on narrow screens (mobile). */
+function defaultShowLabels(): boolean {
+  if (typeof window !== 'undefined') return window.innerWidth >= 640;
+  return true;
+}
+
 /** Pull the persistable slice out of the full state. */
 function snapshot(s: AppState): PersistedState {
   return {
@@ -72,6 +81,8 @@ function snapshot(s: AppState): PersistedState {
     range: s.range,
     granularity: s.granularity,
     theme: s.theme,
+    locale: s.locale,
+    showLabels: s.showLabels,
     seeded: s.seeded,
   };
 }
@@ -88,6 +99,8 @@ export const useStore = create<AppState>((set, get) => {
     range: 'all',
     granularity: 'weekly',
     theme: defaultTheme(),
+    locale: 'en',
+    showLabels: defaultShowLabels(),
     seeded: false,
     hydrated: false,
     user: null,
@@ -96,7 +109,14 @@ export const useStore = create<AppState>((set, get) => {
     hydrate: async () => {
       const saved = await loadState();
       if (saved) {
-        set({ ...saved, hydrated: true });
+        // Provide defaults for fields added after the initial release so that
+        // existing persisted state (which won't have them) still gets values.
+        set({
+          ...saved,
+          locale: saved.locale ?? 'en',
+          showLabels: saved.showLabels ?? defaultShowLabels(),
+          hydrated: true,
+        });
       } else {
         // First ever launch: seed from the bundled dataset.
         set({
@@ -165,6 +185,16 @@ export const useStore = create<AppState>((set, get) => {
 
     setTheme: (theme) => {
       set({ theme });
+      persist();
+    },
+
+    setLocale: (locale) => {
+      set({ locale });
+      persist();
+    },
+
+    setShowLabels: (showLabels) => {
+      set({ showLabels });
       persist();
     },
 

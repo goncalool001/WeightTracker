@@ -1,7 +1,7 @@
 import {
   GoogleAuthProvider,
+  getRedirectResult,
   onAuthStateChanged,
-  signInWithPopup,
   signInWithRedirect,
   signOut,
   type User,
@@ -51,16 +51,44 @@ export function onAuth(cb: (user: User | null) => void): () => void {
   return onAuthStateChanged(auth, cb);
 }
 
-/** Sign in with Google — popup on desktop, redirect fallback on mobile. */
+/**
+ * Complete any pending redirect sign-in from a previous page navigation.
+ * Must be called once on app startup — before or alongside onAuthStateChanged.
+ * Returns the signed-in user if a redirect just completed, or null otherwise.
+ */
+export async function handleRedirectResult(): Promise<User | null> {
+  if (!auth) return null;
+  try {
+    const result = await getRedirectResult(auth);
+    return result?.user ?? null;
+  } catch (err: any) {
+    // auth/credential-already-in-use, auth/cancelled-popup-request, etc.
+    // onAuthStateChanged will still fire with the current user if one is
+    // already signed in, so we only need to surface unexpected errors.
+    const code: string = err?.code ?? '';
+    if (
+      code !== 'auth/credential-already-in-use' &&
+      code !== 'auth/cancelled-popup-request' &&
+      code !== 'auth/popup-closed-by-user'
+    ) {
+      console.error('[Auth] getRedirectResult error:', code, err?.message);
+    }
+    return null;
+  }
+}
+
+/**
+ * Sign in with Google via a full-page redirect (works on all browsers,
+ * including desktop Chrome with third-party cookies disabled and all
+ * mobile browsers). The sign-in completes on the return page load when
+ * handleRedirectResult() is called.
+ */
 export async function signInWithGoogle(): Promise<void> {
   if (!auth) return;
   const provider = new GoogleAuthProvider();
-  try {
-    await signInWithPopup(auth, provider);
-  } catch {
-    // Popups are often blocked on mobile browsers — fall back to redirect.
-    await signInWithRedirect(auth, provider);
-  }
+  // Ensure the account chooser always appears so the user can switch accounts.
+  provider.setCustomParameters({ prompt: 'select_account' });
+  await signInWithRedirect(auth, provider);
 }
 
 export async function signOutUser(): Promise<void> {
