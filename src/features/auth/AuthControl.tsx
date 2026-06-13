@@ -19,11 +19,17 @@ export function AuthControl() {
   async function handleSignIn() {
     setBusy(true);
     try {
-      // signInWithGoogle navigates away on success; setBusy(false) only on error.
-      await signInWithGoogle();
+      // Popup path resolves with the user → show success. Redirect path returns
+      // null (navigates away) and confirms on return load (see useSync).
+      const signedIn = await signInWithGoogle();
+      if (signedIn) {
+        const name = signedIn.displayName ?? signedIn.email ?? 'Google';
+        toast.success(t.signedInAs(name));
+      }
     } catch (err) {
       // Surface the real Firebase cause (also logged to the console).
       toast.error(authErrorMessage(err));
+    } finally {
       setBusy(false);
     }
   }

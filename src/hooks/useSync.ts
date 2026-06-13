@@ -8,6 +8,7 @@ import {
   subscribeEntries,
   subscribeGoal,
 } from '@/data/sync';
+import { getT } from '@/i18n';
 import { useStore } from '@/store/useStore';
 
 /**
@@ -27,13 +28,19 @@ export function useSync(): void {
       unsubsRef.current = [];
     };
 
-    // Complete any in-flight redirect sign-in FIRST. Firebase's
-    // onAuthStateChanged fires right after getRedirectResult resolves, so the
-    // two flows compose naturally without special-casing.
-    void handleRedirectResult().catch((err) => {
-      // handleRedirectResult already logs; surface unexpected errors as toasts.
-      console.error('[useSync] redirect result error:', err);
-    });
+    // Complete any in-flight redirect sign-in FIRST. getRedirectResult returns
+    // a user ONLY immediately after a redirect flow completes (not on ordinary
+    // reloads), so a truthy result means a fresh sign-in → confirm it in green.
+    void handleRedirectResult()
+      .then((u) => {
+        if (u) {
+          const t = getT(store().locale);
+          toast.success(t.signedInAs(u.displayName ?? u.email ?? 'Google'));
+        }
+      })
+      .catch((err) => {
+        console.error('[useSync] redirect result error:', err);
+      });
 
     const unsubAuth = onAuth(async (fbUser) => {
       clearDataSubs();
@@ -53,7 +60,7 @@ export function useSync(): void {
       try {
         await mergeOnSignIn(fbUser.uid, store().entries, store().goalWeight);
       } catch {
-        toast.error('Could not sync local data to the cloud.');
+        toast.error(getT(store().locale).syncLocalFailed);
       }
 
       unsubsRef.current.push(
@@ -62,9 +69,9 @@ export function useSync(): void {
         ),
         subscribeGoal(fbUser.uid, (goal) => store().applyRemoteGoal(goal)),
       );
-
-      const name = fbUser.displayName ?? fbUser.email ?? 'you';
-      toast.success(`Synced as ${name}`);
+      // No success toast here: this handler also fires on every reload when a
+      // session is restored. The green confirmation is shown once, at the
+      // moment of sign-in (popup → AuthControl, redirect → above).
     });
 
     return () => {

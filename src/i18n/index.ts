@@ -11,6 +11,8 @@ export interface T {
   // Header / auth
   signIn: string;
   signOut: string;
+  signedInAs: (name: string) => string;
+  syncLocalFailed: string;
   syncedMsg: string;
   offlineMsg: string;
   importBtn: string;
@@ -127,6 +129,8 @@ export interface T {
 const en: T = {
   signIn: 'Sign in',
   signOut: 'Sign out',
+  signedInAs: (name) => `Signed in as ${name}`,
+  syncLocalFailed: 'Could not sync local data to the cloud.',
   syncedMsg: 'Synced',
   offlineMsg: 'Offline — changes will sync when back online',
   importBtn: 'Import',
@@ -259,6 +263,8 @@ const en: T = {
 const pt: T = {
   signIn: 'Iniciar sessão',
   signOut: 'Terminar sessão',
+  signedInAs: (name) => `Sessão iniciada como ${name}`,
+  syncLocalFailed: 'Não foi possível sincronizar os dados locais para a cloud.',
   syncedMsg: 'Sincronizado',
   offlineMsg: 'Sem ligação — as alterações sincronizam quando voltares online',
   importBtn: 'Importar',

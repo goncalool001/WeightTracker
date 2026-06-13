@@ -2,6 +2,7 @@ import {
   GoogleAuthProvider,
   getRedirectResult,
   onAuthStateChanged,
+  signInWithPopup,
   signInWithRedirect,
   signOut,
   type User,
@@ -78,21 +79,45 @@ export async function handleRedirectResult(): Promise<User | null> {
 }
 
 /**
- * Sign in with Google via a full-page redirect (works on all browsers,
- * including desktop Chrome with third-party cookies disabled and all
- * mobile browsers). The sign-in completes on the return page load when
- * handleRedirectResult() is called.
+ * Sign in with Google.
  *
- * Rejects (before navigating) on configuration problems such as an
- * unauthorized domain or a disabled provider — the caller surfaces the cause
- * via `authErrorMessage`.
+ * Uses a **popup** by default: the credential is returned to the opener via
+ * postMessage, so it works even when the app domain differs from the Firebase
+ * `authDomain` and the browser blocks third-party storage (which breaks the
+ * redirect flow's result relay). Resolves with the signed-in `User`.
+ *
+ * Falls back to a **full-page redirect** when the popup can't be used (blocked
+ * by the browser, or unsupported in-app webviews — typical on mobile); in that
+ * case it navigates away and resolves with `null` (the sign-in completes on the
+ * return load via `handleRedirectResult`).
+ *
+ * Rejects on a deliberate cancellation or a configuration problem (unauthorized
+ * domain, disabled provider) — the caller surfaces the cause via
+ * `authErrorMessage`.
  */
-export async function signInWithGoogle(): Promise<void> {
+export async function signInWithGoogle(): Promise<User | null> {
   if (!auth) throw new Error('auth/not-initialized');
   const provider = new GoogleAuthProvider();
   // Ensure the account chooser always appears so the user can switch accounts.
   provider.setCustomParameters({ prompt: 'select_account' });
-  await signInWithRedirect(auth, provider);
+
+  try {
+    const cred = await signInWithPopup(auth, provider);
+    return cred.user;
+  } catch (err) {
+    const code = (err as { code?: string })?.code ?? '';
+    // The popup couldn't open — fall back to a redirect.
+    if (
+      code === 'auth/popup-blocked' ||
+      code === 'auth/operation-not-supported-in-this-environment'
+    ) {
+      await signInWithRedirect(auth, provider);
+      return null; // navigating away
+    }
+    // auth/popup-closed-by-user, auth/cancelled-popup-request (user action) and
+    // real config errors propagate to the caller.
+    throw err;
+  }
 }
 
 /**
