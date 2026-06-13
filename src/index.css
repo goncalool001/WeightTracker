@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Theme tokens. Values are space-separated RGB channels so Tailwind's
+ * `rgb(var(--x) / <alpha-value>)` opacity syntax works. The `.dark` class on
+ * <html> swaps the palette; default (no class) is light.
+ */
+@layer base {
+  :root {
+    --bg: 244 246 250; /* slate-50-ish */
+    --surface: 255 255 255;
+    --surface-2: 241 245 249;
+    --border: 226 232 240;
+    --text: 15 23 42; /* slate-900 */
+    --muted: 71 85 105; /* slate-600 — darker for AA contrast on light bg */
+    --accent: 37 99 235;
+    --accent-hover: 29 78 216;
+    --good: 21 128 61; /* green-700 — readable on white */
+    --bad: 220 38 38;
+
+    /* chart-specific (consumed in chartTokens.ts) */
+    --c-line: 37 99 235; /* blue-600 */
+    --c-trend: 194 65 12; /* orange-700 — stronger contrast on white */
+    --c-ma: 109 40 217; /* violet-700 */
+    --c-goal: 21 128 61; /* green-700 */
+    --c-plot-bg: 255 255 255;
+    --c-grid: 226 232 240;
+    --c-axis: 51 65 85; /* slate-700 — high-contrast axis text */
+    /* in-chart label chip (opaque, high-contrast in both themes) */
+    --c-label-bg: 255 255 255;
+    --c-label-text: 15 23 42;
+    --c-label-border: 203 213 225; /* slate-300 */
+  }
+
+  .dark {
+    --bg: 26 29 46; /* #1a1d2e — the desktop app background */
+    --surface: 30 33 48; /* #1e2130 */
+    --surface-2: 35 39 58; /* #23273a */
+    --border: 45 51 71; /* #2d3347 */
+    --text: 226 232 240; /* #e2e8f0 */
+    --muted: 148 163 184; /* #94a3b8 */
+    --accent: 96 165 250; /* #60a5fa */
+    --accent-hover: 59 130 246;
+    --good: 74 222 128; /* #4ade80 */
+    --bad: 248 113 113; /* #f87171 */
+
+    --c-line: 96 165 250;
+    --c-trend: 251 146 60; /* orange-400 — brighter on dark */
+    --c-ma: 167 139 250;
+    --c-goal: 74 222 128;
+    --c-plot-bg: 30 33 48;
+    --c-grid: 45 51 71;
+    --c-axis: 148 163 184;
+    --c-label-bg: 15 23 42; /* slate-900 */
+    --c-label-text: 241 245 249;
+    --c-label-border: 51 65 85; /* slate-700 */
+  }
+
+  * {
+    border-color: rgb(var(--border));
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-bg text-text font-sans antialiased;
+    margin: 0;
+    /* respect device safe areas on notched phones */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right)
+      env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  /* Smooth theme transition */
+  body,
+  .themed {
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease,
+      border-color 0.3s ease;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border border-border bg-surface;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--border)) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgb(var(--border));
+    border-radius: 4px;
+  }
+}
