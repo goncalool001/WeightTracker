@@ -22,7 +22,7 @@ projection, and import/export the same `.xlsx` format the desktop app used.
   a projected goal date.
 - KPI cards: total entries, latest, this week, vs last week, since week 1, and
   trend rate (kg/week).
-- Time-range filter: 30D / 90D / YTD / All.
+- Time-range filter: 7D / 30D / 90D / YTD / All.
 
 ## Tech stack
 
