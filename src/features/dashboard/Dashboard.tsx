@@ -14,7 +14,9 @@ import { MetricGrid } from '@/components/metrics/MetricGrid';
 import { InsightsPanel } from '@/components/insights/InsightsPanel';
 import { DailyTable } from '@/components/tables/DailyTable';
 import { PeriodTable } from '@/components/tables/PeriodTable';
+import { Trash2 } from 'lucide-react';
 import { Panel } from '@/components/ui/Panel';
+import { Button } from '@/components/ui/Button';
 import { Segmented } from '@/components/ui/Segmented';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { LogEntryForm } from '@/features/log-entry/LogEntryForm';
@@ -34,6 +36,7 @@ export function Dashboard() {
   const setRange = useStore((s) => s.setRange);
   const setGranularity = useStore((s) => s.setGranularity);
   const deleteEntry = useStore((s) => s.deleteEntry);
+  const replaceEntries = useStore((s) => s.replaceEntries);
 
   const granularity = useGranularity();
   const filtered = useFilteredEntries();
@@ -46,12 +49,20 @@ export function Dashboard() {
     granularity === 'monthly' ? t.monthlyAvgs : t.weeklyAvgs;
 
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+  const [confirmClearAll, setConfirmClearAll] = useState(false);
 
   function confirmDelete() {
     if (!pendingDelete) return;
     deleteEntry(pendingDelete);
     toast.success(t.toastDeleted(t.fmtDateLong(pendingDelete)));
     setPendingDelete(null);
+  }
+
+  function clearAll() {
+    const count = totalEntries;
+    replaceEntries([]); // clears locally and, when signed in, in the cloud too
+    toast.success(t.toastDeletedAll(count));
+    setConfirmClearAll(false);
   }
 
   const OVERLAY_OPTIONS: { value: Overlay; label: string }[] = [
@@ -156,7 +167,21 @@ export function Dashboard() {
           </Panel>
 
           {/* 6 · Daily Log table */}
-          <Panel title={t.dailyLog} bodyClassName="p-0">
+          <Panel
+            title={t.dailyLog}
+            actions={
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setConfirmClearAll(true)}
+                className="text-bad hover:bg-bad/10 hover:text-bad"
+              >
+                <Trash2 className="h-4 w-4" />
+                <span className="hidden sm:inline">{t.deleteAll}</span>
+              </Button>
+            }
+            bodyClassName="p-0"
+          >
             <DailyTable entries={filtered} onDelete={setPendingDelete} />
           </Panel>
 
@@ -180,6 +205,17 @@ export function Dashboard() {
         destructive
         onConfirm={confirmDelete}
         onOpenChange={(o) => !o && setPendingDelete(null)}
+      />
+
+      <ConfirmDialog
+        open={confirmClearAll}
+        title={t.deleteAllTitle}
+        description={t.deleteAllDesc(totalEntries)}
+        confirmLabel={t.deleteAll}
+        cancelLabel={t.cancelBtn}
+        destructive
+        onConfirm={clearAll}
+        onOpenChange={(o) => !o && setConfirmClearAll(false)}
       />
     </div>
   );

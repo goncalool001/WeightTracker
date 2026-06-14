@@ -46,7 +46,10 @@ export function useSync(): void {
       clearDataSubs();
 
       if (!fbUser) {
+        // Signed out (or never signed in): data is account-scoped, so clear the
+        // local view. The cloud copy is untouched and returns on next sign-in.
         store().setUser(null);
+        store().clearAccountData();
         return;
       }
 

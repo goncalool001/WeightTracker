@@ -6,7 +6,6 @@ import {
   upsertEntry,
 } from '@/domain';
 import { loadState, saveState } from '@/data/storage';
-import { SEED_ENTRIES } from '@/data/seed';
 import {
   pushDeleteEntry,
   pushEntry,
@@ -54,6 +53,8 @@ interface AppState extends PersistedState {
   setOnline: (online: boolean) => void;
   applyRemoteEntries: (entries: WeightEntry[]) => void;
   applyRemoteGoal: (goal: number | null) => void;
+  /** Drop the local view of account data on sign-out (cloud is untouched). */
+  clearAccountData: () => void;
 }
 
 /** Default theme follows the OS preference on first run. */
@@ -118,13 +119,9 @@ export const useStore = create<AppState>((set, get) => {
           hydrated: true,
         });
       } else {
-        // First ever launch: seed from the bundled dataset.
-        set({
-          entries: normalizeEntries(SEED_ENTRIES),
-          seeded: true,
-          hydrated: true,
-        });
-        persist();
+        // Start empty — no preloaded/seed data. Entries belong to the
+        // signed-in account and arrive via cloud sync after sign-in.
+        set({ hydrated: true });
       }
     },
 
@@ -209,6 +206,13 @@ export const useStore = create<AppState>((set, get) => {
 
     applyRemoteGoal: (goal) => {
       set({ goalWeight: goal == null ? null : roundWeight(goal) });
+      persist();
+    },
+
+    clearAccountData: () => {
+      // Local-only reset (sign-out): the cloud copy stays intact so the data
+      // returns on the next sign-in. No cloud writes are issued.
+      set({ entries: [], goalWeight: null });
       persist();
     },
   };

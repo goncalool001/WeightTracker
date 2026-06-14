@@ -1,13 +1,14 @@
 import * as XLSX from 'xlsx';
 import { parse } from 'date-fns';
-import { SHEET_DAILY, SHEET_WEEKLY } from '@/lib/constants';
-import { normalizeEntries, weeklyAverages } from '@/domain';
+import { SHEET_DAILY } from '@/lib/constants';
+import { normalizeEntries } from '@/domain';
 import { formatDate } from '@/lib/format';
 import type { WeightEntry } from '@/types';
 
 /**
- * Excel import/export, fully compatible with the original desktop app's
- * two-sheet schema ("Daily Data" + "Weekly Averages").
+ * Excel import/export. The workbook is a single sheet with `Date` and `Weight`
+ * columns. Import is tolerant: it scans every sheet (regardless of name) for the
+ * first one that has Date + Weight columns and matches them case-insensitively.
  */
 
 /** Coerce an Excel cell (date string, ISO, or serial number) to `YYYY-MM-DD`. */
@@ -47,60 +48,48 @@ function cellToISO(value: unknown): string | null {
 }
 
 /**
- * Parse an uploaded workbook into normalised entries. Case-insensitive column
- * matching and graceful handling of missing columns mirror the desktop loader.
+ * Parse an uploaded workbook into normalised entries. Sheet names are ignored:
+ * every sheet is scanned and the first one exposing both a Date and a Weight
+ * column (matched case-insensitively) is used.
  */
 export async function importWorkbook(file: File): Promise<WeightEntry[]> {
   const buffer = await file.arrayBuffer();
   const wb = XLSX.read(buffer, { cellDates: true });
 
-  // Prefer the canonical sheet; otherwise fall back to the first sheet.
-  const sheetName = wb.SheetNames.includes(SHEET_DAILY)
-    ? SHEET_DAILY
-    : wb.SheetNames[0];
-  if (!sheetName) return [];
+  for (const name of wb.SheetNames) {
+    const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(
+      wb.Sheets[name],
+      { defval: null },
+    );
+    if (rows.length === 0) continue;
 
-  const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(
-    wb.Sheets[sheetName],
-    { defval: null },
-  );
-  if (rows.length === 0) return [];
+    // Resolve the date/weight columns case-insensitively on this sheet.
+    const keys = Object.keys(rows[0]);
+    const dateKey = keys.find((k) => k.trim().toLowerCase() === 'date');
+    const weightKey = keys.find((k) => k.trim().toLowerCase() === 'weight');
+    if (!dateKey || !weightKey) continue; // not the data sheet — keep looking
 
-  // Resolve the date/weight columns case-insensitively.
-  const keys = Object.keys(rows[0]);
-  const dateKey = keys.find((k) => k.trim().toLowerCase() === 'date');
-  const weightKey = keys.find((k) => k.trim().toLowerCase() === 'weight');
-  if (!dateKey || !weightKey) return [];
-
-  const parsed: WeightEntry[] = [];
-  for (const row of rows) {
-    const iso = cellToISO(row[dateKey]);
-    const weight = Number(row[weightKey]);
-    if (iso && !Number.isNaN(weight)) parsed.push({ date: iso, weight });
+    const parsed: WeightEntry[] = [];
+    for (const row of rows) {
+      const iso = cellToISO(row[dateKey]);
+      const weight = Number(row[weightKey]);
+      if (iso && !Number.isNaN(weight)) parsed.push({ date: iso, weight });
+    }
+    return normalizeEntries(parsed);
   }
-  return normalizeEntries(parsed);
+
+  return []; // no sheet had Date + Weight columns
 }
 
-/** Build a workbook (Blob) with the daily + derived weekly sheets. */
+/** Build a single-sheet workbook (Blob) with `Date` and `Weight` columns. */
 export function buildWorkbookBlob(entries: WeightEntry[]): Blob {
   const wb = XLSX.utils.book_new();
 
-  const daily = XLSX.utils.json_to_sheet(
+  const sheet = XLSX.utils.json_to_sheet(
     entries.map((e) => ({ Date: e.date, Weight: e.weight })),
     { header: ['Date', 'Weight'] },
   );
-  XLSX.utils.book_append_sheet(wb, daily, SHEET_DAILY);
-
-  const weekly = XLSX.utils.json_to_sheet(
-    weeklyAverages(entries).map((w) => ({
-      'Week Start': w.weekStart,
-      'Week End': w.weekEnd,
-      'Average Weight': w.averageWeight,
-      Measurements: w.measurements,
-    })),
-    { header: ['Week Start', 'Week End', 'Average Weight', 'Measurements'] },
-  );
-  XLSX.utils.book_append_sheet(wb, weekly, SHEET_WEEKLY);
+  XLSX.utils.book_append_sheet(wb, sheet, SHEET_DAILY);
 
   const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
   return new Blob([out], {

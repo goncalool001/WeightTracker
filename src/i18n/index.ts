@@ -111,10 +111,16 @@ export interface T {
   deleteDesc: (date: string) => string;
   deleteBtn: string;
 
+  // Delete-all
+  deleteAll: string;
+  deleteAllTitle: string;
+  deleteAllDesc: (n: number) => string;
+
   // Toast messages
   toastAdded: (date: string, weight: string) => string;
   toastUpdated: (date: string, weight: string) => string;
   toastDeleted: (date: string) => string;
+  toastDeletedAll: (n: number) => string;
 
   // Insight text strings (passed into the domain)
   insights: InsightStrings;
@@ -224,6 +230,11 @@ const en: T = {
     `Delete the entry for ${date}? This cannot be undone.`,
   deleteBtn: 'Delete',
 
+  deleteAll: 'Delete all',
+  deleteAllTitle: 'Delete all entries?',
+  deleteAllDesc: (n) =>
+    `Permanently delete all ${n} ${n === 1 ? 'entry' : 'entries'}? This also removes them from your synced account and cannot be undone.`,
+
   insights: {
     reachedGoal: (g) => `You've reached your goal of ${g} kg — nice work.`,
     goalPace: (g, date, weeks) =>
@@ -252,6 +263,8 @@ const en: T = {
   toastAdded: (date, weight) => `Added ${date} — ${weight}`,
   toastUpdated: (date, weight) => `Updated ${date} — ${weight}`,
   toastDeleted: (date) => `Deleted entry for ${date}`,
+  toastDeletedAll: (n) =>
+    `Deleted all ${n} ${n === 1 ? 'entry' : 'entries'}`,
 
   fmtDate: (iso) => format(parseISO(iso), 'dd MMM yyyy', { locale: enUS }),
   fmtDateLong: (iso) =>
@@ -360,6 +373,11 @@ const pt: T = {
     `Eliminar a entrada de ${date}? Esta ação não pode ser desfeita.`,
   deleteBtn: 'Eliminar',
 
+  deleteAll: 'Apagar tudo',
+  deleteAllTitle: 'Apagar todas as entradas?',
+  deleteAllDesc: (n) =>
+    `Apagar permanentemente ${n === 1 ? 'a única entrada' : `todas as ${n} entradas`}? Isto também as remove da tua conta sincronizada e não pode ser desfeito.`,
+
   insights: {
     reachedGoal: (g) => `Atingiste o teu objetivo de ${g} kg — parabéns.`,
     goalPace: (g, date, weeks) =>
@@ -387,6 +405,8 @@ const pt: T = {
   toastAdded: (date, weight) => `Adicionado ${date} — ${weight}`,
   toastUpdated: (date, weight) => `Atualizado ${date} — ${weight}`,
   toastDeleted: (date) => `Entrada de ${date} eliminada`,
+  toastDeletedAll: (n) =>
+    `${n === 1 ? '1 entrada apagada' : `${n} entradas apagadas`}`,
 
   fmtDate: (iso) => format(parseISO(iso), 'dd MMM yyyy', { locale: ptLocale }),
   fmtDateLong: (iso) =>
