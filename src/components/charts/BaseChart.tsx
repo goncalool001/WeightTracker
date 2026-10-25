@@ -6,23 +6,21 @@ import { RotateCcw } from 'lucide-react';
 
 interface BaseChartProps {
   option: EChartsOption;
-  /** Label for the floating reset-zoom button (shown only when zoomed). */
+  /** Label for the reset-zoom button (shown only when zoomed). */
   resetLabel?: string;
+  /** Plain-language summary read by screen readers instead of the canvas. */
+  ariaLabel: string;
 }
 
 /**
  * Thin wrapper around `echarts-for-react` that:
- *  1. Keeps the canvas sized to its container. `echarts-for-react` only calls
- *     `resize()` on *window* resize — not when the container itself changes
- *     size (initial layout settling, the LoadingState→Dashboard swap, a flex
- *     reflow, or Vite HMR). A `ResizeObserver` makes the chart track its real
- *     box, preventing the content from collapsing into a thin band.
- *  2. Surfaces a "Reset zoom" affordance. Zoom/pan is driven by the chart's
- *     `inside` dataZoom (wheel, pinch, drag) with no visible slider; this
- *     button appears only once the user has zoomed in, and restores the full
- *     range on click.
+ *  1. Keeps the canvas sized to its container with a ResizeObserver
+ *     (`echarts-for-react` only listens to window resizes).
+ *  2. Shows a "Reset zoom" button once the user has zoomed (desktop only;
+ *     touch screens read the chart on drag instead of zooming).
+ *  3. Exposes the chart to assistive tech as one image with a summary.
  */
-export function BaseChart({ option, resetLabel = 'Reset zoom' }: BaseChartProps) {
+export function BaseChart({ option, resetLabel = 'Reset zoom', ariaLabel }: BaseChartProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<EChartsInstance | null>(null);
   const [zoomed, setZoomed] = useState(false);
@@ -37,8 +35,7 @@ export function BaseChart({ option, resetLabel = 'Reset zoom' }: BaseChartProps)
     return () => ro.disconnect();
   }, []);
 
-  // A `notMerge` option swap (range/granularity/theme change) resets the zoom
-  // window to full, so clear the button state to match.
+  // A `notMerge` option swap resets the zoom window, so clear the button.
   useEffect(() => {
     setZoomed(false);
   }, [option]);
@@ -47,11 +44,9 @@ export function BaseChart({ option, resetLabel = 'Reset zoom' }: BaseChartProps)
     chartRef.current = instance;
     instance.resize();
     instance.on('datazoom', () => {
-      const opt = instance.getOption() as any;
-      const dz = opt?.dataZoom?.[0] ?? {};
-      const start = dz.start ?? 0;
-      const end = dz.end ?? 100;
-      setZoomed(start > 0.5 || end < 99.5);
+      const dz = (instance.getOption() as { dataZoom?: Array<{ start?: number; end?: number }> })
+        ?.dataZoom?.[0];
+      setZoomed((dz?.start ?? 0) > 0.5 || (dz?.end ?? 100) < 99.5);
     });
   };
 
@@ -62,25 +57,24 @@ export function BaseChart({ option, resetLabel = 'Reset zoom' }: BaseChartProps)
 
   return (
     <div ref={wrapRef} className="relative h-full w-full">
-      <ReactECharts
-        option={option}
-        notMerge
-        style={{ height: '100%', width: '100%' }}
-        opts={{ renderer: 'canvas' }}
-        onChartReady={handleReady}
-      />
+      <div role="img" aria-label={ariaLabel} className="h-full w-full">
+        <ReactECharts
+          option={option}
+          notMerge
+          style={{ height: '100%', width: '100%' }}
+          opts={{ renderer: 'canvas' }}
+          onChartReady={handleReady}
+        />
+      </div>
       {zoomed && (
         <button
           type="button"
           onClick={resetZoom}
-          title={resetLabel}
-          aria-label={resetLabel}
-          className="absolute bottom-2 right-2 z-10 flex items-center gap-1 rounded-md
-                     border border-border bg-surface/90 px-2 py-1 text-xs font-semibold
-                     text-muted shadow-sm backdrop-blur transition-colors hover:text-text"
+          className="absolute right-2 top-2 z-10 flex h-9 items-center gap-1.5 rounded-full border border-control
+                     bg-raised px-3 text-[13px] font-medium text-text hover:bg-active"
         >
-          <RotateCcw className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">{resetLabel}</span>
+          <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+          {resetLabel}
         </button>
       )}
     </div>

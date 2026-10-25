@@ -1,0 +1,1650 @@
+{
+ "url": ".taste-skill/demo-dark/index.html",
+ "at": "2026-10-25T18:55:17.032Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.56,
+    0.72
+   ],
+   "motion": {
+    "elements": 2,
+    "css": 0,
+    "transitions": 2,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 1535,
+     "screens": 1.7,
+     "words": 221,
+     "img": 0,
+     "video": 0,
+     "canvas": 2,
+     "svg": 8,
+     "sections": 5,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+     "words": 11,
+     "chars": 51,
+     "lines": 1,
+     "size": 32,
+     "vw": 2.2,
+     "font": "Instrument Serif",
+     "weight": 400,
+     "tracking": -0.01,
+     "leading": 1.15,
+     "top": 52,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+     "words": 11,
+     "lines": 1,
+     "size": 32,
+     "font": "Instrument Serif"
+    },
+    "headings": [
+     {
+      "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+      "words": 11,
+      "chars": 51,
+      "lines": 1,
+      "size": 32,
+      "vw": 2.2,
+      "font": "Instrument Serif",
+      "weight": 400,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.74,
+      "top": 52,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Instrument Sans",
+       "share": 0.95,
+       "mono": false
+      },
+      {
+       "family": "Instrument Serif",
+       "share": 0.05,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      19,
+      24,
+      32
+     ],
+     "sizeCount": 8,
+     "notLoaded": [],
+     "body": {
+      "font": "Instrument Sans",
+      "size": 14,
+      "leading": 1.43,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 14.8
+     },
+     "measureChars": 69,
+     "max": {
+      "size": 32,
+      "vw": 2.2,
+      "font": "Instrument Serif",
+      "text": "76.5 kg · faltam 1.5 kg para 75 · tendên"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.15,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#111110",
+     "bodyBgHsl": {
+      "h": 60,
+      "s": 0.03,
+      "l": 0.06
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#111110",
+       "top": 0,
+       "hsl": {
+        "h": 60,
+        "s": 0.03,
+        "l": 0.06
+       }
+      },
+      {
+       "color": "#1a1a19",
+       "top": 699,
+       "hsl": {
+        "h": 60,
+        "s": 0.02,
+        "l": 0.1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#ededea",
+       "share": 0.57
+      },
+      {
+       "color": "#b4b4b0",
+       "share": 0.4
+      },
+      {
+       "color": "#5fc77f",
+       "share": 0.02
+      },
+      {
+       "color": "#111110",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#111110",
+      "hsl": {
+       "h": 60,
+       "s": 0.03,
+       "l": 0.06
+      },
+      "fg": "#ededea"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 10,
+     "inHero": 7,
+     "radius": "pill",
+     "height": 36,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Hoje",
+      "Registos",
+      "Meta",
+      "Dados",
+      "Escuro"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 5,
+     "hairlineSamples": [
+      "aside.sticky.top-0 232px",
+      "div.mt-5.border-t 755px",
+      "li.border-t.border-rule 484px",
+      "li.border-t.border-rule 484px",
+      "li.border-t.border-rule 484px"
+     ],
+     "outlinedBoxes": 10,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 10,
+     "boxRadius": 22,
+     "squareMedia": 2,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 4,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 137
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "canvas",
+      "ratio": 0.1
+     }
+    ],
+    "nav": {
+     "links": 2,
+     "fixed": true,
+     "height": 900,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "instrument sans",
+     "instrument serif"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 1535,
+    "margins": {
+     "left": 28,
+     "right": 91
+    },
+    "sections": [
+     {
+      "sel": "dl.grid.grid-cols-2",
+      "tag": "dl",
+      "top": 137,
+      "height": 128,
+      "words": 35,
+      "media": 0,
+      "middle": 211,
+      "heading": {
+       "text": "76.7",
+       "size": 24,
+       "tag": "span"
+      },
+      "left": 319,
+      "right": 151,
+      "textLeft": 319,
+      "textRight": 151,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.grid-cols-1",
+      "tag": "div",
+      "top": 281,
+      "height": 402,
+      "words": 62,
+      "media": 0,
+      "middle": 154,
+      "heading": {
+       "text": "Caminho até à meta",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 323,
+      "right": 91,
+      "textLeft": 323,
+      "textRight": 108,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.panel.flex",
+      "tag": "section",
+      "top": 699,
+      "height": 478,
+      "words": 25,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Peso diário",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 323,
+      "right": 95,
+      "textLeft": 323,
+      "textRight": 107,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.grid-cols-1",
+      "tag": "div",
+      "top": 1193,
+      "height": 278,
+      "words": 54,
+      "media": 1,
+      "middle": 75,
+      "heading": {
+       "text": "Análise",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 323,
+      "right": 91,
+      "textLeft": 323,
+      "textRight": 107,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+      "size": 32,
+      "top": 52,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 323,
+      "n": 3
+     },
+     {
+      "x": 302,
+      "n": 2
+     },
+     {
+      "x": 865,
+      "n": 1
+     },
+     {
+      "x": 1136,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 7,
+    "bodySize": 14,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0.11,
+    "voidBox": {
+     "x": 0,
+     "y": 240,
+     "w": 300,
+     "h": 480
+    }
+   },
+   "app": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "dark": true,
+    "ground": "#111110",
+    "sidebar": {
+     "w": 232,
+     "tag": "aside",
+     "links": 9,
+     "share": 0.16
+    },
+    "topbar": null,
+    "canvas": {
+     "left": 70,
+     "right": 91
+    },
+    "hero": {
+     "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+     "words": 11,
+     "chars": 51,
+     "lines": 1,
+     "size": 32,
+     "vw": 2.2,
+     "font": "Instrument Serif",
+     "weight": 400,
+     "tracking": -0.01,
+     "leading": 1.15,
+     "top": 52,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 9,
+     "firstScreen": 7,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 10,
+     "radii": [
+      [
+       22,
+       9
+      ],
+      [
+       0,
+       1
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 3,
+     "tabularShare": 1,
+     "kpiMax": 14
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      19,
+      24,
+      32
+     ]
+    },
+    "title": {
+     "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+     "size": 32,
+     "top": 52
+    },
+    "colourShare": 0
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 3,
+   "filled": [
+    0.84,
+    0.74,
+    0.81
+   ],
+   "motion": {
+    "elements": 0,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 2086,
+     "screens": 2,
+     "words": 210,
+     "img": 0,
+     "video": 0,
+     "canvas": 2,
+     "svg": 8,
+     "sections": 5,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+     "words": 11,
+     "chars": 51,
+     "lines": 1,
+     "size": 30,
+     "vw": 3.9,
+     "font": "Instrument Serif",
+     "weight": 400,
+     "tracking": -0.01,
+     "leading": 1.15,
+     "top": 73,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+     "words": 11,
+     "lines": 1,
+     "size": 30,
+     "font": "Instrument Serif"
+    },
+    "headings": [
+     {
+      "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+      "words": 11,
+      "chars": 51,
+      "lines": 1,
+      "size": 30,
+      "vw": 3.9,
+      "font": "Instrument Serif",
+      "weight": 400,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.96,
+      "top": 73,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Instrument Sans",
+       "share": 0.94,
+       "mono": false
+      },
+      {
+       "family": "Instrument Serif",
+       "share": 0.06,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      19,
+      24,
+      30
+     ],
+     "sizeCount": 8,
+     "notLoaded": [],
+     "body": {
+      "font": "Instrument Sans",
+      "size": 15,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 9.1
+     },
+     "measureChars": 93,
+     "max": {
+      "size": 30,
+      "vw": 3.9,
+      "font": "Instrument Serif",
+      "text": "76.5 kg · faltam 1.5 kg para 75 · tendên"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.13,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#111110",
+     "bodyBgHsl": {
+      "h": 60,
+      "s": 0.03,
+      "l": 0.06
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#111110",
+       "top": 0,
+       "hsl": {
+        "h": 60,
+        "s": 0.03,
+        "l": 0.06
+       }
+      },
+      {
+       "color": "#1a1a19",
+       "top": 419,
+       "hsl": {
+        "h": 60,
+        "s": 0.02,
+        "l": 0.1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#ededea",
+       "share": 0.6
+      },
+      {
+       "color": "#b4b4b0",
+       "share": 0.36
+      },
+      {
+       "color": "#5fc77f",
+       "share": 0.02
+      },
+      {
+       "color": "#111110",
+       "share": 0.02
+      }
+     ],
+     "button": {
+      "bg": "#111110",
+      "hsl": {
+       "h": 60,
+       "s": 0.03,
+       "l": 0.06
+      },
+      "fg": "#ededea"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 5,
+     "inHero": 1,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Substituir 76.5"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 6,
+     "hairlineSamples": [
+      "header.sticky.top-0 768px",
+      "div.mt-5.border-t 694px",
+      "li.border-t.border-rule 694px",
+      "li.border-t.border-rule 694px",
+      "li.border-t.border-rule 694px"
+     ],
+     "outlinedBoxes": 9,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 9,
+     "boxRadius": 22,
+     "squareMedia": 2,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 4,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 158
+      }
+     ]
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 0,
+     "fixed": true,
+     "height": 0,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "instrument sans",
+     "instrument serif"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 2086,
+    "margins": {
+     "left": 16,
+     "right": 37
+    },
+    "sections": [
+     {
+      "sel": "dl.grid.grid-cols-2",
+      "tag": "dl",
+      "top": 158,
+      "height": 241,
+      "words": 35,
+      "media": 0,
+      "middle": 250,
+      "heading": {
+       "text": "76.7",
+       "size": 24,
+       "tag": "span"
+      },
+      "left": 33,
+      "right": 202,
+      "textLeft": 33,
+      "textRight": 202,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.grid-cols-1",
+      "tag": "div",
+      "top": 419,
+      "height": 411,
+      "words": 46,
+      "media": 0,
+      "middle": 62,
+      "heading": {
+       "text": "Caminho até à meta",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 37,
+      "right": 37,
+      "textLeft": 37,
+      "textRight": 37,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.panel.flex",
+      "tag": "section",
+      "top": 850,
+      "height": 482,
+      "words": 25,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Peso diário",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 37,
+      "right": 41,
+      "textLeft": 37,
+      "textRight": 53,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.grid-cols-1",
+      "tag": "div",
+      "top": 1351,
+      "height": 571,
+      "words": 54,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Análise",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 37,
+      "right": 37,
+      "textLeft": 37,
+      "textRight": 53,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+      "size": 30,
+      "top": 73,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 37,
+      "n": 5
+     },
+     {
+      "x": 16,
+      "n": 2
+     }
+    ],
+    "leftBlocks": 7,
+    "bodySize": 15,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "dark": true,
+    "ground": "#111110",
+    "sidebar": null,
+    "topbar": {
+     "h": 49
+    },
+    "canvas": {
+     "left": 15,
+     "right": 16
+    },
+    "hero": {
+     "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+     "words": 11,
+     "chars": 51,
+     "lines": 1,
+     "size": 30,
+     "vw": 3.9,
+     "font": "Instrument Serif",
+     "weight": 400,
+     "tracking": -0.01,
+     "leading": 1.15,
+     "top": 73,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 8,
+     "firstScreen": 6,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 9,
+     "radii": [
+      [
+       22,
+       8
+      ],
+      [
+       0,
+       1
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 3,
+     "tabularShare": 1,
+     "kpiMax": 14
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      19,
+      24,
+      30
+     ]
+    },
+    "title": {
+     "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+     "size": 30,
+     "top": 73
+    },
+    "colourShare": 0.001
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 3,
+   "filled": [
+    0.78,
+    0.89,
+    0.81
+   ],
+   "motion": {
+    "elements": 0,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 2200,
+     "screens": 2.6,
+     "words": 210,
+     "img": 0,
+     "video": 0,
+     "canvas": 2,
+     "svg": 8,
+     "sections": 5,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+     "words": 11,
+     "chars": 51,
+     "lines": 2,
+     "size": 26,
+     "vw": 6.7,
+     "font": "Instrument Serif",
+     "weight": 400,
+     "tracking": -0.01,
+     "leading": 1.15,
+     "top": 73,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+     "words": 11,
+     "lines": 2,
+     "size": 26,
+     "font": "Instrument Serif"
+    },
+    "headings": [
+     {
+      "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+      "words": 11,
+      "chars": 51,
+      "lines": 2,
+      "size": 26,
+      "vw": 6.7,
+      "font": "Instrument Serif",
+      "weight": 400,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 73,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "76.7kg",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Instrument Sans",
+      "weight": 400,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.36,
+      "top": 244,
+      "tag": "dd",
+      "kind": "statement"
+     },
+     {
+      "text": "−0.1kg",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Instrument Sans",
+      "weight": 400,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.18,
+      "top": 244,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "1.5kg",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Instrument Sans",
+      "weight": 400,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.36,
+      "top": 366,
+      "tag": "dd",
+      "kind": "statement"
+     },
+     {
+      "text": "−0.44kg/sem",
+      "words": 1,
+      "chars": 11,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Instrument Sans",
+      "weight": 400,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.32,
+      "top": 366,
+      "tag": "span",
+      "kind": "statement"
+     }
+    ],
+    "headingSummary": {
+     "count": 5,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 4,
+     "centered": 0,
+     "medianWords": 1,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Instrument Sans",
+       "share": 0.94,
+       "mono": false
+      },
+      {
+       "family": "Instrument Serif",
+       "share": 0.06,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      18,
+      22,
+      26
+     ],
+     "sizeCount": 7,
+     "notLoaded": [],
+     "body": {
+      "font": "Instrument Sans",
+      "size": 15,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 9.1
+     },
+     "measureChars": 43,
+     "max": {
+      "size": 26,
+      "vw": 6.7,
+      "font": "Instrument Serif",
+      "text": "76.5 kg · faltam 1.5 kg para 75 · tendên"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.13,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#111110",
+     "bodyBgHsl": {
+      "h": 60,
+      "s": 0.03,
+      "l": 0.06
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#111110",
+       "top": 0,
+       "hsl": {
+        "h": 60,
+        "s": 0.03,
+        "l": 0.06
+       }
+      },
+      {
+       "color": "#1a1a19",
+       "top": 469,
+       "hsl": {
+        "h": 60,
+        "s": 0.02,
+        "l": 0.1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#ededea",
+       "share": 0.6
+      },
+      {
+       "color": "#b4b4b0",
+       "share": 0.36
+      },
+      {
+       "color": "#5fc77f",
+       "share": 0.02
+      },
+      {
+       "color": "#111110",
+       "share": 0.02
+      }
+     ],
+     "button": {
+      "bg": "#111110",
+      "hsl": {
+       "h": 60,
+       "s": 0.03,
+       "l": 0.06
+      },
+      "fg": "#ededea"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 5,
+     "inHero": 1,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Substituir 76.5"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 6,
+     "hairlineSamples": [
+      "header.sticky.top-0 390px",
+      "div.mt-5.border-t 324px",
+      "li.border-t.border-rule 324px",
+      "li.border-t.border-rule 324px",
+      "li.border-t.border-rule 324px"
+     ],
+     "outlinedBoxes": 9,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 9,
+     "boxRadius": 22,
+     "squareMedia": 2,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 4,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 202
+      }
+     ]
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 0,
+     "fixed": true,
+     "height": 0,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "instrument sans",
+     "instrument serif"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 2200,
+    "margins": {
+     "left": 16,
+     "right": 22
+    },
+    "sections": [
+     {
+      "sel": "dl.grid.grid-cols-2",
+      "tag": "dl",
+      "top": 202,
+      "height": 252,
+      "words": 35,
+      "media": 0,
+      "middle": 59,
+      "heading": {
+       "text": "76.7",
+       "size": 22,
+       "tag": "span"
+      },
+      "left": 33,
+      "right": 32,
+      "textLeft": 33,
+      "textRight": 32,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.grid-cols-1",
+      "tag": "div",
+      "top": 469,
+      "height": 425,
+      "words": 46,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Caminho até à meta",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 33,
+      "right": 33,
+      "textLeft": 33,
+      "textRight": 33,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.panel.flex",
+      "tag": "section",
+      "top": 910,
+      "height": 488,
+      "words": 25,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Peso diário",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 33,
+      "right": 34,
+      "textLeft": 33,
+      "textRight": 47,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.grid-cols-1",
+      "tag": "div",
+      "top": 1414,
+      "height": 626,
+      "words": 54,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Análise",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 29,
+      "right": 29,
+      "textLeft": 33,
+      "textRight": 49,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+      "size": 26,
+      "top": 73,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 33,
+      "n": 5
+     },
+     {
+      "x": 16,
+      "n": 2
+     }
+    ],
+    "leftBlocks": 7,
+    "bodySize": 15,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "dark": true,
+    "ground": "#111110",
+    "sidebar": null,
+    "topbar": {
+     "h": 49
+    },
+    "canvas": {
+     "left": 15,
+     "right": 16
+    },
+    "hero": {
+     "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+     "words": 11,
+     "chars": 51,
+     "lines": 2,
+     "size": 26,
+     "vw": 6.7,
+     "font": "Instrument Serif",
+     "weight": 400,
+     "tracking": -0.01,
+     "leading": 1.15,
+     "top": 73,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 8,
+     "firstScreen": 5,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 10,
+     "radii": [
+      [
+       22,
+       8
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 3,
+     "tabularShare": 1,
+     "kpiMax": 14
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      18,
+      22,
+      26
+     ]
+    },
+    "title": {
+     "text": "76.5 kg · faltam 1.5 kg para 75 · tendência estável",
+     "size": 26,
+     "top": 73
+    },
+    "colourShare": 0.001
+   },
+   "consoleErrors": []
+  }
+ ],
+ "findings": [],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\after-dark-lose\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\after-dark-lose\\desktop-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\after-dark-lose\\tablet-fold.jpg",
+   "pages": [
+    "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\after-dark-lose\\tablet-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\after-dark-lose\\mobile-fold.jpg",
+   "pages": [
+    "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\after-dark-lose\\mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

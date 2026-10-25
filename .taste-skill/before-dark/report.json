@@ -1,0 +1,2056 @@
+{
+ "url": ".taste-skill/demo-dark/index.html",
+ "at": "2026-10-25T16:09:38.786Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 4,
+   "filled": [
+    0.8,
+    0.93,
+    0.54,
+    0.33
+   ],
+   "motion": {
+    "elements": 1,
+    "css": 0,
+    "transitions": 1,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 2921,
+     "screens": 3.2,
+     "words": 623,
+     "img": 0,
+     "video": 0,
+     "canvas": 2,
+     "svg": 63,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Weight Tracker",
+     "words": 2,
+     "chars": 14,
+     "lines": 1,
+     "size": 16,
+     "vw": 1.1,
+     "font": "Inter",
+     "weight": 700,
+     "tracking": -0.02,
+     "leading": 1.5,
+     "top": 16,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Weight Tracker",
+     "words": 2,
+     "lines": 1,
+     "size": 16,
+     "font": "Inter"
+    },
+    "headings": [],
+    "headingSummary": {
+     "count": 0,
+     "maxLines": 0,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Inter",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      12,
+      14,
+      16,
+      18,
+      24
+     ],
+     "sizeCount": 5,
+     "notLoaded": [],
+     "body": {
+      "font": "Inter",
+      "size": 14,
+      "leading": 1.63,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 12.9
+     },
+     "measureChars": 188,
+     "max": {
+      "size": 24,
+      "vw": 1.7,
+      "font": "Inter",
+      "text": "39"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.03,
+     "smallText": 9
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#1a1d2e",
+     "bodyBgHsl": {
+      "h": 231,
+      "s": 0.28,
+      "l": 0.14
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#1a1d2e",
+       "top": 0,
+       "hsl": {
+        "h": 231,
+        "s": 0.28,
+        "l": 0.14
+       }
+      },
+      {
+       "color": "#1e2130",
+       "top": 475,
+       "hsl": {
+        "h": 230,
+        "s": 0.23,
+        "l": 0.15
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#e2e8f0",
+       "share": 0.74
+      },
+      {
+       "color": "#94a3b8",
+       "share": 0.12
+      },
+      {
+       "color": "#4ade80",
+       "share": 0.09
+      },
+      {
+       "color": "#f87171",
+       "share": 0.05
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#23273a",
+      "hsl": {
+       "h": 230,
+       "s": 0.25,
+       "l": 0.18
+      },
+      "fg": "#e2e8f0"
+     },
+     "lowContrast": [
+      {
+       "text": "Save",
+       "ratio": 1.7,
+       "need": 4.5,
+       "size": 14,
+       "fg": "#ffffff",
+       "bg": "#4ade80"
+      },
+      {
+       "text": "7-day avg",
+       "ratio": 2.5,
+       "need": 4.5,
+       "size": 12,
+       "fg": "#ffffff",
+       "bg": "#60a5fa"
+      },
+      {
+       "text": "Weekly",
+       "ratio": 2.5,
+       "need": 4.5,
+       "size": 12,
+       "fg": "#ffffff",
+       "bg": "#60a5fa"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 4,
+     "radius": 8,
+     "height": 32,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Import",
+      "Export",
+      "Sign in",
+      "Save"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 1,
+     "shadowOverlay": 0,
+     "shadowSamples": [
+      "button.rounded-md.px-3 → rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+     ],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 12,
+     "hairlineSamples": [
+      "header.sticky.top-0 1440px",
+      "header.flex.items-center 1390px",
+      "header.flex.items-center 1390px",
+      "li.flex.items-start 1390px",
+      "li.flex.items-start 1390px"
+     ],
+     "outlinedBoxes": 13,
+     "dashed": 0,
+     "blurred": 1,
+     "roundedBoxes": 13,
+     "boxRadius": 14,
+     "squareMedia": 2,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 6,
+       "iconTopped": true,
+       "rounded": true,
+       "top": 81
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "canvas",
+      "ratio": 0.38
+     }
+    ],
+    "nav": {
+     "links": 0,
+     "fixed": true,
+     "height": 57,
+     "floatingPill": false,
+     "blur": true
+    },
+    "fontsLoaded": [
+     "inter"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 2921,
+    "margins": {
+     "left": 37,
+     "right": 37
+    },
+    "sections": [
+     {
+      "sel": "div.grid.gap-4",
+      "tag": "div",
+      "top": 217,
+      "height": 150,
+      "words": 19,
+      "media": 0,
+      "middle": 50,
+      "heading": {
+       "text": "Log weight",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 41,
+      "right": 41,
+      "textLeft": 41,
+      "textRight": 207,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 475,
+      "height": 537,
+      "words": 5,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Daily weight",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 37,
+      "right": 37,
+      "textLeft": 41,
+      "textRight": 56,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 1044,
+      "height": 462,
+      "words": 95,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Insights",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 65,
+      "right": 790,
+      "textLeft": 65,
+      "textRight": 790,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 1538,
+      "height": 497,
+      "words": 4,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Weekly average",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 37,
+      "right": 37,
+      "textLeft": 41,
+      "textRight": 56,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 2067,
+      "height": 395,
+      "words": 71,
+      "media": 0,
+      "middle": 813,
+      "heading": {
+       "text": "Daily log",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 37,
+      "right": 41,
+      "textLeft": 37,
+      "textRight": 53,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 2494,
+      "height": 403,
+      "words": 103,
+      "media": 0,
+      "middle": 590,
+      "heading": {
+       "text": "Weekly averages",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 41,
+      "right": 37,
+      "textLeft": 41,
+      "textRight": 37,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Weight Tracker",
+      "size": 16,
+      "top": 16,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 41,
+      "n": 5
+     },
+     {
+      "x": 65,
+      "n": 2
+     },
+     {
+      "x": 24,
+      "n": 1
+     },
+     {
+      "x": 996,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 9,
+    "bodySize": 14,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0.09,
+    "voidBox": {
+     "x": 180,
+     "y": 360,
+     "w": 960,
+     "h": 120
+    }
+   },
+   "app": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "dark": true,
+    "ground": "#1a1d2e",
+    "sidebar": null,
+    "topbar": {
+     "h": 57
+    },
+    "canvas": {
+     "left": 37,
+     "right": 37
+    },
+    "hero": {
+     "text": "Weight Tracker",
+     "words": 2,
+     "chars": 14,
+     "lines": 1,
+     "size": 16,
+     "vw": 1.1,
+     "font": "Inter",
+     "weight": 700,
+     "tracking": -0.02,
+     "leading": 1.5,
+     "top": 16,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 13,
+     "firstScreen": 9,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 13,
+     "radii": [
+      [
+       14,
+       13
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 8,
+     "hues": 2,
+     "samples": [
+      {
+       "hue": 211,
+       "size": 32,
+       "radius": "8px"
+      },
+      {
+       "hue": 211,
+       "size": 32,
+       "radius": "8px"
+      },
+      {
+       "hue": 211,
+       "size": 32,
+       "radius": "8px"
+      },
+      {
+       "hue": 142,
+       "size": 32,
+       "radius": "8px"
+      }
+     ]
+    },
+    "numbers": {
+     "cells": 18,
+     "leftAligned": 9,
+     "figures": 1,
+     "tabularShare": 0,
+     "kpiMax": 24
+    },
+    "rows": {
+     "count": 48,
+     "median": 42
+    },
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.14,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      12,
+      14,
+      16,
+      18,
+      24
+     ]
+    },
+    "title": {
+     "text": "Weight Tracker",
+     "size": 16,
+     "top": 16
+    },
+    "colourShare": 0.008
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 3,
+   "filled": [
+    0.83,
+    0.8,
+    0.48
+   ],
+   "motion": {
+    "elements": 1,
+    "css": 0,
+    "transitions": 1,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 3003,
+     "screens": 2.9,
+     "words": 623,
+     "img": 0,
+     "video": 0,
+     "canvas": 2,
+     "svg": 63,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Weight Tracker",
+     "words": 2,
+     "chars": 14,
+     "lines": 1,
+     "size": 16,
+     "vw": 2.1,
+     "font": "Inter",
+     "weight": 700,
+     "tracking": -0.02,
+     "leading": 1.5,
+     "top": 16,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Weight Tracker",
+     "words": 2,
+     "lines": 1,
+     "size": 16,
+     "font": "Inter"
+    },
+    "headings": [],
+    "headingSummary": {
+     "count": 0,
+     "maxLines": 0,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Inter",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      12,
+      14,
+      16,
+      18,
+      24
+     ],
+     "sizeCount": 5,
+     "notLoaded": [],
+     "body": {
+      "font": "Inter",
+      "size": 14,
+      "leading": 1.63,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 12.9
+     },
+     "measureChars": 92,
+     "max": {
+      "size": 24,
+      "vw": 3.1,
+      "font": "Inter",
+      "text": "39"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.03,
+     "smallText": 9
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#1a1d2e",
+     "bodyBgHsl": {
+      "h": 231,
+      "s": 0.28,
+      "l": 0.14
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#1a1d2e",
+       "top": 0,
+       "hsl": {
+        "h": 231,
+        "s": 0.28,
+        "l": 0.14
+       }
+      },
+      {
+       "color": "#1e2130",
+       "top": 709,
+       "hsl": {
+        "h": 230,
+        "s": 0.23,
+        "l": 0.15
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#e2e8f0",
+       "share": 0.74
+      },
+      {
+       "color": "#94a3b8",
+       "share": 0.12
+      },
+      {
+       "color": "#4ade80",
+       "share": 0.09
+      },
+      {
+       "color": "#f87171",
+       "share": 0.05
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#23273a",
+      "hsl": {
+       "h": 230,
+       "s": 0.25,
+       "l": 0.18
+      },
+      "fg": "#e2e8f0"
+     },
+     "lowContrast": [
+      {
+       "text": "Save",
+       "ratio": 1.7,
+       "need": 4.5,
+       "size": 14,
+       "fg": "#ffffff",
+       "bg": "#4ade80"
+      },
+      {
+       "text": "7-day avg",
+       "ratio": 2.5,
+       "need": 4.5,
+       "size": 12,
+       "fg": "#ffffff",
+       "bg": "#60a5fa"
+      },
+      {
+       "text": "Weekly",
+       "ratio": 2.5,
+       "need": 4.5,
+       "size": 12,
+       "fg": "#ffffff",
+       "bg": "#60a5fa"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 4,
+     "radius": 8,
+     "height": 32,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Import",
+      "Export",
+      "Sign in",
+      "Save"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 1,
+     "shadowOverlay": 0,
+     "shadowSamples": [
+      "button.rounded-md.px-3 → rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+     ],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 12,
+     "hairlineSamples": [
+      "header.sticky.top-0 768px",
+      "header.flex.items-center 718px",
+      "header.flex.items-center 718px",
+      "li.flex.items-start 718px",
+      "li.flex.items-start 718px"
+     ],
+     "outlinedBoxes": 13,
+     "dashed": 0,
+     "blurred": 1,
+     "roundedBoxes": 13,
+     "boxRadius": 14,
+     "squareMedia": 2,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 6,
+       "iconTopped": true,
+       "rounded": true,
+       "top": 81
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "canvas",
+      "ratio": 0.22
+     }
+    ],
+    "nav": {
+     "links": 0,
+     "fixed": true,
+     "height": 57,
+     "floatingPill": false,
+     "blur": true
+    },
+    "fontsLoaded": [
+     "inter"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 3003,
+    "margins": {
+     "left": 37,
+     "right": 37
+    },
+    "sections": [
+     {
+      "sel": "div.grid.grid-cols-2",
+      "tag": "div",
+      "top": 81,
+      "height": 220,
+      "words": 38,
+      "media": 0,
+      "middle": 156,
+      "heading": {
+       "text": "39",
+       "size": 24,
+       "tag": "span"
+      },
+      "left": 41,
+      "right": 95,
+      "textLeft": 41,
+      "textRight": 95,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.gap-4",
+      "tag": "div",
+      "top": 325,
+      "height": 292,
+      "words": 19,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Log weight",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 41,
+      "right": 41,
+      "textLeft": 41,
+      "textRight": 57,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 709,
+      "height": 477,
+      "words": 5,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Daily weight",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 37,
+      "right": 37,
+      "textLeft": 41,
+      "textRight": 56,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 1210,
+      "height": 462,
+      "words": 95,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Insights",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 65,
+      "right": 118,
+      "textLeft": 65,
+      "textRight": 118,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 1696,
+      "height": 437,
+      "words": 4,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Weekly average",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 37,
+      "right": 37,
+      "textLeft": 41,
+      "textRight": 56,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 2157,
+      "height": 395,
+      "words": 71,
+      "media": 0,
+      "middle": 283,
+      "heading": {
+       "text": "Daily log",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 37,
+      "right": 41,
+      "textLeft": 37,
+      "textRight": 53,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 2576,
+      "height": 403,
+      "words": 103,
+      "media": 0,
+      "middle": 173,
+      "heading": {
+       "text": "Weekly averages",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 41,
+      "right": 37,
+      "textLeft": 41,
+      "textRight": 37,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Weight Tracker",
+      "size": 16,
+      "top": 16,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 41,
+      "n": 5
+     },
+     {
+      "x": 63,
+      "n": 3
+     },
+     {
+      "x": 24,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 9,
+    "bodySize": 14,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "dark": true,
+    "ground": "#1a1d2e",
+    "sidebar": null,
+    "topbar": {
+     "h": 57
+    },
+    "canvas": {
+     "left": 37,
+     "right": 37
+    },
+    "hero": {
+     "text": "Weight Tracker",
+     "words": 2,
+     "chars": 14,
+     "lines": 1,
+     "size": 16,
+     "vw": 2.1,
+     "font": "Inter",
+     "weight": 700,
+     "tracking": -0.02,
+     "leading": 1.5,
+     "top": 16,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 13,
+     "firstScreen": 9,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 13,
+     "radii": [
+      [
+       14,
+       13
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 8,
+     "hues": 2,
+     "samples": [
+      {
+       "hue": 211,
+       "size": 32,
+       "radius": "8px"
+      },
+      {
+       "hue": 211,
+       "size": 32,
+       "radius": "8px"
+      },
+      {
+       "hue": 211,
+       "size": 32,
+       "radius": "8px"
+      },
+      {
+       "hue": 142,
+       "size": 32,
+       "radius": "8px"
+      }
+     ]
+    },
+    "numbers": {
+     "cells": 18,
+     "leftAligned": 9,
+     "figures": 1,
+     "tabularShare": 0,
+     "kpiMax": 24
+    },
+    "rows": {
+     "count": 48,
+     "median": 42
+    },
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.14,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      12,
+      14,
+      16,
+      18,
+      24
+     ]
+    },
+    "title": {
+     "text": "Weight Tracker",
+     "size": 16,
+     "top": 16
+    },
+    "colourShare": 0.017
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 4,
+   "filled": [
+    0.64,
+    0.74,
+    0.73,
+    0.51
+   ],
+   "motion": {
+    "elements": 2,
+    "css": 0,
+    "transitions": 2,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 445,
+     "h": 964
+    },
+    "page": {
+     "height": 3274,
+     "screens": 3.4,
+     "words": 617,
+     "img": 0,
+     "video": 0,
+     "canvas": 2,
+     "svg": 63,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Weight Tracker",
+     "words": 2,
+     "chars": 14,
+     "lines": 2,
+     "size": 16,
+     "vw": 3.6,
+     "font": "Inter",
+     "weight": 700,
+     "tracking": -0.02,
+     "leading": 1.5,
+     "top": 10,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Weight Tracker",
+     "words": 2,
+     "lines": 2,
+     "size": 16,
+     "font": "Inter"
+    },
+    "headings": [
+     {
+      "text": "39",
+      "words": 1,
+      "chars": 2,
+      "lines": 1,
+      "size": 24,
+      "vw": 5.4,
+      "font": "Inter",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.31,
+      "top": 130,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "81.6 kg",
+      "words": 2,
+      "chars": 7,
+      "lines": 1,
+      "size": 24,
+      "vw": 5.4,
+      "font": "Inter",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.31,
+      "top": 130,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "82.0 kg",
+      "words": 2,
+      "chars": 7,
+      "lines": 1,
+      "size": 24,
+      "vw": 5.4,
+      "font": "Inter",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.31,
+      "top": 246,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "82.0 kg",
+      "words": 2,
+      "chars": 7,
+      "lines": 1,
+      "size": 24,
+      "vw": 5.4,
+      "font": "Inter",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.31,
+      "top": 246,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "-4.07 kg",
+      "words": 2,
+      "chars": 8,
+      "lines": 1,
+      "size": 24,
+      "vw": 5.4,
+      "font": "Inter",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.31,
+      "top": 362,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "-0.48 kg/wk",
+      "words": 2,
+      "chars": 11,
+      "lines": 2,
+      "size": 24,
+      "vw": 5.4,
+      "font": "Inter",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.31,
+      "top": 362,
+      "tag": "span",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 6,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 2,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Inter",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      12,
+      14,
+      16,
+      18,
+      24
+     ],
+     "sizeCount": 5,
+     "notLoaded": [],
+     "body": {
+      "font": "Inter",
+      "size": 14,
+      "leading": 1.63,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 12.9
+     },
+     "measureChars": 40,
+     "max": {
+      "size": 24,
+      "vw": 5.4,
+      "font": "Inter",
+      "text": "39"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.02,
+     "smallText": 9
+    },
+    "eyebrows": [
+     {
+      "text": "Total entries",
+      "above": "39",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 12,
+      "top": 110
+     },
+     {
+      "text": "Latest",
+      "above": "81.6 kg",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 12,
+      "top": 110
+     },
+     {
+      "text": "This week",
+      "above": "82.0 kg",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 12,
+      "top": 226
+     },
+     {
+      "text": "vs last week",
+      "above": "82.0 kg",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 12,
+      "top": 226
+     },
+     {
+      "text": "Since week 1",
+      "above": "-4.07 kg",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 12,
+      "top": 342
+     },
+     {
+      "text": "Rate",
+      "above": "-0.48 kg/wk",
+      "upper": false,
+      "tracked": false,
+      "mono": false,
+      "pill": false,
+      "size": 12,
+      "top": 342
+     }
+    ],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#1a1d2e",
+     "bodyBgHsl": {
+      "h": 231,
+      "s": 0.28,
+      "l": 0.14
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#1a1d2e",
+       "top": 0,
+       "hsl": {
+        "h": 231,
+        "s": 0.28,
+        "l": 0.14
+       }
+      },
+      {
+       "color": "#1e2130",
+       "top": 1033,
+       "hsl": {
+        "h": 230,
+        "s": 0.23,
+        "l": 0.15
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#e2e8f0",
+       "share": 0.74
+      },
+      {
+       "color": "#94a3b8",
+       "share": 0.12
+      },
+      {
+       "color": "#4ade80",
+       "share": 0.09
+      },
+      {
+       "color": "#f87171",
+       "share": 0.04
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#4ade80",
+      "hsl": {
+       "h": 142,
+       "s": 0.69,
+       "l": 0.58
+      },
+      "fg": "#ffffff"
+     },
+     "lowContrast": [
+      {
+       "text": "Save",
+       "ratio": 1.7,
+       "need": 4.5,
+       "size": 14,
+       "fg": "#ffffff",
+       "bg": "#4ade80"
+      },
+      {
+       "text": "7-day avg",
+       "ratio": 2.5,
+       "need": 4.5,
+       "size": 12,
+       "fg": "#ffffff",
+       "bg": "#60a5fa"
+      },
+      {
+       "text": "Weekly",
+       "ratio": 2.5,
+       "need": 4.5,
+       "size": 12,
+       "fg": "#ffffff",
+       "bg": "#60a5fa"
+      }
+     ]
+    },
+    "buttons": {
+     "count": 1,
+     "inHero": 1,
+     "radius": 8,
+     "height": 40,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Save"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 1,
+     "shadowOverlay": 0,
+     "shadowSamples": [
+      "button.rounded-md.px-3 → rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+     ],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 12,
+     "hairlineSamples": [
+      "header.sticky.top-0 390px",
+      "header.flex.items-center 356px",
+      "header.flex.items-center 356px",
+      "li.flex.items-start 356px",
+      "li.flex.items-start 356px"
+     ],
+     "outlinedBoxes": 13,
+     "dashed": 0,
+     "blurred": 1,
+     "roundedBoxes": 13,
+     "boxRadius": 14,
+     "squareMedia": 2,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 5,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 1033
+      },
+      {
+       "count": 6,
+       "iconTopped": true,
+       "rounded": true,
+       "top": 93
+      }
+     ]
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 0,
+     "fixed": true,
+     "height": 69,
+     "floatingPill": false,
+     "blur": true
+    },
+    "fontsLoaded": [
+     "inter"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 445,
+     "h": 964
+    },
+    "pageH": 3274,
+    "margins": {
+     "left": 19,
+     "right": 80
+    },
+    "sections": [
+     {
+      "sel": "div.grid.grid-cols-2",
+      "tag": "div",
+      "top": 93,
+      "height": 366,
+      "words": 38,
+      "media": 0,
+      "middle": 87,
+      "heading": {
+       "text": "39",
+       "size": 24,
+       "tag": "span"
+      },
+      "left": 33,
+      "right": 125,
+      "textLeft": 33,
+      "textRight": 125,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.gap-4",
+      "tag": "div",
+      "top": 483,
+      "height": 416,
+      "words": 19,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Log weight",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 33,
+      "right": 88,
+      "textLeft": 33,
+      "textRight": 153,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 1033,
+      "height": 389,
+      "words": 5,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Daily weight",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 25,
+      "right": 80,
+      "textLeft": 33,
+      "textRight": 103,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 1446,
+      "height": 565,
+      "words": 95,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Insights",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 57,
+      "right": 94,
+      "textLeft": 57,
+      "textRight": 94,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 2035,
+      "height": 369,
+      "words": 4,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Weekly average",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 25,
+      "right": 80,
+      "textLeft": 33,
+      "textRight": 103,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 2428,
+      "height": 395,
+      "words": 53,
+      "media": 0,
+      "middle": 33,
+      "heading": {
+       "text": "Daily log",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 29,
+      "right": 88,
+      "textLeft": 29,
+      "textRight": 124,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.card.themed",
+      "tag": "section",
+      "top": 2847,
+      "height": 403,
+      "words": 57,
+      "media": 0,
+      "middle": 32,
+      "heading": {
+       "text": "Weekly averages",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 33,
+      "right": 84,
+      "textLeft": 33,
+      "textRight": 84,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Weight Tracker",
+      "size": 16,
+      "top": 10,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 33,
+      "n": 5
+     },
+     {
+      "x": 46,
+      "n": 2
+     },
+     {
+      "x": 16,
+      "n": 1
+     },
+     {
+      "x": 57,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 9,
+    "bodySize": 14,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 445,
+     "h": 964
+    },
+    "dark": true,
+    "ground": "#1a1d2e",
+    "sidebar": null,
+    "topbar": {
+     "h": 69
+    },
+    "canvas": {
+     "left": 19,
+     "right": 72
+    },
+    "hero": {
+     "text": "Weight Tracker",
+     "words": 2,
+     "chars": 14,
+     "lines": 2,
+     "size": 16,
+     "vw": 3.6,
+     "font": "Inter",
+     "weight": 700,
+     "tracking": -0.02,
+     "leading": 1.5,
+     "top": 10,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 13,
+     "firstScreen": 8,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 23,
+     "radii": [
+      [
+       14,
+       13
+      ],
+      [
+       0,
+       10
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 7,
+     "hues": 2,
+     "samples": [
+      {
+       "hue": 211,
+       "size": 32,
+       "radius": "8px"
+      },
+      {
+       "hue": 211,
+       "size": 32,
+       "radius": "8px"
+      },
+      {
+       "hue": 142,
+       "size": 32,
+       "radius": "8px"
+      },
+      {
+       "hue": 142,
+       "size": 32,
+       "radius": "8px"
+      }
+     ]
+    },
+    "numbers": {
+     "cells": 18,
+     "leftAligned": 9,
+     "figures": 1,
+     "tabularShare": 0,
+     "kpiMax": 24
+    },
+    "rows": {
+     "count": 48,
+     "median": 57
+    },
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.13,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      12,
+      14,
+      16,
+      18,
+      24
+     ]
+    },
+    "title": {
+     "text": "Weight Tracker",
+     "size": 16,
+     "top": 10
+    },
+    "colourShare": 0.048
+   },
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "FAIL",
+   "id": "contrast",
+   "width": 1440,
+   "message": "Unreadable text: \"Save\" 1.7:1 (#ffffff on #4ade80); \"7-day avg\" 2.5:1 (#ffffff on #60a5fa); \"Weekly\" 2.5:1 (#ffffff on #60a5fa)",
+   "fix": "Raise contrast to at least 4.5:1 for text, 3:1 for large display.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "icon-chips",
+   "width": 1440,
+   "message": "8 icons sit in tinted squares or circles in 2 different colours.",
+   "fix": "This is the commonest tell of a generated dashboard. Drop the tinted square: a KPI is a label and a number; an icon, if it helps, is plain and in the text colour.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "numeric-align",
+   "width": 1440,
+   "message": "9 of 18 numeric table cells are left-aligned.",
+   "fix": "Right-align numbers, amounts and percentages (and their column headers) so the digits line up.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\before-dark\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\before-dark\\desktop-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\before-dark\\tablet-fold.jpg",
+   "pages": [
+    "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\before-dark\\tablet-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\before-dark\\mobile-fold.jpg",
+   "pages": [
+    "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\before-dark\\mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

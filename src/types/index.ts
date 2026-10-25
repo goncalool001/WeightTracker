@@ -9,6 +9,10 @@ export interface WeightEntry {
   date: string;
   /** Body weight in kilograms. */
   weight: number;
+  /** Optional short note: what was different that day. */
+  note?: string;
+  /** Optional categories (ids from domain/categories) explaining the weigh-in. */
+  tags?: string[];
 }
 
 /** A Monday–Sunday week aggregate, derived from daily entries. */
@@ -62,17 +66,6 @@ export interface DeltaResult {
   direction: DeltaDirection;
 }
 
-/** Headline statistics shown in the metric cards. */
-export interface Metrics {
-  totalEntries: number;
-  latest: { weight: number; date: string } | null;
-  thisWeek: { average: number; measurements: number } | null;
-  vsLastWeek: { average: number; delta: number } | null;
-  sinceStart: { firstAverage: number; currentAverage: number; delta: number } | null;
-  /** Trend rate of change in kg per week, or `null` if < 2 entries. */
-  ratePerWeek: number | null;
-}
-
 /** A projection of when the goal weight will be reached. */
 export interface GoalProjection {
   /** ISO date the goal is projected to be hit. */
@@ -81,13 +74,53 @@ export interface GoalProjection {
   weeksRemaining: number;
 }
 
+/**
+ * A goal. `lose` and `gain` aim for a target weight (low = high = target);
+ * `maintain` keeps the weight inside a range (target = its midpoint). Goals
+ * are kept as a history: the current goal is the one with `endedOn === null`.
+ * Older saves used `reach` for both directions; it is converted on load.
+ */
+export type GoalMode = 'lose' | 'gain' | 'maintain';
+
+/** A goal mode as it may arrive from an older save or the cloud. */
+export type StoredGoalMode = GoalMode | 'reach';
+
+/** A goal as it may arrive from an older save or the cloud. */
+export type StoredGoal = Omit<Goal, 'mode'> & { mode: StoredGoalMode };
+
+export interface Goal {
+  mode: GoalMode;
+  target: number;
+  low: number;
+  high: number;
+  /** ISO date the goal was set. */
+  setOn: string;
+  /** ISO date the goal was replaced or removed; `null` while current. */
+  endedOn: string | null;
+}
+
+/** One calendar day of the rolling 7-day average. */
+export interface CalendarAveragePoint {
+  date: string;
+  /** Mean of the weigh-ins in [date − 6, date], or null when too few. */
+  average: number | null;
+  /** Weigh-ins inside the window. */
+  count: number;
+}
+
 /** Chart overlay for the daily view (mutually exclusive). */
 export type Overlay = 'trend' | 'ma';
 
 /** Time-range filter applied to charts and tables. */
-export type RangeKey = '7d' | '30d' | '90d' | 'ytd' | 'all';
+export type RangeKey = '7d' | '30d' | '90d' | 'ytd' | 'all' | 'custom';
 
-/** Icon identifier for an insight (mapped to a concrete icon in the UI). */
+/** The dates of a custom range, inclusive. */
+export interface CustomRange {
+  from: string;
+  to: string;
+}
+
+/** Icon identifier for an insight (kept for ordering and tests). */
 export type InsightIcon =
   | 'goalPace'
   | 'progress'
@@ -96,14 +129,17 @@ export type InsightIcon =
   | 'consistency'
   | 'best'
   | 'contribution'
-  | 'compare';
+  | 'compare'
+  | 'band'
+  | 'weekday'
+  | 'category';
 
-/** Sentiment of an insight, used for colour. */
+/** Sentiment of an insight. */
 export type InsightTone = 'good' | 'bad' | 'neutral' | 'accent';
 
 /**
  * A single generated insight, rendered as a row in the analytical feed. Each
- * is a full sentence surfacing a pattern not already shown by the KPI cards.
+ * is a full sentence surfacing a pattern not already shown by the KPI strip.
  */
 export interface Insight {
   id: string;
@@ -120,9 +156,6 @@ export type Theme = 'light' | 'dark';
 
 /** Locale-specific string factories for the Insight generator. */
 export interface InsightStrings {
-  reachedGoal: (g: string) => string;
-  goalPace: (g: string, date: string, weeks: number) => string;
-  progress: (pct: string, startKg: string, goalKg: string) => string;
   windowLost: (kg: string, days: number) => string;
   windowGained: (kg: string, days: number) => string;
   accelAccel: (recent: string, prior: string) => string;
@@ -132,6 +165,11 @@ export interface InsightStrings {
   contribution: (pct: string) => string;
   compareStronger: (thisRate: string, lastRate: string) => string;
   compareWeaker: (thisRate: string, lastRate: string) => string;
+  avgSpread: (lo: string, hi: string, days: number) => string;
+  /** A category (by its label) linked to heavier or lighter weigh-ins. */
+  categoryEffect: (label: string, kg: string, n: number, heavier: boolean) => string;
+  /** `day`: 0 = Sunday. `heavier`: above the week's own average. */
+  weekday: (day: number, kg: string, heavier: boolean) => string;
 }
 
 /** App language / UI locale. */
@@ -148,12 +186,22 @@ export interface SyncUser {
 /** The serialisable slice of app state that is persisted locally. */
 export interface PersistedState {
   entries: WeightEntry[];
-  goalWeight: number | null;
+  /** Goal history, oldest first. The current goal has `endedOn === null`. */
+  goals: StoredGoal[];
+  /**
+   * Legacy single goal weight (pre-history). Read on hydrate to migrate older
+   * saves and still written to the cloud for older clients.
+   */
+  goalWeight?: number | null;
   overlay: Overlay;
   range: RangeKey;
+  /** Dates for the `custom` range; kept when another range is picked. */
+  customRange?: CustomRange | null;
   granularity: Granularity;
   theme: Theme;
   locale: Locale;
-  showLabels: boolean;
   seeded: boolean;
 }
+
+/** Screens reachable from the navigation (hash routes). */
+export type Route = 'today' | 'log' | 'goal' | 'data';

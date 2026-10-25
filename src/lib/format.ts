@@ -1,34 +1,22 @@
-import { format, parseISO } from 'date-fns';
+/**
+ * Number formatting shared across the UI. One rule per metric: weights and
+ * weight changes at 1 decimal, rates (kg/week) at 2. Signs use a true minus
+ * so "−0.1" and "+0.1" line up in tabular figures.
+ */
 
-/** Formatting helpers shared across the UI. Pure, no side effects. */
-
-/** `2026-06-13` → `13 Jun 2026`. */
-export function formatDate(iso: string): string {
-  return format(parseISO(iso), 'dd MMM yyyy');
+/** `76.5` → "76.5". */
+export function kg(value: number): string {
+  return value.toFixed(1);
 }
 
-/** `2026-06-13` → `13 Jun 2026 (Saturday)`. */
-export function formatDateLong(iso: string): string {
-  return format(parseISO(iso), 'dd MMM yyyy (EEEE)');
+/** A signed change: "+0.4", "−1.2", "0.0". */
+export function signed(value: number, decimals = 1): string {
+  const fixed = Math.abs(value).toFixed(decimals);
+  if (Number(fixed) === 0) return (0).toFixed(decimals);
+  return `${value > 0 ? '+' : '−'}${fixed}`;
 }
 
-/** `2026-06-13` → `13 Jun`. */
-export function formatDateShort(iso: string): string {
-  return format(parseISO(iso), 'dd MMM');
-}
-
-/** A weight value with unit, e.g. `81.6 kg`. */
-export function formatWeight(value: number, decimals = 1): string {
-  return `${value.toFixed(decimals)} kg`;
-}
-
-/** A signed delta, e.g. `+0.30`, `-1.20`, `0.00`. */
-export function formatDelta(value: number, decimals = 2): string {
-  const sign = value > 0 ? '+' : '';
-  return `${sign}${value.toFixed(decimals)}`;
-}
-
-/** A signed delta with unit, e.g. `-1.20 kg`. */
-export function formatDeltaWeight(value: number, decimals = 2): string {
-  return `${formatDelta(value, decimals)} kg`;
+/** An unsigned magnitude: "1.5". */
+export function abs1(value: number): string {
+  return Math.abs(value).toFixed(1);
 }

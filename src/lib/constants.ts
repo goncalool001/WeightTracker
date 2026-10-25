@@ -1,5 +1,3 @@
-import type { RangeKey } from '@/types';
-
 /** App-wide constants. Centralised so there are no magic numbers in logic. */
 
 export const APP_TITLE = 'Weight Tracker';
@@ -8,10 +6,9 @@ export const APP_TITLE = 'Weight Tracker';
 export const SHEET_DAILY = 'Daily Data';
 export const SHEET_WEEKLY = 'Weekly Averages';
 
-/** Valid body-weight range for input (kg). */
-export const WEIGHT_MIN = 20;
-export const WEIGHT_MAX = 300;
-export const WEIGHT_STEP = 0.1;
+/** Valid body-weight range for input and import (kg). */
+export const WEIGHT_MIN = 30;
+export const WEIGHT_MAX = 250;
 
 /**
  * Dead-bands (kg) for classifying a change as a loss/gain rather than "flat".
@@ -21,11 +18,30 @@ export const DELTA_BAND = 0.05; // daily / weekly table cells
 export const RATE_BAND = 0.05; // rate metric (kg/week)
 export const WEEK_BAND = 0.01; // week-over-week metric & bar labels
 
-/** Max number of daily points before per-point value labels are hidden. */
-export const MAX_POINT_LABELS = 45;
-
 /** Window (days) for the moving-average overlay. */
 export const MA_WINDOW = 7;
+
+/**
+ * Fewest weigh-ins a 7-day calendar window needs before its average is drawn
+ * as a solid line. Windows with fewer are bridged with a dashed segment.
+ */
+export const MA_MIN_COUNT = 2;
+
+/** Change (kg) between consecutive 7-day averages read as "steady". */
+export const TREND_BAND = 0.2;
+
+/** Window (days) for the recent rate of change (kg/week). */
+export const RATE_WINDOW = 28;
+
+/** z for the projection range: about an 80% interval on the 28-day rate. */
+export const PROJECTION_Z = 1.28;
+
+/** Maintaining: warn when the 7-day average is this close (kg) to an edge… */
+export const DRIFT_NEAR = 0.3;
+/** …or when the recent rate would carry it past one within this many days… */
+export const DRIFT_DAYS = 21;
+/** …measured over this many days. */
+export const DRIFT_WINDOW = 14;
 
 /** Upper bound (weeks) for a sensible goal projection. */
 export const MAX_PROJECTION_WEEKS = 260;
@@ -33,20 +49,5 @@ export const MAX_PROJECTION_WEEKS = 260;
 /** LocalStorage/IndexedDB key for the persisted app state. */
 export const STORAGE_KEY = 'weight-tracker:state:v1';
 
-/** Time-range filter options shown in the UI, in display order. */
-export const RANGE_OPTIONS: { key: RangeKey; label: string }[] = [
-  { key: '7d', label: '7D' },
-  { key: '30d', label: '30D' },
-  { key: '90d', label: '90D' },
-  { key: 'ytd', label: 'YTD' },
-  { key: 'all', label: 'All' },
-];
-
-/** Human-readable phrase for each range, used in insight copy. */
-export const RANGE_LABELS: Record<RangeKey, string> = {
-  '7d': 'last 7 days',
-  '30d': 'last 30 days',
-  '90d': 'last 90 days',
-  ytd: 'this year',
-  all: 'all time',
-};
+/** How long the undo action stays on a toast (ms). */
+export const UNDO_MS = 8000;

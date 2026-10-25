@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { firebaseReady } from '@/data/firebase';
+import { DEV_SEED } from '@/data/devSeed';
 import {
   handleRedirectResult,
   mergeOnSignIn,
   onAuth,
   subscribeEntries,
-  subscribeGoal,
+  subscribeSettings,
 } from '@/data/sync';
 import { getT } from '@/i18n';
 import { useStore } from '@/store/useStore';
@@ -14,13 +15,15 @@ import { useStore } from '@/store/useStore';
 /**
  * Drives cloud sync: resolves any pending redirect sign-in, tracks auth state,
  * performs a one-time merge on sign-in, then keeps the store live with realtime
- * Firestore subscriptions. No-ops when Firebase isn't configured.
+ * Firestore subscriptions. No-ops when Firebase isn't configured, and in a
+ * dev-seed session (`?seed` on the dev server) so seed data never reaches the
+ * cloud and is never cleared by the signed-out rule.
  */
 export function useSync(): void {
   const unsubsRef = useRef<Array<() => void>>([]);
 
   useEffect(() => {
-    if (!firebaseReady) return;
+    if (!firebaseReady || DEV_SEED) return;
 
     const store = useStore.getState;
     const clearDataSubs = () => {
@@ -61,7 +64,7 @@ export function useSync(): void {
       });
 
       try {
-        await mergeOnSignIn(fbUser.uid, store().entries, store().goalWeight);
+        await mergeOnSignIn(fbUser.uid, store().entries, store().goals);
       } catch {
         toast.error(getT(store().locale).syncLocalFailed);
       }
@@ -70,7 +73,7 @@ export function useSync(): void {
         subscribeEntries(fbUser.uid, (entries) =>
           store().applyRemoteEntries(entries),
         ),
-        subscribeGoal(fbUser.uid, (goal) => store().applyRemoteGoal(goal)),
+        subscribeSettings(fbUser.uid, (settings) => store().applyRemoteSettings(settings)),
       );
       // No success toast here: this handler also fires on every reload when a
       // session is restored. The green confirmation is shown once, at the

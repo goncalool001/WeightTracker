@@ -1,108 +1,164 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /**
- * Theme tokens. Values are space-separated RGB channels so Tailwind's
- * `rgb(var(--x) / <alpha-value>)` opacity syntax works. The `.dark` class on
- * <html> swaps the palette; default (no class) is light.
+ * Theme tokens. Light is the editorial-greeting sheet; dark is a neutral
+ * (not navy) derivation with every text pair at 4.5:1 or more.
  */
 @layer base {
   :root {
-    --bg: 244 246 250; /* slate-50-ish */
-    --surface: 255 255 255;
-    --surface-2: 241 245 249;
-    --border: 226 232 240;
-    --text: 15 23 42; /* slate-900 */
-    --muted: 71 85 105; /* slate-600 — darker for AA contrast on light bg */
-    --accent: 37 99 235;
-    --accent-hover: 29 78 216;
-    --good: 21 128 61; /* green-700 — readable on white */
-    --bad: 220 38 38;
-
-    /* chart-specific (consumed in chartTokens.ts) */
-    --c-line: 37 99 235; /* blue-600 */
-    --c-trend: 194 65 12; /* orange-700 — stronger contrast on white */
-    --c-ma: 109 40 217; /* violet-700 */
-    --c-goal: 21 128 61; /* green-700 */
-    --c-plot-bg: 255 255 255;
-    --c-grid: 226 232 240;
-    --c-axis: 51 65 85; /* slate-700 — high-contrast axis text */
-    /* in-chart label chip (opaque, high-contrast in both themes) */
-    --c-label-bg: 255 255 255;
-    --c-label-text: 15 23 42;
-    --c-label-border: 203 213 225; /* slate-300 */
+    /* A grey ground with white panels on a 1px edge, so every block reads as
+       its own surface (the first light theme, white on #f9f9f9, was too flat). */
+    --ground: #ebebe6;
+    --surface: #ffffff;
+    --raised: #ffffff;
+    --active: #e6e6e1;
+    --nav-active: #ffffff;
+    --border: #dcdcd6;
+    --rule: #ecece8;
+    --control: #b9b9b3;
+    --cell-off: #8c8c86;
+    --text: #1f201d;
+    --muted: #5e5e5b;
+    --accent: #1b6e66;
+    --accent-soft: #e2efed;
+    --primary: #1f201d;
+    --on-primary: #ffffff;
+    --positive: #2e7d32;
+    --negative: #b42318;
+    --pill-positive-bg: #dcfae5;
+    --pill-positive-ink: #04250e;
+    --pill-negative-bg: #fdecea;
+    --pill-negative-ink: #7a1d14;
+    --pill-warning-bg: #fffbeb;
+    --pill-warning-ink: #92400e;
+    /* charts */
+    --chart-ink: #1f201d;
+    --chart-dot: #8c8c88;
+    --chart-grid: #ececea;
+    --bar-height: 0px;
+    color-scheme: light;
   }
 
   .dark {
-    --bg: 26 29 46; /* #1a1d2e — the desktop app background */
-    --surface: 30 33 48; /* #1e2130 */
-    --surface-2: 35 39 58; /* #23273a */
-    --border: 45 51 71; /* #2d3347 */
-    --text: 226 232 240; /* #e2e8f0 */
-    --muted: 148 163 184; /* #94a3b8 */
-    --accent: 96 165 250; /* #60a5fa */
-    --accent-hover: 59 130 246;
-    --good: 74 222 128; /* #4ade80 */
-    --bad: 248 113 113; /* #f87171 */
-
-    --c-line: 96 165 250;
-    --c-trend: 251 146 60; /* orange-400 — brighter on dark */
-    --c-ma: 167 139 250;
-    --c-goal: 74 222 128;
-    --c-plot-bg: 30 33 48;
-    --c-grid: 45 51 71;
-    --c-axis: 148 163 184;
-    --c-label-bg: 15 23 42; /* slate-900 */
-    --c-label-text: 241 245 249;
-    --c-label-border: 51 65 85; /* slate-700 */
+    --ground: #111110;
+    --surface: #1a1a19;
+    --raised: #111110;
+    --active: #2a2a28;
+    --nav-active: #2a2a28;
+    --border: #2c2c2a;
+    --rule: #222220;
+    --control: #4a4a47;
+    --cell-off: #6b6b66;
+    --text: #ededea;
+    --muted: #b4b4b0;
+    --accent: #5cb8ad;
+    --accent-soft: #1d3532;
+    --primary: #ededea;
+    --on-primary: #111110;
+    --positive: #5fc77f;
+    --negative: #ff8a7a;
+    --pill-positive-bg: #172a1d;
+    --pill-positive-ink: #5fc77f;
+    --pill-negative-bg: #2c1a18;
+    --pill-negative-ink: #ff8a7a;
+    --pill-warning-bg: #2b2213;
+    --pill-warning-ink: #f5c26b;
+    --chart-ink: #ededea;
+    --chart-dot: #85857f;
+    --chart-grid: #262624;
+    color-scheme: dark;
   }
 
   * {
-    border-color: rgb(var(--border));
+    border-color: var(--border);
   }
 
-  html,
-  body,
-  #root {
-    height: 100%;
+  html {
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    @apply bg-bg text-text font-sans antialiased;
+    @apply bg-ground font-sans text-text antialiased;
     margin: 0;
-    /* respect device safe areas on notched phones */
-    padding: env(safe-area-inset-top) env(safe-area-inset-right)
-      env(safe-area-inset-bottom) env(safe-area-inset-left);
+    font-size: 15px;
+    line-height: 1.5;
   }
 
-  /* Smooth theme transition */
-  body,
-  .themed {
-    transition:
-      background-color 0.3s ease,
-      color 0.3s ease,
-      border-color 0.3s ease;
+  @media (min-width: 1024px) {
+    body {
+      font-size: 14px;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--text);
   }
 }
 
 @layer components {
-  .card {
-    @apply rounded-xl border border-border bg-surface;
+  /** A panel: one step off the ground and a 1px edge, no shadow. */
+  .panel {
+    @apply rounded-card border border-border bg-surface;
   }
 
-  .scrollbar-thin {
-    scrollbar-width: thin;
-    scrollbar-color: rgb(var(--border)) transparent;
+  /** The one white inner card on the screen (the main chart). */
+  .inner-card {
+    @apply rounded-inner border border-border bg-raised;
   }
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
+
+  .num {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: rgb(var(--border));
-    border-radius: 4px;
+
+  /** A unit that stays glued to its number and reads one step quieter. */
+  .unit {
+    @apply text-muted;
+    font-size: 0.8em;
+    margin-left: 0.15em;
+  }
+
+  .field {
+    @apply h-11 w-full rounded-full border border-control bg-raised px-4 text-base text-text;
+    font-variant-numeric: tabular-nums;
+  }
+  .field::placeholder {
+    color: var(--muted);
+  }
+  .field:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+  .field[aria-invalid='true'] {
+    border-color: var(--negative);
+  }
+
+  .sr-only-focusable:not(:focus) {
+    @apply sr-only;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Toasts sit above the fixed log bar on phones and tablets. */
+@media (max-width: 1023px) {
+  [data-sonner-toaster][data-y-position='bottom'] {
+    bottom: calc(84px + env(safe-area-inset-bottom)) !important;
   }
 }

@@ -58,3 +58,25 @@ export function dayOffsets(isoDates: string[]): number[] {
   const base = Date.parse(isoDates[0]);
   return isoDates.map((d) => Math.round((Date.parse(d) - base) / MS_PER_DAY));
 }
+
+/**
+ * Least-squares fit plus the standard error of the slope, so a projection can
+ * say how sure it is. `slopeSE` is null with fewer than three points.
+ */
+export function linearFitWithError(
+  xs: number[],
+  ys: number[],
+): LinearFit & { slopeSE: number | null } {
+  const fit = linearFit(xs, ys);
+  const n = xs.length;
+  if (n < 3) return { ...fit, slopeSE: null };
+  const mx = xs.reduce((a, b) => a + b, 0) / n;
+  let sxx = 0;
+  let sse = 0;
+  for (let i = 0; i < n; i++) {
+    sxx += (xs[i] - mx) ** 2;
+    sse += (ys[i] - (fit.slope * xs[i] + fit.intercept)) ** 2;
+  }
+  if (sxx === 0) return { ...fit, slopeSE: null };
+  return { ...fit, slopeSE: Math.sqrt(sse / (n - 2) / sxx) };
+}

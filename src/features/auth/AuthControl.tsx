@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Cloud, CloudOff, LogIn, LogOut } from 'lucide-react';
+import { CloudOff, LogIn, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 import { firebaseReady } from '@/data/firebase';
 import { authErrorMessage, signInWithGoogle, signOutUser } from '@/data/sync';
@@ -7,27 +7,29 @@ import { useT } from '@/i18n';
 import { useStore } from '@/store/useStore';
 import { Button } from '@/components/ui/Button';
 
-/** Header control for cloud sync: sign in/out + a live sync indicator. */
+/**
+ * Account row for the sidebar and the phone menu: sign in when signed out;
+ * avatar, name, sync state and sign out when signed in. Renders a quiet
+ * "this device only" line when the build has no cloud sync.
+ */
 export function AuthControl() {
   const t = useT();
   const user = useStore((s) => s.user);
   const online = useStore((s) => s.online);
   const [busy, setBusy] = useState(false);
 
-  if (!firebaseReady) return null;
+  if (!firebaseReady) {
+    return <p className="text-[13px] text-muted">{t.localOnly}</p>;
+  }
 
   async function handleSignIn() {
     setBusy(true);
     try {
-      // Popup path resolves with the user → show success. Redirect path returns
-      // null (navigates away) and confirms on return load (see useSync).
+      // Popup path resolves with the user; the redirect path returns null
+      // (navigates away) and confirms on the return load (see useSync).
       const signedIn = await signInWithGoogle();
-      if (signedIn) {
-        const name = signedIn.displayName ?? signedIn.email ?? 'Google';
-        toast.success(t.signedInAs(name));
-      }
+      if (signedIn) toast.success(t.signedInAs(signedIn.displayName ?? signedIn.email ?? 'Google'));
     } catch (err) {
-      // Surface the real Firebase cause (also logged to the console).
       toast.error(authErrorMessage(err));
     } finally {
       setBusy(false);
@@ -36,50 +38,39 @@ export function AuthControl() {
 
   if (!user) {
     return (
-      <Button variant="secondary" size="sm" onClick={handleSignIn} disabled={busy}>
-        <LogIn className="h-4 w-4" />
-        <span className="hidden sm:inline">{t.signIn}</span>
+      <Button size="sm" onClick={handleSignIn} disabled={busy} className="w-full justify-start">
+        <LogIn className="h-4 w-4" aria-hidden="true" />
+        {t.signIn}
       </Button>
     );
   }
 
-  const initial = (user.name ?? user.email ?? '?').charAt(0).toUpperCase();
-
+  const who = user.name ?? user.email ?? 'Google';
   return (
-    <div className="flex items-center gap-2">
-      <span
-        title={online ? t.syncedMsg : t.offlineMsg}
-        className={online ? 'text-good' : 'text-muted'}
-      >
-        {online ? (
-          <Cloud className="h-4 w-4" />
-        ) : (
-          <CloudOff className="h-4 w-4" />
-        )}
-      </span>
-
+    <div className="flex min-w-0 items-center gap-3">
       {user.photoURL ? (
-        <img
-          src={user.photoURL}
-          alt=""
-          className="h-7 w-7 rounded-full"
-          referrerPolicy="no-referrer"
-        />
+        <img src={user.photoURL} alt="" className="h-8 w-8 shrink-0 rounded-full" referrerPolicy="no-referrer" />
       ) : (
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent/15 text-xs font-bold text-accent">
-          {initial}
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-active text-sm font-medium text-text">
+          {who.charAt(0).toUpperCase()}
         </span>
       )}
-
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm text-text">{who}</p>
+        <p className="flex items-center gap-1 text-[13px] text-muted">
+          {!online && <CloudOff className="h-3.5 w-3.5" aria-hidden="true" />}
+          {online ? t.syncedMsg : t.offlineMsg}
+        </p>
+      </div>
       <Button
         variant="ghost"
         size="sm"
         onClick={() => void signOutUser()}
         aria-label={t.signOut}
         title={t.signOut}
-        className="h-9 w-9 px-0"
+        className="w-11 px-0 lg:w-9"
       >
-        <LogOut className="h-4 w-4" />
+        <LogOut className="h-4 w-4" aria-hidden="true" />
       </Button>
     </div>
   );

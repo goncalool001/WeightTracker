@@ -1,11 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildInsights,
-  buildMetrics,
   classifyDelta,
   filterByRange,
   filterPeriodsByRange,
-  goalProjection,
   linearFit,
   monthlyPeriods,
   movingAverage,
@@ -148,6 +146,18 @@ describe('filterByRange', () => {
   });
 });
 
+describe('custom range', () => {
+  it('keeps the entries between the chosen dates, swapping them if backwards', () => {
+    expect(filterByRange(sample, 'custom', { from: '2026-04-24', to: '2026-04-26' }).map((e) => e.date)).toEqual([
+      '2026-04-24',
+      '2026-04-25',
+      '2026-04-26',
+    ]);
+    expect(filterByRange(sample, 'custom', { from: '2026-04-26', to: '2026-04-24' })).toHaveLength(3);
+    expect(filterByRange(sample, 'custom', null)).toHaveLength(sample.length);
+  });
+});
+
 describe('periods', () => {
   it('numbers weekly periods from the start of the dataset', () => {
     const wp = weeklyPeriods(sample);
@@ -178,56 +188,18 @@ describe('periods', () => {
 
 describe('buildInsights', () => {
   it('returns an empty list with too little data', () => {
-    expect(buildInsights({ entries: [], goal: null })).toEqual([]);
+    expect(buildInsights({ entries: [], goals: [] })).toEqual([]);
     expect(
-      buildInsights({ entries: [{ date: '2026-01-01', weight: 80 }], goal: null }),
+      buildInsights({ entries: [{ date: '2026-01-01', weight: 80 }], goals: [] }),
     ).toEqual([]);
   });
 
   it('surfaces the fastest-loss week and avoids restating KPIs', () => {
-    const insights = buildInsights({ entries: sample, goal: null });
+    const insights = buildInsights({ entries: sample, goals: [] });
     const ids = insights.map((i) => i.id);
     expect(ids).toContain('best');
-    // Should not re-emit KPI-style cards by their old ids.
-    expect(ids).not.toContain('trend');
-    expect(ids).not.toContain('start');
-  });
-
-  it('emits goal pace + clamped progress when a goal is set', () => {
-    const insights = buildInsights({ entries: sample, goal: 80 });
-    const ids = insights.map((i) => i.id);
-    expect(ids).toContain('goal-pace');
-
-    const progress = insights.find((i) => i.id === 'progress');
-    expect(progress).toBeDefined();
-    expect(progress!.progress).toBeGreaterThanOrEqual(0);
-    expect(progress!.progress).toBeLessThanOrEqual(100);
-  });
-});
-
-describe('buildMetrics', () => {
-  it('computes latest, weekly and rate', () => {
-    const m = buildMetrics(sample, weeklyAverages(sample));
-    expect(m.totalEntries).toBe(8);
-    expect(m.latest).toEqual({ weight: 85.1, date: '2026-04-30' });
-    expect(m.ratePerWeek).not.toBeNull();
-    expect(m.vsLastWeek).not.toBeNull();
-  });
-});
-
-describe('goalProjection', () => {
-  it('projects a date when trending toward a reachable goal', () => {
-    const declining: WeightEntry[] = Array.from({ length: 21 }, (_, i) => ({
-      date: `2026-0${1 + Math.floor(i / 7)}-${String((i % 7) * 4 + 1).padStart(2, '0')}`,
-      weight: 90 - i * 0.3,
-    }));
-    const weekly = weeklyAverages(declining);
-    const proj = goalProjection(weekly, 80);
-    expect(proj).not.toBeNull();
-    expect(proj!.weeksRemaining).toBeGreaterThan(0);
-  });
-
-  it('returns null without a goal', () => {
-    expect(goalProjection(weeklyAverages(sample), null)).toBeNull();
+    // Goal pace and progress live in the KPI strip and the ruler now.
+    expect(ids).not.toContain('goal-pace');
+    expect(ids).not.toContain('progress');
   });
 });

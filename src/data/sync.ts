@@ -19,14 +19,20 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import { auth, db } from './firebase';
-import type { WeightEntry } from '@/types';
+import { currentGoal, legacyGoalWeight } from '@/domain/goals';
+import { cleanNote } from '@/domain/entries';
+import { cleanTags } from '@/domain/categories';
+import type { Goal, StoredGoal, WeightEntry } from '@/types';
 
 /**
  * Cloud-sync layer over Firebase Auth + Firestore.
  *
  * Data model (per signed-in user):
- *   users/{uid}/entries/{YYYY-MM-DD}  → { date, weight, updatedAt }
- *   users/{uid}/meta/settings         → { goalWeight, updatedAt }
+ *   users/{uid}/entries/{YYYY-MM-DD}  → { date, weight, note, tags, updatedAt }
+ *   users/{uid}/meta/settings         → { goals, goalWeight, updatedAt }
+ *
+ * `goals` is the goal history; `goalWeight` (the current target, or a band's
+ * ceiling) is still written so older clients keep showing a goal line.
  *
  * This module is store-agnostic: it takes plain data and `uid`s, and exposes
  * subscriptions whose callbacks the UI layer wires into the store.
@@ -62,17 +68,17 @@ export async function handleRedirectResult(): Promise<User | null> {
   try {
     const result = await getRedirectResult(auth);
     return result?.user ?? null;
-  } catch (err: any) {
+  } catch (err) {
     // auth/credential-already-in-use, auth/cancelled-popup-request, etc.
     // onAuthStateChanged will still fire with the current user if one is
     // already signed in, so we only need to surface unexpected errors.
-    const code: string = err?.code ?? '';
+    const code: string = (err as { code?: string })?.code ?? '';
     if (
       code !== 'auth/credential-already-in-use' &&
       code !== 'auth/cancelled-popup-request' &&
       code !== 'auth/popup-closed-by-user'
     ) {
-      console.error('[Auth] getRedirectResult error:', code, err?.message);
+      console.error('[Auth] getRedirectResult error:', code, (err as Error)?.message);
     }
     return null;
   }
@@ -176,21 +182,50 @@ export function subscribeEntries(
     snap.forEach((d) => {
       const weight = Number(d.get('weight'));
       const date = (d.get('date') as string) ?? d.id;
-      if (date && !Number.isNaN(weight)) entries.push({ date, weight });
+      const note = cleanNote(d.get('note'));
+      const tags = cleanTags(d.get('tags'));
+      if (date && !Number.isNaN(weight)) {
+        const e: WeightEntry = { date, weight };
+        if (note) e.note = note;
+        if (tags) e.tags = tags;
+        entries.push(e);
+      }
     });
     cb(entries);
   });
 }
 
-/** Subscribe to the user's goal weight. */
-export function subscribeGoal(
+/** Cloud goal settings: the history when present, else the legacy weight. */
+export interface RemoteSettings {
+  goals: StoredGoal[] | null;
+  goalWeight: number | null;
+}
+
+function isGoal(g: unknown): g is StoredGoal {
+  const x = g as StoredGoal;
+  return (
+    !!x &&
+    ['reach', 'lose', 'gain', 'maintain'].includes(x.mode) &&
+    typeof x.target === 'number' &&
+    typeof x.low === 'number' &&
+    typeof x.high === 'number' &&
+    typeof x.setOn === 'string'
+  );
+}
+
+/** Subscribe to the user's goal settings. */
+export function subscribeSettings(
   uid: string,
-  cb: (goal: number | null) => void,
+  cb: (settings: RemoteSettings) => void,
 ): () => void {
   if (!db) return noop;
   return onSnapshot(settingsDoc(uid), (snap) => {
-    const value = snap.exists() ? snap.get('goalWeight') : null;
-    cb(value == null ? null : Number(value));
+    const raw = snap.exists() ? snap.get('goals') : null;
+    const goals = Array.isArray(raw)
+      ? raw.filter(isGoal).map((g) => ({ ...g, endedOn: g.endedOn ?? null }))
+      : null;
+    const w = snap.exists() ? snap.get('goalWeight') : null;
+    cb({ goals, goalWeight: w == null ? null : Number(w) });
   });
 }
 
@@ -201,6 +236,8 @@ export async function pushEntry(uid: string, entry: WeightEntry): Promise<void> 
   await setDoc(entryDoc(uid, entry.date), {
     date: entry.date,
     weight: entry.weight,
+    note: entry.note ?? null,
+    tags: entry.tags ?? [],
     updatedAt: serverTimestamp(),
   });
 }
@@ -226,34 +263,36 @@ export async function pushReplace(
     batch.set(entryDoc(uid, e.date), {
       date: e.date,
       weight: e.weight,
+      note: e.note ?? null,
+      tags: e.tags ?? [],
       updatedAt: serverTimestamp(),
     });
   }
   await batch.commit();
 }
 
-export async function pushGoal(
-  uid: string,
-  goal: number | null,
-): Promise<void> {
+export async function pushGoals(uid: string, goals: Goal[]): Promise<void> {
   if (!db) return;
   await setDoc(
     settingsDoc(uid),
-    { goalWeight: goal, updatedAt: serverTimestamp() },
+    {
+      goals,
+      goalWeight: legacyGoalWeight(currentGoal(goals)),
+      updatedAt: serverTimestamp(),
+    },
     { merge: true },
   );
 }
 
 /**
  * One-time reconciliation when a device signs in: upload any local entries that
- * aren't in the cloud yet (e.g. the seeded history on first link), and seed the
- * goal if the cloud has none. The cloud value wins on per-date conflicts; the
+ * aren't in the cloud yet, and upload the goal history if the cloud has none. The cloud value wins on per-date conflicts; the
  * realtime subscription then delivers the merged dataset.
  */
 export async function mergeOnSignIn(
   uid: string,
   localEntries: WeightEntry[],
-  localGoal: number | null,
+  localGoals: Goal[],
 ): Promise<void> {
   if (!db) return;
   const remote = await getDocs(entriesCol(uid));
@@ -267,6 +306,8 @@ export async function mergeOnSignIn(
       batch.set(entryDoc(uid, e.date), {
         date: e.date,
         weight: e.weight,
+        note: e.note ?? null,
+        tags: e.tags ?? [],
         updatedAt: serverTimestamp(),
       });
     }
@@ -274,7 +315,7 @@ export async function mergeOnSignIn(
   }
 
   const settings = await getDoc(settingsDoc(uid));
-  if (!settings.exists() && localGoal != null) {
-    await pushGoal(uid, localGoal);
+  if (!settings.exists() && localGoals.length > 0) {
+    await pushGoals(uid, localGoals);
   }
 }

@@ -5,9 +5,10 @@ import {
   parseISO,
   startOfMonth,
   startOfWeek,
-  subDays,
 } from 'date-fns';
+import { rangeBounds } from './range';
 import type {
+  CustomRange,
   Granularity,
   PeriodAverage,
   RangeKey,
@@ -114,27 +115,17 @@ export function periodAverages(
 }
 
 /**
- * Filter already-numbered periods down to those overlapping the active range,
- * anchored on the latest entry. Numbers are preserved (dataset-based), so a
- * filtered view still shows e.g. "Week #7".
+ * Filter already-numbered periods down to those overlapping the active range.
+ * Numbers are preserved (dataset-based), so a filtered view still shows e.g.
+ * "Week 7".
  */
 export function filterPeriodsByRange(
   periods: PeriodAverage[],
   range: RangeKey,
   entries: WeightEntry[],
+  custom?: CustomRange | null,
 ): PeriodAverage[] {
-  if (range === 'all' || periods.length === 0 || entries.length === 0) {
-    return periods;
-  }
-  const latest = parseISO(entries[entries.length - 1].date);
-
-  if (range === 'ytd') {
-    const year = latest.getFullYear();
-    return periods.filter((p) => parseISO(p.start).getFullYear() === year);
-  }
-
-  const days = range === '7d' ? 7 : range === '30d' ? 30 : 90;
-  const cutoff = subDays(latest, days - 1);
-  // Keep any period that overlaps the window (its end is on/after the cutoff).
-  return periods.filter((p) => parseISO(p.end) >= cutoff);
+  const b = rangeBounds(entries, range, custom);
+  if (!b) return periods;
+  return periods.filter((p) => p.end >= b.from && p.start <= b.to);
 }

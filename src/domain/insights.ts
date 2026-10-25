@@ -1,8 +1,11 @@
 import { differenceInCalendarDays, format, parseISO } from 'date-fns';
-import { goalProjection } from './projection';
-import { weeklyAverages } from './weekly';
+import { signed } from '@/lib/format';
+import { daysBetween, rollingCalendarAverage, weekdayOffsets } from './calendar';
+import { currentGoal } from './goals';
 import { monthlyPeriods, weeklyPeriods } from './periods';
-import type { Insight, InsightStrings, WeightEntry } from '@/types';
+import { categoryEffects } from './effects';
+import type { CategoryId } from './categories';
+import type { Goal, Insight, InsightStrings, WeightEntry } from '@/types';
 
 /**
  * Insight generator. Each insight is a full-sentence observation that surfaces
@@ -13,17 +16,12 @@ import type { Insight, InsightStrings, WeightEntry } from '@/types';
 
 /** Fallback English string factories (used by tests and as default). */
 const defaultStrings: InsightStrings = {
-  reachedGoal: (g) => `You've reached your goal of ${g} kg — nice work.`,
-  goalPace: (g, date, weeks) =>
-    `At your current pace, you'll reach ${g} kg around ${date} — about ${weeks} week${weeks === 1 ? '' : 's'} away.`,
-  progress: (pct, start, goal) =>
-    `You're ${pct}% of the way from your start (${start} kg) to your goal (${goal} kg).`,
   windowLost: (kg, days) => `You've lost ${kg} over the last ${days} days.`,
   windowGained: (kg, days) => `You've gained ${kg} over the last ${days} days.`,
   accelAccel: (recent, prior) =>
-    `Your weight loss is accelerating — ${recent} in the last 30 days vs ${prior} the 30 days before.`,
+    `Your loss is speeding up: ${recent} in the last 30 days against ${prior} in the 30 before.`,
   accelSlow: (recent, prior) =>
-    `Your weight loss is slowing — ${recent} in the last 30 days vs ${prior} the 30 days before.`,
+    `Your loss is slowing: ${recent} in the last 30 days against ${prior} in the 30 before.`,
   consistency: (drops, m) =>
     `Weight decreased in ${drops} of your last ${m} measurements.`,
   bestWeek: (start, end, kg) =>
@@ -34,6 +32,12 @@ const defaultStrings: InsightStrings = {
     `This month's pace (${thisRate} kg/wk) is stronger than last month's (${lastRate} kg/wk).`,
   compareWeaker: (thisRate, lastRate) =>
     `This month's pace (${thisRate} kg/wk) is weaker than last month's (${lastRate} kg/wk).`,
+  categoryEffect: (label, kg, n, heavier) =>
+    `After a day with "${label}" you weigh ${kg} kg ${heavier ? 'more' : 'less'} on average (${n} weigh-ins).`,
+  weekday: (day, kg, heavier) =>
+    `On ${['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays'][day]} you weigh ${kg} kg ${heavier ? 'more' : 'less'} than the rest of that week, on average.`,
+  avgSpread: (lo, hi, days) =>
+    `Your 7-day average stayed between ${lo} and ${hi} kg over the last ${days} days.`,
 };
 
 const defaultFmtDate = (iso: string) =>
@@ -41,7 +45,10 @@ const defaultFmtDate = (iso: string) =>
 
 export interface InsightInput {
   entries: WeightEntry[];
-  goal: number | null;
+  /** Goal history; the current goal decides which insights apply. */
+  goals: Goal[];
+  /** Category label for the category insight; without it that insight is skipped. */
+  catLabel?: (id: CategoryId) => string;
   /** Locale-specific string factories. Defaults to English. */
   strings?: InsightStrings;
   /** Locale-aware ISO→human date formatter. Defaults to English. */
@@ -96,7 +103,8 @@ function absKg(n: number): string {
 export function buildInsights(input: InsightInput): Insight[] {
   const {
     entries,
-    goal,
+    goals,
+    catLabel,
     strings: s = defaultStrings,
     fmtDate = defaultFmtDate,
   } = input;
@@ -112,46 +120,55 @@ export function buildInsights(input: InsightInput): Insight[] {
     parseISO(entries[0].date),
   );
 
-  const weekly = weeklyAverages(entries);
+  const goal = currentGoal(goals);
 
-  // 1 · Goal pace / ETA
-  if (goal != null) {
-    const reached =
-      (start > goal && current <= goal) || (start < goal && current >= goal);
-    if (reached) {
+  // 0 · The category most clearly linked to the scale, once it is reliable
+  // (10+ weigh-ins and a range that excludes zero). See effects.ts.
+  if (catLabel) {
+    const f = categoryEffects(entries).finding;
+    if (f && f.effect != null) {
       insights.push({
-        id: 'goal-reached',
-        icon: 'goalPace',
-        tone: 'good',
-        text: s.reachedGoal(goal.toFixed(1)),
+        id: 'category',
+        icon: 'category',
+        tone: 'neutral',
+        text: s.categoryEffect(catLabel(f.id), Math.abs(f.effect).toFixed(1), f.n, f.effect > 0),
       });
-    } else {
-      const projection = goalProjection(weekly, goal);
-      if (projection) {
-        const weeks = Math.round(projection.weeksRemaining);
-        insights.push({
-          id: 'goal-pace',
-          icon: 'goalPace',
-          tone: 'accent',
-          text: s.goalPace(goal.toFixed(1), fmtDate(projection.date), weeks),
-        });
-      }
     }
   }
 
-  // 2 · Progress toward goal (%) with a bar
-  if (goal != null && start !== goal) {
-    const pct = Math.min(
-      100,
-      Math.max(0, ((start - current) / (start - goal)) * 100),
-    );
-    if (pct > 0 && pct < 100) {
+  // 1 · Maintenance: how far the 7-day average moved in the last 4 weeks
+  // (the share of weigh-ins in the band is on the Today ruler)
+  if (goal?.mode === 'maintain') {
+    const avgs = rollingCalendarAverage(entries)
+      .slice(-28)
+      .map((p) => p.average)
+      .filter((v): v is number => v != null);
+    if (avgs.length >= 14) {
       insights.push({
-        id: 'progress',
-        icon: 'progress',
-        tone: 'accent',
-        text: s.progress(pct.toFixed(0), start.toFixed(1), goal.toFixed(1)),
-        progress: pct,
+        id: 'spread',
+        icon: 'band',
+        tone: 'neutral',
+        text: s.avgSpread(Math.min(...avgs).toFixed(1), Math.max(...avgs).toFixed(1), 28),
+      });
+    }
+  }
+
+  // 2 · Weekday pattern: one weekday that sits clearly off its own week.
+  // Needs 8 weeks of history and 6 samples of that weekday; small offsets
+  // are day-to-day noise and are not reported.
+  if (daysBetween(entries[0].date, entries[entries.length - 1].date) >= 56) {
+    const days = weekdayOffsets(entries);
+    let best = -1;
+    days.forEach((d, i) => {
+      if (d.n >= 6 && (best < 0 || Math.abs(d.offset) > Math.abs(days[best].offset))) best = i;
+    });
+    if (best >= 0 && Math.abs(days[best].offset) >= 0.3) {
+      const off = days[best].offset;
+      insights.push({
+        id: 'weekday',
+        icon: 'weekday',
+        tone: 'neutral',
+        text: s.weekday(best, Math.abs(off).toFixed(1), off > 0),
       });
     }
   }
@@ -275,12 +292,12 @@ export function buildInsights(input: InsightInput): Insight[] {
             tone: stronger ? 'good' : 'neutral',
             text: stronger
               ? s.compareStronger(
-                  thisRate.toFixed(2),
-                  lastRate.toFixed(2),
+                  signed(thisRate, 2),
+                  signed(lastRate, 2),
                 )
               : s.compareWeaker(
-                  thisRate.toFixed(2),
-                  lastRate.toFixed(2),
+                  signed(thisRate, 2),
+                  signed(lastRate, 2),
                 ),
           });
         }

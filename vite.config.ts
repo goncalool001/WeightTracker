@@ -21,9 +21,9 @@ export default defineConfig({
       manifest: {
         name: 'Weight Tracker',
         short_name: 'Weight',
-        description: 'Track your weight, trends and goals — offline-first.',
-        theme_color: '#1a1d2e',
-        background_color: '#1a1d2e',
+        description: 'Track your weight, trends and goals. Offline-first.',
+        theme_color: '#ebebe6',
+        background_color: '#ebebe6',
         display: 'standalone',
         start_url: './',
         scope: './',
@@ -56,5 +56,6 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
+    include: ['src/**/*.test.ts'],
   },
 });

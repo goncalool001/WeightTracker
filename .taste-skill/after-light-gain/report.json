@@ -1,0 +1,1650 @@
+{
+ "url": ".taste-skill/demo-light/index.html",
+ "at": "2026-10-25T18:55:58.912Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.57,
+    0.68
+   ],
+   "motion": {
+    "elements": 21,
+    "css": 0,
+    "transitions": 21,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 1515,
+     "screens": 1.7,
+     "words": 214,
+     "img": 0,
+     "video": 0,
+     "canvas": 2,
+     "svg": 8,
+     "sections": 5,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "chars": 39,
+     "lines": 1,
+     "size": 32,
+     "vw": 2.2,
+     "font": "Instrument Serif",
+     "weight": 400,
+     "tracking": -0.01,
+     "leading": 1.15,
+     "top": 52,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "lines": 1,
+     "size": 32,
+     "font": "Instrument Serif"
+    },
+    "headings": [
+     {
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+      "words": 10,
+      "chars": 39,
+      "lines": 1,
+      "size": 32,
+      "vw": 2.2,
+      "font": "Instrument Serif",
+      "weight": 400,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.74,
+      "top": 52,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Instrument Sans",
+       "share": 0.96,
+       "mono": false
+      },
+      {
+       "family": "Instrument Serif",
+       "share": 0.04,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      19,
+      24,
+      32
+     ],
+     "sizeCount": 8,
+     "notLoaded": [],
+     "body": {
+      "font": "Instrument Sans",
+      "size": 14,
+      "leading": 1.43,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 16.4
+     },
+     "measureChars": 69,
+     "max": {
+      "size": 32,
+      "vw": 2.2,
+      "font": "Instrument Serif",
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.12,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ebebe6",
+     "bodyBgHsl": {
+      "h": 60,
+      "s": 0.11,
+      "l": 0.91
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ebebe6",
+       "top": 0,
+       "hsl": {
+        "h": 60,
+        "s": 0.11,
+        "l": 0.91
+       }
+      },
+      {
+       "color": "#ffffff",
+       "top": 699,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#1f201d",
+       "share": 0.56
+      },
+      {
+       "color": "#5e5e5b",
+       "share": 0.41
+      },
+      {
+       "color": "#b42318",
+       "share": 0.02
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#1f201d"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 9,
+     "inHero": 6,
+     "radius": "pill",
+     "height": 36,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Today",
+      "Entries",
+      "Goal",
+      "Data",
+      "Add a note"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 5,
+     "hairlineSamples": [
+      "aside.sticky.top-0 232px",
+      "div.mt-5.border-t 755px",
+      "li.border-t.border-rule 484px",
+      "li.border-t.border-rule 484px",
+      "li.border-t.border-rule 484px"
+     ],
+     "outlinedBoxes": 10,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 10,
+     "boxRadius": 22,
+     "squareMedia": 2,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 4,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 137
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "canvas",
+      "ratio": 0.1
+     }
+    ],
+    "nav": {
+     "links": 2,
+     "fixed": true,
+     "height": 900,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "instrument sans",
+     "instrument serif"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 1515,
+    "margins": {
+     "left": 28,
+     "right": 91
+    },
+    "sections": [
+     {
+      "sel": "dl.grid.grid-cols-2",
+      "tag": "dl",
+      "top": 137,
+      "height": 128,
+      "words": 35,
+      "media": 0,
+      "middle": 211,
+      "heading": {
+       "text": "76.7",
+       "size": 24,
+       "tag": "span"
+      },
+      "left": 319,
+      "right": 149,
+      "textLeft": 319,
+      "textRight": 149,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.grid-cols-1",
+      "tag": "div",
+      "top": 281,
+      "height": 402,
+      "words": 66,
+      "media": 0,
+      "middle": 79,
+      "heading": {
+       "text": "Way to the goal",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 323,
+      "right": 91,
+      "textLeft": 323,
+      "textRight": 108,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.panel.flex",
+      "tag": "section",
+      "top": 699,
+      "height": 478,
+      "words": 21,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Daily weight",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 323,
+      "right": 95,
+      "textLeft": 323,
+      "textRight": 107,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.grid-cols-1",
+      "tag": "div",
+      "top": 1193,
+      "height": 258,
+      "words": 53,
+      "media": 1,
+      "middle": 82,
+      "heading": {
+       "text": "Insights",
+       "size": 14,
+       "tag": "h2"
+      },
+      "left": 323,
+      "right": 91,
+      "textLeft": 323,
+      "textRight": 107,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+      "size": 32,
+      "top": 52,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 323,
+      "n": 3
+     },
+     {
+      "x": 302,
+      "n": 2
+     },
+     {
+      "x": 865,
+      "n": 1
+     },
+     {
+      "x": 1136,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 7,
+    "bodySize": 14,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0.11,
+    "voidBox": {
+     "x": 0,
+     "y": 240,
+     "w": 300,
+     "h": 480
+    }
+   },
+   "app": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "dark": false,
+    "ground": "#ebebe6",
+    "sidebar": {
+     "w": 232,
+     "tag": "aside",
+     "links": 9,
+     "share": 0.16
+    },
+    "topbar": null,
+    "canvas": {
+     "left": 70,
+     "right": 91
+    },
+    "hero": {
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "chars": 39,
+     "lines": 1,
+     "size": 32,
+     "vw": 2.2,
+     "font": "Instrument Serif",
+     "weight": 400,
+     "tracking": -0.01,
+     "leading": 1.15,
+     "top": 52,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 9,
+     "firstScreen": 7,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 10,
+     "radii": [
+      [
+       22,
+       9
+      ],
+      [
+       0,
+       1
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 3,
+     "tabularShare": 1,
+     "kpiMax": 14
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      19,
+      24,
+      32
+     ]
+    },
+    "title": {
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "size": 32,
+     "top": 52
+    },
+    "colourShare": 0
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 3,
+   "filled": [
+    0.87,
+    0.78,
+    0.84
+   ],
+   "motion": {
+    "elements": 13,
+    "css": 0,
+    "transitions": 13,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 2086,
+     "screens": 2,
+     "words": 200,
+     "img": 0,
+     "video": 0,
+     "canvas": 2,
+     "svg": 8,
+     "sections": 5,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "chars": 39,
+     "lines": 1,
+     "size": 30,
+     "vw": 3.9,
+     "font": "Instrument Serif",
+     "weight": 400,
+     "tracking": -0.01,
+     "leading": 1.15,
+     "top": 73,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "lines": 1,
+     "size": 30,
+     "font": "Instrument Serif"
+    },
+    "headings": [
+     {
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+      "words": 10,
+      "chars": 39,
+      "lines": 1,
+      "size": 30,
+      "vw": 3.9,
+      "font": "Instrument Serif",
+      "weight": 400,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.96,
+      "top": 73,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Instrument Sans",
+       "share": 0.96,
+       "mono": false
+      },
+      {
+       "family": "Instrument Serif",
+       "share": 0.04,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      19,
+      24,
+      30
+     ],
+     "sizeCount": 8,
+     "notLoaded": [],
+     "body": {
+      "font": "Instrument Sans",
+      "size": 15,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 5.4
+     },
+     "measureChars": 93,
+     "max": {
+      "size": 30,
+      "vw": 3.9,
+      "font": "Instrument Serif",
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.11,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ebebe6",
+     "bodyBgHsl": {
+      "h": 60,
+      "s": 0.11,
+      "l": 0.91
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ebebe6",
+       "top": 0,
+       "hsl": {
+        "h": 60,
+        "s": 0.11,
+        "l": 0.91
+       }
+      },
+      {
+       "color": "#ffffff",
+       "top": 419,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#1f201d",
+       "share": 0.6
+      },
+      {
+       "color": "#5e5e5b",
+       "share": 0.36
+      },
+      {
+       "color": "#b42318",
+       "share": 0.02
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#1f201d"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 5,
+     "inHero": 1,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Replace 76.5"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 6,
+     "hairlineSamples": [
+      "header.sticky.top-0 768px",
+      "div.mt-5.border-t 694px",
+      "li.border-t.border-rule 694px",
+      "li.border-t.border-rule 694px",
+      "li.border-t.border-rule 694px"
+     ],
+     "outlinedBoxes": 9,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 9,
+     "boxRadius": 22,
+     "squareMedia": 2,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 4,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 158
+      }
+     ]
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 0,
+     "fixed": true,
+     "height": 0,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "instrument sans",
+     "instrument serif"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 2086,
+    "margins": {
+     "left": 16,
+     "right": 37
+    },
+    "sections": [
+     {
+      "sel": "dl.grid.grid-cols-2",
+      "tag": "dl",
+      "top": 158,
+      "height": 241,
+      "words": 35,
+      "media": 0,
+      "middle": 254,
+      "heading": {
+       "text": "76.7",
+       "size": 24,
+       "tag": "span"
+      },
+      "left": 33,
+      "right": 200,
+      "textLeft": 33,
+      "textRight": 200,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.grid-cols-1",
+      "tag": "div",
+      "top": 419,
+      "height": 411,
+      "words": 49,
+      "media": 0,
+      "middle": 59,
+      "heading": {
+       "text": "Way to the goal",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 37,
+      "right": 37,
+      "textLeft": 37,
+      "textRight": 37,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.panel.flex",
+      "tag": "section",
+      "top": 850,
+      "height": 482,
+      "words": 21,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Daily weight",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 37,
+      "right": 41,
+      "textLeft": 37,
+      "textRight": 53,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.grid-cols-1",
+      "tag": "div",
+      "top": 1351,
+      "height": 571,
+      "words": 53,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Insights",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 37,
+      "right": 37,
+      "textLeft": 37,
+      "textRight": 53,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+      "size": 30,
+      "top": 73,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 37,
+      "n": 5
+     },
+     {
+      "x": 16,
+      "n": 2
+     }
+    ],
+    "leftBlocks": 7,
+    "bodySize": 15,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "dark": false,
+    "ground": "#ebebe6",
+    "sidebar": null,
+    "topbar": {
+     "h": 49
+    },
+    "canvas": {
+     "left": 15,
+     "right": 16
+    },
+    "hero": {
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "chars": 39,
+     "lines": 1,
+     "size": 30,
+     "vw": 3.9,
+     "font": "Instrument Serif",
+     "weight": 400,
+     "tracking": -0.01,
+     "leading": 1.15,
+     "top": 73,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 8,
+     "firstScreen": 6,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 9,
+     "radii": [
+      [
+       22,
+       8
+      ],
+      [
+       0,
+       1
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 3,
+     "tabularShare": 1,
+     "kpiMax": 14
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      19,
+      24,
+      30
+     ]
+    },
+    "title": {
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "size": 30,
+     "top": 73
+    },
+    "colourShare": 0.002
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 3,
+   "filled": [
+    0.83,
+    0.83,
+    0.84
+   ],
+   "motion": {
+    "elements": 13,
+    "css": 0,
+    "transitions": 13,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 2149,
+     "screens": 2.5,
+     "words": 200,
+     "img": 0,
+     "video": 0,
+     "canvas": 2,
+     "svg": 8,
+     "sections": 5,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "chars": 39,
+     "lines": 1,
+     "size": 26,
+     "vw": 6.7,
+     "font": "Instrument Serif",
+     "weight": 400,
+     "tracking": -0.01,
+     "leading": 1.15,
+     "top": 73,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "lines": 1,
+     "size": 26,
+     "font": "Instrument Serif"
+    },
+    "headings": [
+     {
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+      "words": 10,
+      "chars": 39,
+      "lines": 1,
+      "size": 26,
+      "vw": 6.7,
+      "font": "Instrument Serif",
+      "weight": 400,
+      "tracking": -0.01,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 73,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "76.7kg",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Instrument Sans",
+      "weight": 400,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.36,
+      "top": 214,
+      "tag": "dd",
+      "kind": "statement"
+     },
+     {
+      "text": "−0.1kg",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Instrument Sans",
+      "weight": 400,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.18,
+      "top": 214,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "1.5kg",
+      "words": 1,
+      "chars": 5,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Instrument Sans",
+      "weight": 400,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.36,
+      "top": 336,
+      "tag": "dd",
+      "kind": "statement"
+     },
+     {
+      "text": "−0.44kg/wk",
+      "words": 1,
+      "chars": 10,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Instrument Sans",
+      "weight": 400,
+      "tracking": 0,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.29,
+      "top": 336,
+      "tag": "span",
+      "kind": "statement"
+     }
+    ],
+    "headingSummary": {
+     "count": 5,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 4,
+     "centered": 0,
+     "medianWords": 1,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Instrument Sans",
+       "share": 0.96,
+       "mono": false
+      },
+      {
+       "family": "Instrument Serif",
+       "share": 0.04,
+       "mono": false
+      }
+     ],
+     "familyCount": 2,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      18,
+      22,
+      26
+     ],
+     "sizeCount": 7,
+     "notLoaded": [],
+     "body": {
+      "font": "Instrument Sans",
+      "size": 15,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 5.4
+     },
+     "measureChars": 43,
+     "max": {
+      "size": 26,
+      "vw": 6.7,
+      "font": "Instrument Serif",
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.11,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ebebe6",
+     "bodyBgHsl": {
+      "h": 60,
+      "s": 0.11,
+      "l": 0.91
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ebebe6",
+       "top": 0,
+       "hsl": {
+        "h": 60,
+        "s": 0.11,
+        "l": 0.91
+       }
+      },
+      {
+       "color": "#ffffff",
+       "top": 439,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#1f201d",
+       "share": 0.6
+      },
+      {
+       "color": "#5e5e5b",
+       "share": 0.36
+      },
+      {
+       "color": "#b42318",
+       "share": 0.02
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ffffff",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 1
+      },
+      "fg": "#1f201d"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 5,
+     "inHero": 1,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Replace 76.5"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 6,
+     "hairlineSamples": [
+      "header.sticky.top-0 390px",
+      "div.mt-5.border-t 324px",
+      "li.border-t.border-rule 324px",
+      "li.border-t.border-rule 324px",
+      "li.border-t.border-rule 324px"
+     ],
+     "outlinedBoxes": 9,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 9,
+     "boxRadius": 22,
+     "squareMedia": 2,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 4,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 172
+      }
+     ]
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 0,
+     "fixed": true,
+     "height": 0,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "instrument sans",
+     "instrument serif"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 2149,
+    "margins": {
+     "left": 16,
+     "right": 29
+    },
+    "sections": [
+     {
+      "sel": "dl.grid.grid-cols-2",
+      "tag": "dl",
+      "top": 172,
+      "height": 252,
+      "words": 35,
+      "media": 0,
+      "middle": 63,
+      "heading": {
+       "text": "76.7",
+       "size": 22,
+       "tag": "span"
+      },
+      "left": 33,
+      "right": 35,
+      "textLeft": 33,
+      "textRight": 35,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.grid-cols-1",
+      "tag": "div",
+      "top": 439,
+      "height": 425,
+      "words": 49,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Way to the goal",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 33,
+      "right": 33,
+      "textLeft": 33,
+      "textRight": 33,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.panel.flex",
+      "tag": "section",
+      "top": 880,
+      "height": 488,
+      "words": 21,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Daily weight",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 33,
+      "right": 34,
+      "textLeft": 33,
+      "textRight": 57,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid.grid-cols-1",
+      "tag": "div",
+      "top": 1384,
+      "height": 605,
+      "words": 53,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Insights",
+       "size": 15,
+       "tag": "h2"
+      },
+      "left": 29,
+      "right": 29,
+      "textLeft": 33,
+      "textRight": 48,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+      "size": 26,
+      "top": 73,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 33,
+      "n": 5
+     },
+     {
+      "x": 16,
+      "n": 2
+     }
+    ],
+    "leftBlocks": 7,
+    "bodySize": 15,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "dark": false,
+    "ground": "#ebebe6",
+    "sidebar": null,
+    "topbar": {
+     "h": 49
+    },
+    "canvas": {
+     "left": 15,
+     "right": 16
+    },
+    "hero": {
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "chars": 39,
+     "lines": 1,
+     "size": 26,
+     "vw": 6.7,
+     "font": "Instrument Serif",
+     "weight": 400,
+     "tracking": -0.01,
+     "leading": 1.15,
+     "top": 73,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 8,
+     "firstScreen": 5,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 9,
+     "radii": [
+      [
+       22,
+       8
+      ],
+      [
+       0,
+       1
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 3,
+     "tabularShare": 1,
+     "kpiMax": 14
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      18,
+      22,
+      26
+     ]
+    },
+    "title": {
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "size": 26,
+     "top": 73
+    },
+    "colourShare": 0.001
+   },
+   "consoleErrors": []
+  }
+ ],
+ "findings": [],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\after-light-gain\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\after-light-gain\\desktop-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\after-light-gain\\tablet-fold.jpg",
+   "pages": [
+    "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\after-light-gain\\tablet-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\after-light-gain\\mobile-fold.jpg",
+   "pages": [
+    "C:\\Users\\gonca\\OneDrive\\Ambiente de Trabalho\\WeightTracker\\weight-tracker-web\\.taste-skill\\after-light-gain\\mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

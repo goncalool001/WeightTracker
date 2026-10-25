@@ -7,12 +7,9 @@ import type { PersistedState } from '@/types';
  * is stored under a single versioned key — simple, atomic, and easily migrated.
  */
 
+/** Read the saved state. Throws when storage cannot be read at all. */
 export async function loadState(): Promise<PersistedState | undefined> {
-  try {
-    return await get<PersistedState>(STORAGE_KEY);
-  } catch {
-    return undefined;
-  }
+  return await get<PersistedState>(STORAGE_KEY);
 }
 
 export async function saveState(state: PersistedState): Promise<void> {

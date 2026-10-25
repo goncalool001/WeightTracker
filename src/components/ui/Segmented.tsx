@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { cn } from '@/lib/cn';
 
 export interface SegmentedOption<T extends string> {
@@ -13,8 +14,11 @@ interface SegmentedProps<T extends string> {
   className?: string;
 }
 
-/** Accessible segmented control (radio-group semantics) for mutually
- *  exclusive choices such as the range filter or chart overlay. */
+/**
+ * Radio-group segmented control: a grey track with the selected option on a
+ * raised pill. Arrow keys move the selection (roving tab stop), as a native
+ * radio group does.
+ */
 export function Segmented<T extends string>({
   options,
   value,
@@ -22,29 +26,41 @@ export function Segmented<T extends string>({
   ariaLabel,
   className,
 }: SegmentedProps<T>) {
+  const refs = useRef<Array<HTMLButtonElement | null>>([]);
+
+  function onKeyDown(e: React.KeyboardEvent, i: number) {
+    const fwd = e.key === 'ArrowRight' || e.key === 'ArrowDown';
+    const back = e.key === 'ArrowLeft' || e.key === 'ArrowUp';
+    if (!fwd && !back) return;
+    e.preventDefault();
+    const next = (i + (fwd ? 1 : -1) + options.length) % options.length;
+    onChange(options[next].value);
+    refs.current[next]?.focus();
+  }
+
   return (
     <div
       role="radiogroup"
       aria-label={ariaLabel}
-      className={cn(
-        'inline-flex rounded-lg border border-border bg-surface-2 p-0.5',
-        className,
-      )}
+      className={cn('inline-flex shrink-0 rounded-full bg-active p-1', className)}
     >
-      {options.map((opt) => {
+      {options.map((opt, i) => {
         const active = opt.value === value;
         return (
           <button
             key={opt.value}
+            ref={(el) => {
+              refs.current[i] = el;
+            }}
+            type="button"
             role="radio"
             aria-checked={active}
+            tabIndex={active ? 0 : -1}
             onClick={() => onChange(opt.value)}
+            onKeyDown={(e) => onKeyDown(e, i)}
             className={cn(
-              'rounded-md px-3 py-1 text-xs font-semibold transition-colors',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-              active
-                ? 'bg-accent text-white shadow-sm'
-                : 'text-muted hover:text-text',
+              'h-9 min-w-[44px] whitespace-nowrap rounded-full px-3 text-sm font-medium transition-colors lg:h-7',
+              active ? 'bg-raised text-text' : 'text-muted hover:text-text',
             )}
           >
             {opt.label}

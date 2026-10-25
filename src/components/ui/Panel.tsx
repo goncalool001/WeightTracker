@@ -3,27 +3,26 @@ import { cn } from '@/lib/cn';
 
 interface PanelProps {
   title: string;
+  /** Heading level inside the screen (default h2). */
+  level?: 2 | 3;
   actions?: ReactNode;
   children: ReactNode;
   className?: string;
-  bodyClassName?: string;
+  id: string;
 }
 
-/** A titled content card with an optional actions slot in the header. */
-export function Panel({
-  title,
-  actions,
-  children,
-  className,
-  bodyClassName,
-}: PanelProps) {
+/** A tonal panel with a section heading and optional controls on the right. */
+export function Panel({ title, level = 2, actions, children, className, id }: PanelProps) {
+  const H = level === 2 ? 'h2' : 'h3';
   return (
-    <section className={cn('card themed flex flex-col overflow-hidden', className)}>
-      <header className="flex items-center justify-between gap-2 border-b border-border px-4 py-2.5">
-        <h2 className="text-sm font-bold text-text">{title}</h2>
+    <section aria-labelledby={id} className={cn('panel flex min-w-0 flex-col p-4 sm:p-5', className)}>
+      <div className="mb-3 flex min-h-9 flex-wrap items-center justify-between gap-x-3 gap-y-2">
+        <H id={id} className="text-[15px] font-semibold text-text lg:text-sm">
+          {title}
+        </H>
         {actions}
-      </header>
-      <div className={cn('flex-1', bodyClassName)}>{children}</div>
+      </div>
+      {children}
     </section>
   );
 }

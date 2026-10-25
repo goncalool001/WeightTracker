@@ -1,18 +1,28 @@
 import { create } from 'zustand';
 import {
+  currentGoal,
+  defaultCustomRange,
+  isTargetGoal,
+  migrateGoals,
   normalizeEntries,
   removeEntry,
-  roundWeight,
+  replaceGoal,
+  todayISO,
   upsertEntry,
+  type EntryExtras,
 } from '@/domain';
 import { loadState, saveState } from '@/data/storage';
+import { DEV_SEED } from '@/data/devSeed';
 import {
   pushDeleteEntry,
   pushEntry,
-  pushGoal,
+  pushGoals,
   pushReplace,
+  type RemoteSettings,
 } from '@/data/sync';
 import type {
+  CustomRange,
+  Goal,
   Granularity,
   Locale,
   Overlay,
@@ -23,9 +33,15 @@ import type {
   WeightEntry,
 } from '@/types';
 
-interface AppState extends PersistedState {
+interface AppState extends Omit<PersistedState, 'goals'> {
+  /** Goal history, oldest first (always in the current lose/gain/maintain form). */
+  goals: Goal[];
   /** True once the initial async hydrate has completed. */
   hydrated: boolean;
+  /** Set when the local store could not be read. */
+  loadError: boolean;
+  /** Dev seed session: nothing is persisted or synced. */
+  ephemeral: boolean;
   /** Signed-in user for cloud sync, or null. */
   user: SyncUser | null;
   /** Network connectivity (drives the sync indicator). */
@@ -34,25 +50,35 @@ interface AppState extends PersistedState {
   // ── lifecycle ─────────────────────────────────────────────
   hydrate: () => Promise<void>;
 
-  // ── data mutations ────────────────────────────────────────
-  addOrUpdate: (date: string, weight: number) => 'added' | 'updated';
-  deleteEntry: (date: string) => void;
-  replaceEntries: (entries: WeightEntry[]) => void;
+  // ── data mutations (each returns what undo needs) ─────────
+  /** `extras`: per field, undefined keeps what the day has, a value replaces it, null removes it. */
+  addOrUpdate: (
+    date: string,
+    weight: number,
+    extras?: EntryExtras,
+  ) => { action: 'added' | 'updated'; previous: WeightEntry | null };
+  deleteEntry: (date: string) => WeightEntry | null;
+  replaceEntries: (entries: WeightEntry[]) => WeightEntry[];
+
+  // ── goals ─────────────────────────────────────────────────
+  /** Replace the current goal (null removes it); returns the previous history. */
+  setGoal: (goal: Goal | null) => Goal[];
+  /** Put a whole goal history back (undo). */
+  restoreGoals: (goals: Goal[]) => void;
 
   // ── settings ──────────────────────────────────────────────
-  setGoal: (goal: number | null) => void;
   setOverlay: (overlay: Overlay) => void;
   setRange: (range: RangeKey) => void;
+  setCustomRange: (range: CustomRange) => void;
   setGranularity: (granularity: Granularity) => void;
   setTheme: (theme: Theme) => void;
   setLocale: (locale: Locale) => void;
-  setShowLabels: (show: boolean) => void;
 
   // ── sync (applied from the cloud; do NOT echo back) ───────
   setUser: (user: SyncUser | null) => void;
   setOnline: (online: boolean) => void;
   applyRemoteEntries: (entries: WeightEntry[]) => void;
-  applyRemoteGoal: (goal: number | null) => void;
+  applyRemoteSettings: (settings: RemoteSettings) => void;
   /** Drop the local view of account data on sign-out (cloud is untouched). */
   clearAccountData: () => void;
 }
@@ -60,108 +86,151 @@ interface AppState extends PersistedState {
 /** Default theme follows the OS preference on first run. */
 function defaultTheme(): Theme {
   if (typeof window !== 'undefined' && window.matchMedia) {
-    return window.matchMedia('(prefers-color-scheme: light)').matches
-      ? 'light'
-      : 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
-  return 'dark';
+  return 'light';
 }
 
-/** Labels are hidden by default on narrow screens (mobile). */
-function defaultShowLabels(): boolean {
-  if (typeof window !== 'undefined') return window.innerWidth >= 640;
-  return true;
+/** Default language follows the browser. */
+function defaultLocale(): Locale {
+  if (typeof navigator !== 'undefined' && navigator.language?.toLowerCase().startsWith('pt')) {
+    return 'pt';
+  }
+  return 'en';
 }
 
 /** Pull the persistable slice out of the full state. */
 function snapshot(s: AppState): PersistedState {
   return {
     entries: s.entries,
-    goalWeight: s.goalWeight,
+    goals: s.goals,
     overlay: s.overlay,
     range: s.range,
+    customRange: s.customRange ?? null,
     granularity: s.granularity,
     theme: s.theme,
     locale: s.locale,
-    showLabels: s.showLabels,
     seeded: s.seeded,
   };
 }
 
 export const useStore = create<AppState>((set, get) => {
   /** Persist the current serialisable slice to the local cache. */
-  const persist = () => void saveState(snapshot(get()));
+  const persist = () => {
+    if (!get().ephemeral) void saveState(snapshot(get()));
+  };
+  const uid = () => (get().ephemeral ? undefined : get().user?.uid);
 
   return {
     // defaults (overwritten by hydrate)
     entries: [],
-    goalWeight: null,
-    overlay: 'trend',
-    range: 'all',
+    goals: [],
+    overlay: 'ma',
+    range: '90d',
+    customRange: null,
     granularity: 'weekly',
     theme: defaultTheme(),
-    locale: 'en',
-    showLabels: defaultShowLabels(),
+    locale: defaultLocale(),
     seeded: false,
     hydrated: false,
+    loadError: false,
+    ephemeral: false,
     user: null,
     online: typeof navigator !== 'undefined' ? navigator.onLine : true,
 
     hydrate: async () => {
-      const saved = await loadState();
-      if (saved) {
-        // Provide defaults for fields added after the initial release so that
-        // existing persisted state (which won't have them) still gets values.
+      // `import.meta.env.DEV` is the literal false in production, so this
+      // branch and the seed chunk are dropped from the build.
+      if (import.meta.env.DEV && DEV_SEED) {
+        const seed = await import('@/data/seed');
         set({
-          ...saved,
-          locale: saved.locale ?? 'en',
-          showLabels: saved.showLabels ?? defaultShowLabels(),
+          entries: new URLSearchParams(window.location.search).has('tags')
+            ? seed.withDemoTags(seed.SEED_ENTRIES)
+            : seed.SEED_ENTRIES,
+          goals:
+            DEV_SEED === 'lose'
+              ? seed.SEED_GOALS_LOSE
+              : DEV_SEED === 'gain'
+                ? seed.SEED_GOALS_GAIN
+                : seed.SEED_GOALS_MAINTAIN,
+          ephemeral: true,
           hydrated: true,
+          loadError: false,
         });
-      } else {
-        // Start empty — no preloaded/seed data. Entries belong to the
-        // signed-in account and arrive via cloud sync after sign-in.
-        set({ hydrated: true });
+        return;
+      }
+      try {
+        const saved = await loadState();
+        if (saved) {
+          // Defaults for fields added after the first release, and the move
+          // from a single goalWeight to a goal history.
+          const entries = normalizeEntries(saved.entries ?? []);
+          set({
+            ...saved,
+            entries,
+            goals: migrateGoals(saved.goals, saved.goalWeight, entries),
+            locale: saved.locale ?? defaultLocale(),
+            overlay: saved.overlay ?? 'ma',
+            hydrated: true,
+            loadError: false,
+          });
+        } else {
+          // Start empty. Entries belong to the signed-in account and arrive
+          // via cloud sync after sign-in.
+          set({ hydrated: true, loadError: false });
+        }
+      } catch {
+        set({ hydrated: true, loadError: true });
       }
     },
 
-    addOrUpdate: (date, weight) => {
-      const { entries, action } = upsertEntry(get().entries, date, weight);
+    addOrUpdate: (date, weight, extras) => {
+      const previous = get().entries.find((e) => e.date === date) ?? null;
+      const { entries, action } = upsertEntry(get().entries, date, weight, extras);
       set({ entries });
-      const uid = get().user?.uid;
-      if (uid) {
-        const saved = entries.find((e) => e.date === date)!;
-        void pushEntry(uid, saved);
-      }
+      const id = uid();
+      if (id) void pushEntry(id, entries.find((e) => e.date === date)!);
       persist(); // keep the local cache warm for offline / pre-auth loads
-      return action;
+      return { action, previous };
     },
 
     deleteEntry: (date) => {
+      const removed = get().entries.find((e) => e.date === date) ?? null;
       set({ entries: removeEntry(get().entries, date) });
-      const uid = get().user?.uid;
-      if (uid) void pushDeleteEntry(uid, date);
+      const id = uid();
+      if (id) void pushDeleteEntry(id, date);
       persist();
+      return removed;
     },
 
     replaceEntries: (entries) => {
+      const before = get().entries;
       const next = normalizeEntries(entries);
-      const uid = get().user?.uid;
-      if (uid) {
+      const id = uid();
+      if (id) {
         const nextDates = new Set(next.map((e) => e.date));
-        const removed = get()
-          .entries.filter((e) => !nextDates.has(e.date))
-          .map((e) => e.date);
-        void pushReplace(uid, next, removed);
+        const removed = before.filter((e) => !nextDates.has(e.date)).map((e) => e.date);
+        void pushReplace(id, next, removed);
       }
       set({ entries: next, seeded: true });
       persist();
+      return before;
     },
 
-    setGoal: (goalWeight) => {
-      set({ goalWeight });
-      const uid = get().user?.uid;
-      if (uid) void pushGoal(uid, goalWeight);
+    setGoal: (goal) => {
+      const before = get().goals;
+      const goals = replaceGoal(before, goal, todayISO());
+      set({ goals });
+      const id = uid();
+      if (id) void pushGoals(id, goals);
+      persist();
+      return before;
+    },
+
+    restoreGoals: (goals) => {
+      set({ goals });
+      const id = uid();
+      if (id) void pushGoals(id, goals);
       persist();
     },
 
@@ -171,7 +240,15 @@ export const useStore = create<AppState>((set, get) => {
     },
 
     setRange: (range) => {
-      set({ range });
+      // The first time Dates is picked, start from the last 30 days.
+      const customRange =
+        range === 'custom' && !get().customRange ? defaultCustomRange(get().entries) : get().customRange;
+      set({ range, customRange });
+      persist();
+    },
+
+    setCustomRange: (customRange) => {
+      set({ customRange, range: 'custom' });
       persist();
     },
 
@@ -190,11 +267,6 @@ export const useStore = create<AppState>((set, get) => {
       persist();
     },
 
-    setShowLabels: (showLabels) => {
-      set({ showLabels });
-      persist();
-    },
-
     // ── sync application (no write-back to the cloud) ─────────
     setUser: (user) => set({ user }),
     setOnline: (online) => set({ online }),
@@ -204,15 +276,22 @@ export const useStore = create<AppState>((set, get) => {
       persist();
     },
 
-    applyRemoteGoal: (goal) => {
-      set({ goalWeight: goal == null ? null : roundWeight(goal) });
+    applyRemoteSettings: ({ goals, goalWeight }) => {
+      if (goals) {
+        set({ goals: migrateGoals(goals, null, get().entries) });
+      } else {
+        // Older cloud data: keep the local history when it already agrees.
+        const local = currentGoal(get().goals);
+        const same = isTargetGoal(local) && local.target === goalWeight;
+        if (!same) set({ goals: migrateGoals(undefined, goalWeight, get().entries) });
+      }
       persist();
     },
 
     clearAccountData: () => {
       // Local-only reset (sign-out): the cloud copy stays intact so the data
       // returns on the next sign-in. No cloud writes are issued.
-      set({ entries: [], goalWeight: null });
+      set({ entries: [], goals: [] });
       persist();
     },
   };

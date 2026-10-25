@@ -1,24 +1,22 @@
-import { Moon, Sun } from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
-import { Button } from '@/components/ui/Button';
+import { useT } from '@/i18n';
+import { useStore } from '@/store/useStore';
+import { Segmented } from '@/components/ui/Segmented';
+import type { Theme } from '@/types';
 
-/** Light/dark theme switch. */
+/** Light / dark switch, with words rather than an icon. */
 export function ThemeToggle() {
-  const { theme, toggle } = useTheme();
+  const t = useT();
+  const theme = useStore((s) => s.theme);
+  const setTheme = useStore((s) => s.setTheme);
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={toggle}
-      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-      title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-      className="h-9 w-9 px-0"
-    >
-      {theme === 'dark' ? (
-        <Sun className="h-4 w-4" />
-      ) : (
-        <Moon className="h-4 w-4" />
-      )}
-    </Button>
+    <Segmented<Theme>
+      ariaLabel={t.theme}
+      value={theme}
+      onChange={setTheme}
+      options={[
+        { value: 'light', label: t.themeLight },
+        { value: 'dark', label: t.themeDark },
+      ]}
+    />
   );
 }

@@ -1,7 +1,7 @@
 import { forwardRef, type ButtonHTMLAttributes } from 'react';
 import { cn } from '@/lib/cn';
 
-type Variant = 'primary' | 'secondary' | 'success' | 'ghost' | 'danger';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
 type Size = 'sm' | 'md';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -10,31 +10,28 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants: Record<Variant, string> = {
-  primary:
-    'bg-accent text-white hover:bg-accent-hover focus-visible:ring-accent',
-  secondary:
-    'bg-surface-2 text-text hover:bg-border focus-visible:ring-accent',
-  success:
-    'bg-good text-white hover:opacity-90 focus-visible:ring-good',
-  ghost:
-    'bg-transparent text-muted hover:bg-surface-2 hover:text-text focus-visible:ring-accent',
-  danger: 'bg-bad text-white hover:opacity-90 focus-visible:ring-bad',
+  primary: 'bg-primary text-on-primary hover:opacity-90',
+  secondary: 'border border-control bg-raised text-text hover:bg-active',
+  ghost: 'bg-transparent text-text hover:bg-active',
+  danger: 'border border-control bg-raised text-negative hover:bg-pill-neg',
 };
 
+// Touch targets stay 44px on phones and tablets; desktop tightens to 36px.
 const sizes: Record<Size, string> = {
-  sm: 'h-8 px-3 text-xs',
-  md: 'h-10 px-4 text-sm',
+  sm: 'h-11 px-4 text-sm lg:h-9',
+  md: 'h-11 px-5 text-[15px]',
 };
 
-/** Themed, accessible button with consistent variants. */
+/** Pill button. One primary (near-black) per view; the rest outline or text. */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', ...props }, ref) => (
+  ({ className, variant = 'secondary', size = 'md', type = 'button', ...props }, ref) => (
     <button
       ref={ref}
+      type={type}
       className={cn(
-        'inline-flex select-none items-center justify-center gap-2 rounded-lg font-semibold',
-        'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-        'focus-visible:ring-offset-bg disabled:pointer-events-none disabled:opacity-50',
+        'inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium',
+        'transition-[background-color,opacity,transform] duration-150 active:scale-[0.98]',
+        'disabled:pointer-events-none disabled:opacity-60',
         variants[variant],
         sizes[size],
         className,

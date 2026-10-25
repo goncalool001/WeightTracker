@@ -3,64 +3,61 @@ import { useStore } from '@/store/useStore';
 
 /** Concrete colours ECharts needs, resolved from the active CSS theme. */
 export interface ChartTokens {
-  line: string;
-  trend: string;
-  ma: string;
-  goal: string;
-  good: string;
-  bad: string;
-  plotBg: string;
+  ink: string;
+  muted: string;
+  dot: string;
+  accent: string;
+  accentSoft: string;
+  positive: string;
+  negative: string;
   grid: string;
-  axis: string;
-  title: string;
-  tooltipBg: string;
-  tooltipText: string;
-  /** Opaque chip behind in-chart value/annotation labels. */
-  labelBg: string;
-  labelText: string;
-  labelBorder: string;
+  ground: string;
+  /** The inner card behind the chart. */
+  raised: string;
+  border: string;
+  font: string;
 }
 
-/** Read a `--c-*`/token CSS variable (space-separated RGB) as `rgb(...)`. */
 function readVar(name: string): string {
-  const raw = getComputedStyle(document.documentElement)
-    .getPropertyValue(name)
-    .trim();
-  return raw ? `rgb(${raw.split(/\s+/).join(',')})` : '#000';
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#000';
 }
 
 function readTokens(): ChartTokens {
   return {
-    line: readVar('--c-line'),
-    trend: readVar('--c-trend'),
-    ma: readVar('--c-ma'),
-    goal: readVar('--c-goal'),
-    good: readVar('--good'),
-    bad: readVar('--bad'),
-    plotBg: readVar('--c-plot-bg'),
-    grid: readVar('--c-grid'),
-    axis: readVar('--c-axis'),
-    title: readVar('--text'),
-    tooltipBg: readVar('--surface'),
-    tooltipText: readVar('--text'),
-    labelBg: readVar('--c-label-bg'),
-    labelText: readVar('--c-label-text'),
-    labelBorder: readVar('--c-label-border'),
+    ink: readVar('--chart-ink'),
+    muted: readVar('--muted'),
+    dot: readVar('--chart-dot'),
+    accent: readVar('--accent'),
+    accentSoft: readVar('--accent-soft'),
+    positive: readVar('--positive'),
+    negative: readVar('--negative'),
+    grid: readVar('--chart-grid'),
+    ground: readVar('--ground'),
+    raised: readVar('--raised'),
+    border: readVar('--border'),
+    font: '"Instrument Sans", Inter, system-ui, sans-serif',
   };
 }
 
-/**
- * Resolve chart colours from CSS variables, recomputing whenever the theme
- * changes. (The CSS transition has settled by the time React re-renders, and
- * ECharts reads the final values either way.)
- */
+/** Resolve chart colours from CSS variables, recomputing on theme change. */
 export function useChartTokens(): ChartTokens {
   const theme = useStore((s) => s.theme);
   const [tokens, setTokens] = useState<ChartTokens>(() => readTokens());
-
   useEffect(() => {
     setTokens(readTokens());
   }, [theme]);
-
   return tokens;
+}
+
+/** Shared tooltip chrome: a plain box with a hairline, no arrow. */
+export function tooltipBase(tok: ChartTokens) {
+  return {
+    backgroundColor: tok.ground,
+    borderColor: tok.border,
+    borderWidth: 1,
+    padding: [8, 12] as [number, number],
+    textStyle: { color: tok.ink, fontSize: 13, fontFamily: tok.font },
+    extraCssText: 'border-radius:10px;',
+    confine: true,
+  };
 }
