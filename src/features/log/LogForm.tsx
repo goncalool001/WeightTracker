@@ -77,7 +77,7 @@ export function LogForm({ variant }: { variant: 'bar' | 'panel' }) {
     if (variant === 'bar') inputRef.current?.blur();
   }
 
-  const message = error ?? (existing ? t.existsNote(kg(existing.weight), dayWord) : null);
+  const message = error;
   const buttonLabel = noteOnly ? t.saveNote : existing ? t.replaceBtn(kg(existing.weight)) : t.save;
   const summary = noteText({ tags, note }, t);
   const count = tags.length + (note.trim() ? 1 : 0);
@@ -156,7 +156,7 @@ export function LogForm({ variant }: { variant: 'bar' | 'panel' }) {
         >
           {message}
         </p>
-        <Button type="submit" variant="primary" className="mt-auto w-full">
+        <Button type="submit" variant="primary" className="w-full">
           {buttonLabel}
         </Button>
         {sheet}

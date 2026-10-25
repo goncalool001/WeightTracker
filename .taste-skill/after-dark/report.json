@@ -1,6 +1,6 @@
 {
  "url": ".taste-skill/demo-dark/index.html",
- "at": "2026-10-25T21:49:53.981Z",
+ "at": "2026-10-25T22:05:48.097Z",
  "allow": [],
  "viewports": [
   {
@@ -9,8 +9,8 @@
    "load": "load",
    "screens": 2,
    "filled": [
-    0.56,
-    0.72
+    0.67,
+    0.71
    ],
    "motion": {
     "elements": 2,
@@ -26,9 +26,9 @@
      "h": 900
     },
     "page": {
-     "height": 1535,
-     "screens": 1.7,
-     "words": 227,
+     "height": 1434,
+     "screens": 1.6,
+     "words": 193,
      "img": 0,
      "video": 0,
      "canvas": 2,
@@ -49,55 +49,33 @@
      "videosNoPoster": 0
     },
     "hero": {
-     "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-     "words": 11,
-     "chars": 51,
+     "text": "Hoje",
+     "words": 1,
+     "chars": 4,
      "lines": 1,
-     "size": 32,
-     "vw": 2.2,
-     "font": "Instrument Serif",
+     "size": 14,
+     "vw": 1,
+     "font": "Instrument Sans",
      "weight": 400,
-     "tracking": -0.01,
-     "leading": 1.15,
-     "top": 52,
+     "tracking": 0,
+     "leading": 1.5,
+     "top": 35,
      "tag": "h1",
      "kind": "heading",
      "align": "left",
      "position": "left"
     },
     "h1": {
-     "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-     "words": 11,
+     "text": "Hoje",
+     "words": 1,
      "lines": 1,
-     "size": 32,
-     "font": "Instrument Serif"
+     "size": 14,
+     "font": "Instrument Sans"
     },
-    "headings": [
-     {
-      "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-      "words": 11,
-      "chars": 51,
-      "lines": 1,
-      "size": 32,
-      "vw": 2.2,
-      "font": "Instrument Serif",
-      "weight": 400,
-      "tracking": -0.01,
-      "leading": 1.15,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "right",
-      "widthRatio": 0.74,
-      "top": 52,
-      "tag": "h1",
-      "kind": "heading"
-     }
-    ],
+    "headings": [],
     "headingSummary": {
-     "count": 1,
-     "maxLines": 1,
+     "count": 0,
+     "maxLines": 0,
      "over2Lines": 0,
      "statements": 0,
      "centered": 0,
@@ -108,27 +86,20 @@
      "families": [
       {
        "family": "Instrument Sans",
-       "share": 0.95,
-       "mono": false
-      },
-      {
-       "family": "Instrument Serif",
-       "share": 0.05,
+       "share": 1,
        "mono": false
       }
      ],
-     "familyCount": 2,
+     "familyCount": 1,
      "sizes": [
       13,
       14,
       15,
-      16,
       17,
       19,
-      24,
-      32
+      24
      ],
-     "sizeCount": 8,
+     "sizeCount": 6,
      "notLoaded": [],
      "body": {
       "font": "Instrument Sans",
@@ -140,10 +111,10 @@
      },
      "measureChars": 108,
      "max": {
-      "size": 32,
-      "vw": 2.2,
-      "font": "Instrument Serif",
-      "text": "76.5 kg · faltam 1.5 kg para 78 · tendên"
+      "size": 24,
+      "vw": 1.7,
+      "font": "Instrument Sans",
+      "text": "76.7"
      },
      "monoShare": 0,
      "monoProseShare": 0,
@@ -153,7 +124,7 @@
      "microLabelShare": 0,
      "microSamples": [],
      "upperShare": 0,
-     "centerShare": 0.13,
+     "centerShare": 0.15,
      "smallText": 0
     },
     "eyebrows": [],
@@ -178,7 +149,7 @@
       },
       {
        "color": "#1a1a19",
-       "top": 699,
+       "top": 598,
        "hsl": {
         "h": 60,
         "s": 0.02,
@@ -189,19 +160,19 @@
      "textColors": [
       {
        "color": "#b4b4b0",
-       "share": 0.6
+       "share": 0.63
       },
       {
        "color": "#ededea",
-       "share": 0.35
+       "share": 0.3
       },
       {
        "color": "#ff8a7a",
-       "share": 0.04
+       "share": 0.05
       },
       {
        "color": "#111110",
-       "share": 0.01
+       "share": 0.02
       }
      ],
      "button": {
@@ -262,14 +233,14 @@
        "count": 4,
        "iconTopped": false,
        "rounded": true,
-       "top": 137
+       "top": 36
       }
      ]
     },
     "heroMedia": [
      {
       "type": "canvas",
-      "ratio": 0.1
+      "ratio": 0.17
      }
     ],
     "nav": {
@@ -280,8 +251,7 @@
      "blur": false
     },
     "fontsLoaded": [
-     "instrument sans",
-     "instrument serif"
+     "instrument sans"
     ]
    },
    "layout": {
@@ -289,7 +259,7 @@
      "w": 1440,
      "h": 900
     },
-    "pageH": 1535,
+    "pageH": 1434,
     "margins": {
      "left": 28,
      "right": 91
@@ -298,20 +268,20 @@
      {
       "sel": "dl.grid.grid-cols-2",
       "tag": "dl",
-      "top": 137,
+      "top": 36,
       "height": 128,
-      "words": 33,
+      "words": 36,
       "media": 0,
-      "middle": 211,
+      "middle": 174,
       "heading": {
        "text": "76.7",
        "size": 24,
        "tag": "span"
       },
       "left": 319,
-      "right": 155,
+      "right": 107,
       "textLeft": 319,
-      "textRight": 155,
+      "textRight": 107,
       "fullBleed": false,
       "footer": false,
       "hero": true,
@@ -321,9 +291,9 @@
      {
       "sel": "div.grid.grid-cols-1",
       "tag": "div",
-      "top": 281,
+      "top": 180,
       "height": 402,
-      "words": 70,
+      "words": 57,
       "media": 0,
       "middle": 58,
       "heading": {
@@ -344,7 +314,7 @@
      {
       "sel": "section.panel.flex",
       "tag": "section",
-      "top": 699,
+      "top": 598,
       "height": 478,
       "words": 25,
       "media": 1,
@@ -367,7 +337,7 @@
      {
       "sel": "div.grid.grid-cols-1",
       "tag": "div",
-      "top": 1193,
+      "top": 1092,
       "height": 278,
       "words": 59,
       "media": 1,
@@ -389,23 +359,12 @@
      }
     ],
     "gaps": [],
-    "h1s": [
-     {
-      "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-      "size": 32,
-      "top": 52,
-      "firstScreen": true
-     }
-    ],
+    "h1s": [],
     "edgeText": [],
     "edges": [
      {
       "x": 323,
       "n": 3
-     },
-     {
-      "x": 302,
-      "n": 2
      },
      {
       "x": 865,
@@ -416,7 +375,7 @@
       "n": 1
      }
     ],
-    "leftBlocks": 7,
+    "leftBlocks": 5,
     "bodySize": 14,
     "stage": false,
     "explains": false,
@@ -448,17 +407,17 @@
      "right": 91
     },
     "hero": {
-     "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-     "words": 11,
-     "chars": 51,
+     "text": "Hoje",
+     "words": 1,
+     "chars": 4,
      "lines": 1,
-     "size": 32,
-     "vw": 2.2,
-     "font": "Instrument Serif",
+     "size": 14,
+     "vw": 1,
+     "font": "Instrument Sans",
      "weight": 400,
-     "tracking": -0.01,
-     "leading": 1.15,
-     "top": 52,
+     "tracking": 0,
+     "leading": 1.5,
+     "top": 35,
      "tag": "h1",
      "kind": "heading",
      "align": "left",
@@ -499,7 +458,7 @@
     "numbers": {
      "cells": 0,
      "leftAligned": 0,
-     "figures": 3,
+     "figures": 1,
      "tabularShare": 1,
      "kpiMax": 14
     },
@@ -516,14 +475,13 @@
       15,
       16,
       19,
-      24,
-      32
+      24
      ]
     },
     "title": {
-     "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-     "size": 32,
-     "top": 52
+     "text": "Hoje",
+     "size": 14,
+     "top": 35
     },
     "colourShare": 0.009
    },
@@ -533,9 +491,8 @@
    "width": 768,
    "height": 1024,
    "load": "load",
-   "screens": 3,
+   "screens": 2,
    "filled": [
-    0.78,
     0.8,
     0.81
    ],
@@ -553,9 +510,9 @@
      "h": 1024
     },
     "page": {
-     "height": 2094,
+     "height": 2005,
      "screens": 2,
-     "words": 216,
+     "words": 182,
      "img": 0,
      "video": 0,
      "canvas": 2,
@@ -576,55 +533,33 @@
      "videosNoPoster": 0
     },
     "hero": {
-     "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-     "words": 11,
-     "chars": 51,
+     "text": "Hoje",
+     "words": 1,
+     "chars": 4,
      "lines": 1,
-     "size": 30,
-     "vw": 3.9,
-     "font": "Instrument Serif",
+     "size": 15,
+     "vw": 2,
+     "font": "Instrument Sans",
      "weight": 400,
-     "tracking": -0.01,
-     "leading": 1.15,
-     "top": 73,
+     "tracking": 0,
+     "leading": 1.5,
+     "top": 68,
      "tag": "h1",
      "kind": "heading",
      "align": "left",
      "position": "left"
     },
     "h1": {
-     "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-     "words": 11,
+     "text": "Hoje",
+     "words": 1,
      "lines": 1,
-     "size": 30,
-     "font": "Instrument Serif"
+     "size": 15,
+     "font": "Instrument Sans"
     },
-    "headings": [
-     {
-      "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-      "words": 11,
-      "chars": 51,
-      "lines": 1,
-      "size": 30,
-      "vw": 3.9,
-      "font": "Instrument Serif",
-      "weight": 400,
-      "tracking": -0.01,
-      "leading": 1.15,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "center",
-      "widthRatio": 0.96,
-      "top": 73,
-      "tag": "h1",
-      "kind": "heading"
-     }
-    ],
+    "headings": [],
     "headingSummary": {
-     "count": 1,
-     "maxLines": 1,
+     "count": 0,
+     "maxLines": 0,
      "over2Lines": 0,
      "statements": 0,
      "centered": 0,
@@ -635,16 +570,11 @@
      "families": [
       {
        "family": "Instrument Sans",
-       "share": 0.95,
-       "mono": false
-      },
-      {
-       "family": "Instrument Serif",
-       "share": 0.05,
+       "share": 1,
        "mono": false
       }
      ],
-     "familyCount": 2,
+     "familyCount": 1,
      "sizes": [
       13,
       14,
@@ -652,10 +582,9 @@
       16,
       17,
       19,
-      24,
-      30
+      24
      ],
-     "sizeCount": 8,
+     "sizeCount": 7,
      "notLoaded": [],
      "body": {
       "font": "Instrument Sans",
@@ -663,14 +592,14 @@
       "leading": 1.5,
       "weight": 400,
       "tracking": 0,
-      "contrast": 9.1
+      "contrast": 14.8
      },
      "measureChars": 93,
      "max": {
-      "size": 30,
-      "vw": 3.9,
-      "font": "Instrument Serif",
-      "text": "76.5 kg · faltam 1.5 kg para 78 · tendên"
+      "size": 24,
+      "vw": 3.1,
+      "font": "Instrument Sans",
+      "text": "76.7"
      },
      "monoShare": 0,
      "monoProseShare": 0,
@@ -680,7 +609,7 @@
      "microLabelShare": 0,
      "microSamples": [],
      "upperShare": 0,
-     "centerShare": 0.11,
+     "centerShare": 0.13,
      "smallText": 0
     },
     "eyebrows": [],
@@ -705,7 +634,7 @@
       },
       {
        "color": "#1a1a19",
-       "top": 419,
+       "top": 330,
        "hsl": {
         "h": 60,
         "s": 0.02,
@@ -716,11 +645,11 @@
      "textColors": [
       {
        "color": "#b4b4b0",
-       "share": 0.57
+       "share": 0.61
       },
       {
        "color": "#ededea",
-       "share": 0.37
+       "share": 0.32
       },
       {
        "color": "#ff8a7a",
@@ -785,11 +714,16 @@
        "count": 4,
        "iconTopped": false,
        "rounded": true,
-       "top": 158
+       "top": 69
       }
      ]
     },
-    "heroMedia": [],
+    "heroMedia": [
+     {
+      "type": "canvas",
+      "ratio": 0.15
+     }
+    ],
     "nav": {
      "links": 0,
      "fixed": true,
@@ -798,8 +732,7 @@
      "blur": false
     },
     "fontsLoaded": [
-     "instrument sans",
-     "instrument serif"
+     "instrument sans"
     ]
    },
    "layout": {
@@ -807,7 +740,7 @@
      "w": 768,
      "h": 1024
     },
-    "pageH": 2094,
+    "pageH": 2005,
     "margins": {
      "left": 33,
      "right": 37
@@ -816,20 +749,20 @@
      {
       "sel": "dl.grid.grid-cols-2",
       "tag": "dl",
-      "top": 158,
+      "top": 69,
       "height": 241,
-      "words": 33,
+      "words": 36,
       "media": 0,
-      "middle": 250,
+      "middle": 267,
       "heading": {
        "text": "76.7",
        "size": 24,
        "tag": "span"
       },
       "left": 33,
-      "right": 206,
+      "right": 158,
       "textLeft": 33,
-      "textRight": 206,
+      "textRight": 158,
       "fullBleed": false,
       "footer": false,
       "hero": true,
@@ -839,9 +772,9 @@
      {
       "sel": "div.grid.grid-cols-1",
       "tag": "div",
-      "top": 419,
+      "top": 330,
       "height": 419,
-      "words": 54,
+      "words": 46,
       "media": 0,
       "middle": 28,
       "heading": {
@@ -862,7 +795,7 @@
      {
       "sel": "section.panel.flex",
       "tag": "section",
-      "top": 858,
+      "top": 769,
       "height": 482,
       "words": 25,
       "media": 1,
@@ -885,7 +818,7 @@
      {
       "sel": "div.grid.grid-cols-1",
       "tag": "div",
-      "top": 1359,
+      "top": 1270,
       "height": 571,
       "words": 59,
       "media": 1,
@@ -907,26 +840,15 @@
      }
     ],
     "gaps": [],
-    "h1s": [
-     {
-      "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-      "size": 30,
-      "top": 73,
-      "firstScreen": true
-     }
-    ],
+    "h1s": [],
     "edgeText": [],
     "edges": [
      {
       "x": 37,
       "n": 5
-     },
-     {
-      "x": 16,
-      "n": 2
      }
     ],
-    "leftBlocks": 7,
+    "leftBlocks": 5,
     "bodySize": 15,
     "stage": false,
     "explains": false,
@@ -946,21 +868,21 @@
      "h": 49
     },
     "canvas": {
-     "left": 16,
+     "left": 15,
      "right": 16
     },
     "hero": {
-     "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-     "words": 11,
-     "chars": 51,
+     "text": "Hoje",
+     "words": 1,
+     "chars": 4,
      "lines": 1,
-     "size": 30,
-     "vw": 3.9,
-     "font": "Instrument Serif",
+     "size": 15,
+     "vw": 2,
+     "font": "Instrument Sans",
      "weight": 400,
-     "tracking": -0.01,
-     "leading": 1.15,
-     "top": 73,
+     "tracking": 0,
+     "leading": 1.5,
+     "top": 68,
      "tag": "h1",
      "kind": "heading",
      "align": "left",
@@ -1001,7 +923,7 @@
     "numbers": {
      "cells": 0,
      "leftAligned": 0,
-     "figures": 3,
+     "figures": 1,
      "tabularShare": 1,
      "kpiMax": 14
     },
@@ -1018,16 +940,15 @@
       15,
       16,
       19,
-      24,
-      30
+      24
      ]
     },
     "title": {
-     "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-     "size": 30,
-     "top": 73
+     "text": "Hoje",
+     "size": 15,
+     "top": 68
     },
-    "colourShare": 0.023
+    "colourShare": 0.022
    },
    "consoleErrors": []
   },
@@ -1037,9 +958,9 @@
    "load": "load",
    "screens": 3,
    "filled": [
-    0.79,
-    0.89,
-    0.81
+    0.83,
+    0.88,
+    0.74
    ],
    "motion": {
     "elements": 0,
@@ -1055,9 +976,9 @@
      "h": 844
     },
     "page": {
-     "height": 2251,
-     "screens": 2.7,
-     "words": 216,
+     "height": 2159,
+     "screens": 2.6,
+     "words": 182,
      "img": 0,
      "video": 0,
      "canvas": 2,
@@ -1078,51 +999,30 @@
      "videosNoPoster": 0
     },
     "hero": {
-     "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-     "words": 11,
-     "chars": 51,
-     "lines": 2,
-     "size": 26,
-     "vw": 6.7,
-     "font": "Instrument Serif",
+     "text": "Hoje",
+     "words": 1,
+     "chars": 4,
+     "lines": 1,
+     "size": 15,
+     "vw": 3.8,
+     "font": "Instrument Sans",
      "weight": 400,
-     "tracking": -0.01,
-     "leading": 1.15,
-     "top": 73,
+     "tracking": 0,
+     "leading": 1.5,
+     "top": 68,
      "tag": "h1",
      "kind": "heading",
      "align": "left",
      "position": "left"
     },
     "h1": {
-     "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-     "words": 11,
-     "lines": 2,
-     "size": 26,
-     "font": "Instrument Serif"
+     "text": "Hoje",
+     "words": 1,
+     "lines": 1,
+     "size": 15,
+     "font": "Instrument Sans"
     },
     "headings": [
-     {
-      "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-      "words": 11,
-      "chars": 51,
-      "lines": 2,
-      "size": 26,
-      "vw": 6.7,
-      "font": "Instrument Serif",
-      "weight": 400,
-      "tracking": -0.01,
-      "leading": 1.15,
-      "upper": false,
-      "italic": false,
-      "mono": false,
-      "align": "left",
-      "position": "center",
-      "widthRatio": 0.92,
-      "top": 73,
-      "tag": "h1",
-      "kind": "heading"
-     },
      {
       "text": "76.7kg",
       "words": 1,
@@ -1140,7 +1040,7 @@
       "align": "left",
       "position": "left",
       "widthRatio": 0.36,
-      "top": 244,
+      "top": 111,
       "tag": "dd",
       "kind": "statement"
      },
@@ -1161,7 +1061,7 @@
       "align": "left",
       "position": "right",
       "widthRatio": 0.18,
-      "top": 244,
+      "top": 132,
       "tag": "span",
       "kind": "statement"
      },
@@ -1182,7 +1082,7 @@
       "align": "left",
       "position": "left",
       "widthRatio": 0.36,
-      "top": 366,
+      "top": 274,
       "tag": "dd",
       "kind": "statement"
      },
@@ -1203,16 +1103,16 @@
       "align": "left",
       "position": "right",
       "widthRatio": 0.32,
-      "top": 366,
+      "top": 274,
       "tag": "span",
-      "kind": "statement"
+      "kind": "heading"
      }
     ],
     "headingSummary": {
-     "count": 5,
-     "maxLines": 2,
+     "count": 4,
+     "maxLines": 1,
      "over2Lines": 0,
-     "statements": 4,
+     "statements": 3,
      "centered": 0,
      "medianWords": 1,
      "mixedFontHeadings": 0
@@ -1221,26 +1121,20 @@
      "families": [
       {
        "family": "Instrument Sans",
-       "share": 0.95,
-       "mono": false
-      },
-      {
-       "family": "Instrument Serif",
-       "share": 0.05,
+       "share": 1,
        "mono": false
       }
      ],
-     "familyCount": 2,
+     "familyCount": 1,
      "sizes": [
       13,
       14,
       15,
       16,
       18,
-      22,
-      26
+      22
      ],
-     "sizeCount": 7,
+     "sizeCount": 6,
      "notLoaded": [],
      "body": {
       "font": "Instrument Sans",
@@ -1248,14 +1142,14 @@
       "leading": 1.5,
       "weight": 400,
       "tracking": 0,
-      "contrast": 9.1
+      "contrast": 14.8
      },
      "measureChars": 43,
      "max": {
-      "size": 26,
-      "vw": 6.7,
-      "font": "Instrument Serif",
-      "text": "76.5 kg · faltam 1.5 kg para 78 · tendên"
+      "size": 22,
+      "vw": 5.6,
+      "font": "Instrument Sans",
+      "text": "76.7"
      },
      "monoShare": 0,
      "monoProseShare": 0,
@@ -1265,7 +1159,7 @@
      "microLabelShare": 0,
      "microSamples": [],
      "upperShare": 0,
-     "centerShare": 0.11,
+     "centerShare": 0.13,
      "smallText": 0
     },
     "eyebrows": [],
@@ -1290,7 +1184,7 @@
       },
       {
        "color": "#1a1a19",
-       "top": 469,
+       "top": 377,
        "hsl": {
         "h": 60,
         "s": 0.02,
@@ -1301,11 +1195,11 @@
      "textColors": [
       {
        "color": "#b4b4b0",
-       "share": 0.57
+       "share": 0.61
       },
       {
        "color": "#ededea",
-       "share": 0.37
+       "share": 0.32
       },
       {
        "color": "#ff8a7a",
@@ -1370,7 +1264,7 @@
        "count": 4,
        "iconTopped": false,
        "rounded": true,
-       "top": 202
+       "top": 69
       }
      ]
     },
@@ -1383,8 +1277,7 @@
      "blur": false
     },
     "fontsLoaded": [
-     "instrument sans",
-     "instrument serif"
+     "instrument sans"
     ]
    },
    "layout": {
@@ -1392,20 +1285,20 @@
      "w": 390,
      "h": 844
     },
-    "pageH": 2251,
+    "pageH": 2159,
     "margins": {
-     "left": 29,
-     "right": 29
+     "left": 33,
+     "right": 32
     },
     "sections": [
      {
       "sel": "dl.grid.grid-cols-2",
       "tag": "dl",
-      "top": 202,
-      "height": 252,
-      "words": 33,
+      "top": 69,
+      "height": 292,
+      "words": 36,
       "media": 0,
-      "middle": 59,
+      "middle": 76,
       "heading": {
        "text": "76.7",
        "size": 22,
@@ -1424,9 +1317,9 @@
      {
       "sel": "div.grid.grid-cols-1",
       "tag": "div",
-      "top": 469,
+      "top": 377,
       "height": 476,
-      "words": 54,
+      "words": 46,
       "media": 0,
       "middle": 0,
       "heading": {
@@ -1440,14 +1333,14 @@
       "textRight": 33,
       "fullBleed": false,
       "footer": false,
-      "hero": false,
+      "hero": true,
       "continues": false,
       "pinned": false
      },
      {
       "sel": "section.panel.flex",
       "tag": "section",
-      "top": 961,
+      "top": 869,
       "height": 488,
       "words": 25,
       "media": 1,
@@ -1470,7 +1363,7 @@
      {
       "sel": "div.grid.grid-cols-1",
       "tag": "div",
-      "top": 1465,
+      "top": 1373,
       "height": 626,
       "words": 59,
       "media": 1,
@@ -1492,26 +1385,15 @@
      }
     ],
     "gaps": [],
-    "h1s": [
-     {
-      "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-      "size": 26,
-      "top": 73,
-      "firstScreen": true
-     }
-    ],
+    "h1s": [],
     "edgeText": [],
     "edges": [
      {
       "x": 33,
       "n": 5
-     },
-     {
-      "x": 16,
-      "n": 2
      }
     ],
-    "leftBlocks": 7,
+    "leftBlocks": 5,
     "bodySize": 15,
     "stage": false,
     "explains": false,
@@ -1535,17 +1417,17 @@
      "right": 16
     },
     "hero": {
-     "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-     "words": 11,
-     "chars": 51,
-     "lines": 2,
-     "size": 26,
-     "vw": 6.7,
-     "font": "Instrument Serif",
+     "text": "Hoje",
+     "words": 1,
+     "chars": 4,
+     "lines": 1,
+     "size": 15,
+     "vw": 3.8,
+     "font": "Instrument Sans",
      "weight": 400,
-     "tracking": -0.01,
-     "leading": 1.15,
-     "top": 73,
+     "tracking": 0,
+     "leading": 1.5,
+     "top": 68,
      "tag": "h1",
      "kind": "heading",
      "align": "left",
@@ -1556,7 +1438,13 @@
      "panels": 8,
      "firstScreen": 5,
      "ragged": [],
-     "voids": []
+     "voids": [
+      {
+       "gap": 46,
+       "at": 138,
+       "panel": "Média semanal"
+      }
+     ]
     },
     "tiles": 0,
     "panels": {
@@ -1586,7 +1474,7 @@
     "numbers": {
      "cells": 0,
      "leftAligned": 0,
-     "figures": 3,
+     "figures": 1,
      "tabularShare": 1,
      "kpiMax": 14
     },
@@ -1603,16 +1491,15 @@
       15,
       16,
       18,
-      22,
-      26
+      22
      ]
     },
     "title": {
-     "text": "76.5 kg · faltam 1.5 kg para 78 · tendência estável",
-     "size": 26,
-     "top": 73
+     "text": "Hoje",
+     "size": 15,
+     "top": 68
     },
-    "colourShare": 0.003
+    "colourShare": 0.021
    },
    "consoleErrors": []
   }

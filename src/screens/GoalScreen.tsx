@@ -90,7 +90,7 @@ export function GoalScreen() {
 
   return (
     <>
-      <ScreenTitle title={t.goalTitle} sub={t.goalSub} />
+      <ScreenTitle title={t.goalTitle} />
 
       <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-12">
         <div className="lg:col-span-4 lg:pt-5">

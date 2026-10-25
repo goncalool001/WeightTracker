@@ -88,7 +88,6 @@ export function EffectsPanel({ className }: { className?: string }) {
       <h2 id={id} className="flex min-h-9 items-center text-[15px] font-semibold text-text lg:text-sm">
         {t.effTitle}
       </h2>
-      <p className="max-w-[72ch] text-[14px] text-muted lg:text-[13px]">{t.effSub}</p>
 
       {report.rows.length === 0 ? (
         <p className="mt-4 text-[15px] text-text lg:text-sm">{t.effEmpty}</p>

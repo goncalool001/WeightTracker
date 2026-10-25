@@ -1,8 +1,8 @@
 import { useT } from '@/i18n';
+import { todayISO } from '@/domain';
 import { useStore } from '@/store/useStore';
 import { useStatus } from '@/store/selectors';
 import { routeHref } from '@/hooks/useRoute';
-import { headline } from '@/features/today/headline';
 import { KpiStrip } from '@/features/today/KpiStrip';
 import { Ruler } from '@/features/today/Ruler';
 import { DailyPanel } from '@/features/today/DailyPanel';
@@ -12,8 +12,7 @@ import { LogForm } from '@/features/log/LogForm';
 import { ScreenTitle } from './ScreenTitle';
 
 /**
- * Today. The h1 answers "am I on track / am I holding?" in one sentence; the
- * KPIs answer the next questions; the ruler shows where today sits against
+ * Today. The KPIs answer "where am I, and am I on track?"; the ruler shows where today sits against
  * the goal; then the chart, the analysis and the period changes.
  *
  * Grid (≥1024px): a 1100px column of 12 × 77px columns with 16px gutters
@@ -24,12 +23,17 @@ export function TodayScreen() {
   const t = useT();
   const s = useStatus();
   const total = useStore((st) => st.entries.length);
-  const { h1, sub } = headline(s, t);
   const empty = s.phase === 'empty';
+  // Shown only when the cards are not about today.
+  const stale = s.latest && s.latest.date !== todayISO() ? t.lastWeighIn(t.fmtShort(s.latest.date)) : undefined;
 
   return (
     <>
-      <ScreenTitle title={h1} sub={sub} serif />
+      {empty ? (
+        <ScreenTitle title={t.emptyHead} serif />
+      ) : (
+        <ScreenTitle title={t.nav.today} sub={stale} hidden />
+      )}
 
       <KpiStrip s={s} />
 
@@ -49,7 +53,7 @@ export function TodayScreen() {
             <Ruler s={s} />
           </div>
         )}
-        <div className="hidden lg:col-span-3 lg:block [&>form]:h-full">
+        <div className="hidden lg:col-span-3 lg:block">
           <LogForm variant="panel" />
         </div>
       </div>

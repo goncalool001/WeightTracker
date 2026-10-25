@@ -1,6 +1,6 @@
 {
  "url": ".taste-skill/demo-log-dark/index.html",
- "at": "2026-10-25T18:58:05.837Z",
+ "at": "2026-10-25T22:06:19.589Z",
  "allow": [],
  "viewports": [
   {
@@ -9,8 +9,8 @@
    "load": "load",
    "screens": 2,
    "filled": [
-    0.69,
-    0.68
+    0.63,
+    0.69
    ],
    "motion": {
     "elements": 2,
@@ -26,9 +26,9 @@
      "h": 900
     },
     "page": {
-     "height": 1667,
-     "screens": 1.9,
-     "words": 709,
+     "height": 1576,
+     "screens": 1.8,
+     "words": 667,
      "img": 0,
      "video": 0,
      "canvas": 0,
@@ -118,11 +118,10 @@
       13,
       14,
       15,
-      16,
       17,
       28
      ],
-     "sizeCount": 7,
+     "sizeCount": 6,
      "notLoaded": [],
      "body": {
       "font": "Instrument Sans",
@@ -147,7 +146,7 @@
      "microLabelShare": 0,
      "microSamples": [],
      "upperShare": 0,
-     "centerShare": 0.12,
+     "centerShare": 0.13,
      "smallText": 0
     },
     "eyebrows": [],
@@ -172,7 +171,7 @@
       },
       {
        "color": "#1a1a19",
-       "top": 135,
+       "top": 103,
        "hsl": {
         "h": 60,
         "s": 0.02,
@@ -183,15 +182,15 @@
      "textColors": [
       {
        "color": "#ededea",
-       "share": 0.47
+       "share": 0.5
       },
       {
        "color": "#b4b4b0",
-       "share": 0.41
+       "share": 0.38
       },
       {
        "color": "#5fc77f",
-       "share": 0.08
+       "share": 0.09
       },
       {
        "color": "#ff8a7a",
@@ -266,10 +265,10 @@
      "w": 1440,
      "h": 900
     },
-    "pageH": 1667,
+    "pageH": 1576,
     "margins": {
      "left": 51,
-     "right": 161
+     "right": 173
     },
     "sections": [],
     "gaps": [],
@@ -304,7 +303,7 @@
     "voidShare": 0.14,
     "voidBox": {
      "x": 480,
-     "y": 300,
+     "y": 240,
      "w": 420,
      "h": 420
     }
@@ -417,8 +416,8 @@
    "filled": [
     0.82,
     0.74,
-    0.78,
-    0.88,
+    0.81,
+    0.89,
     0.87
    ],
    "motion": {
@@ -435,9 +434,9 @@
      "h": 1024
     },
     "page": {
-     "height": 4339,
+     "height": 4266,
      "screens": 4.2,
-     "words": 713,
+     "words": 666,
      "img": 0,
      "video": 0,
      "canvas": 0,
@@ -535,7 +534,7 @@
      "microLabelShare": 0,
      "microSamples": [],
      "upperShare": 0,
-     "centerShare": 0.12,
+     "centerShare": 0.13,
      "smallText": 0
     },
     "eyebrows": [],
@@ -560,7 +559,7 @@
       },
       {
        "color": "#1a1a19",
-       "top": 154,
+       "top": 123,
        "hsl": {
         "h": 60,
         "s": 0.02,
@@ -571,15 +570,15 @@
      "textColors": [
       {
        "color": "#ededea",
-       "share": 0.47
+       "share": 0.51
       },
       {
        "color": "#b4b4b0",
-       "share": 0.41
+       "share": 0.37
       },
       {
        "color": "#5fc77f",
-       "share": 0.08
+       "share": 0.09
       },
       {
        "color": "#ff8a7a",
@@ -587,7 +586,7 @@
       },
       {
        "color": "#111110",
-       "share": 0
+       "share": 0.01
       }
      ],
      "button": {
@@ -655,7 +654,7 @@
      "w": 768,
      "h": 1024
     },
-    "pageH": 4339,
+    "pageH": 4266,
     "margins": {
      "left": 38,
      "right": 38
@@ -664,9 +663,9 @@
      {
       "sel": "section.panel.flex",
       "tag": "section",
-      "top": 154,
-      "height": 821,
-      "words": 151,
+      "top": 123,
+      "height": 779,
+      "words": 121,
       "media": 0,
       "middle": 0,
       "heading": {
@@ -687,7 +686,7 @@
      {
       "sel": "section.panel.flex",
       "tag": "section",
-      "top": 991,
+      "top": 918,
       "height": 1758,
       "words": 334,
       "media": 0,
@@ -710,7 +709,7 @@
      {
       "sel": "section.panel.flex",
       "tag": "section",
-      "top": 2765,
+      "top": 2692,
       "height": 1478,
       "words": 259,
       "media": 0,
@@ -744,15 +743,15 @@
     "edges": [
      {
       "x": 37,
-      "n": 5
+      "n": 4
      },
      {
       "x": 16,
       "n": 1
      }
     ],
-    "leftBlocks": 6,
-    "bodySize": 14,
+    "leftBlocks": 5,
+    "bodySize": 13,
     "stage": false,
     "explains": false,
     "slivers": [],
@@ -794,7 +793,7 @@
     "charts": 0,
     "layout": {
      "panels": 3,
-     "firstScreen": 1,
+     "firstScreen": 2,
      "ragged": [],
      "voids": []
     },
@@ -862,10 +861,10 @@
    "load": "load",
    "screens": 7,
    "filled": [
-    0.78,
+    0.84,
     0.89,
     0.89,
-    0.9,
+    0.88,
     0.89,
     0.89,
     0.88
@@ -884,9 +883,9 @@
      "h": 844
     },
     "page": {
-     "height": 5417,
-     "screens": 6.4,
-     "words": 745,
+     "height": 5303,
+     "screens": 6.3,
+     "words": 698,
      "img": 0,
      "video": 0,
      "canvas": 0,
@@ -1031,7 +1030,7 @@
       },
       {
        "color": "#1a1a19",
-       "top": 150,
+       "top": 119,
        "hsl": {
         "h": 60,
         "s": 0.02,
@@ -1042,11 +1041,11 @@
      "textColors": [
       {
        "color": "#b4b4b0",
-       "share": 0.51
+       "share": 0.48
       },
       {
        "color": "#ededea",
-       "share": 0.37
+       "share": 0.4
       },
       {
        "color": "#5fc77f",
@@ -1058,7 +1057,7 @@
       },
       {
        "color": "#111110",
-       "share": 0
+       "share": 0.01
       }
      ],
      "button": {
@@ -1129,7 +1128,7 @@
      "w": 390,
      "h": 844
     },
-    "pageH": 5417,
+    "pageH": 5303,
     "margins": {
      "left": 33,
      "right": 33
@@ -1138,9 +1137,9 @@
      {
       "sel": "section.panel.flex",
       "tag": "section",
-      "top": 150,
-      "height": 1077,
-      "words": 196,
+      "top": 119,
+      "height": 993,
+      "words": 166,
       "media": 0,
       "middle": 0,
       "heading": {
@@ -1161,7 +1160,7 @@
      {
       "sel": "section.panel.flex",
       "tag": "section",
-      "top": 1238,
+      "top": 1124,
       "height": 2012,
       "words": 282,
       "media": 0,
@@ -1184,7 +1183,7 @@
      {
       "sel": "section.panel.flex",
       "tag": "section",
-      "top": 3262,
+      "top": 3148,
       "height": 2059,
       "words": 282,
       "media": 0,
@@ -1218,14 +1217,14 @@
     "edges": [
      {
       "x": 33,
-      "n": 5
+      "n": 4
      },
      {
       "x": 16,
       "n": 1
      }
     ],
-    "leftBlocks": 6,
+    "leftBlocks": 5,
     "bodySize": 13,
     "stage": false,
     "explains": false,
@@ -1323,7 +1322,7 @@
      "size": 24,
      "top": 73
     },
-    "colourShare": 0.002
+    "colourShare": 0.003
    },
    "consoleErrors": []
   }

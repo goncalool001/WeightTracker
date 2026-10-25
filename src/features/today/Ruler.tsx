@@ -70,16 +70,16 @@ export function Ruler({ s }: { s: Status }) {
   let caption: string;
   if (s.phase === 'maintain' && band) {
     if (s.bandPosition === 'inside') {
-      caption = t.rCapInside(kg(latest), trimKg(band.low), abs1(latest - band.low), abs1(band.high - latest));
+      caption = t.rCapInside(abs1(latest - band.low), abs1(band.high - latest));
     } else if (s.bandPosition === 'above') {
-      caption = t.rCapAbove(kg(latest), abs1(s.bandDistance ?? 0));
+      caption = t.rCapAbove(abs1(s.bandDistance ?? 0));
     } else {
-      caption = t.rCapBelow(kg(latest), abs1(s.bandDistance ?? 0));
+      caption = t.rCapBelow(abs1(s.bandDistance ?? 0));
     }
   } else if (s.phase === 'reach' && target != null) {
-    caption = t.rCapReach((s.progress ?? 0).toFixed(0), kg(start), trimKg(target));
+    caption = t.rCapReach((s.progress ?? 0).toFixed(0));
   } else if (s.phase === 'reached' && target != null && s.reached) {
-    caption = t.rCapReached(trimKg(target), t.fmtShort(s.reached.date), kg(s.reached.weight));
+    caption = t.rCapReached(trimKg(target), t.fmtShort(s.reached.date));
   } else {
     caption = t.rCapNone;
   }
@@ -165,12 +165,12 @@ export function Ruler({ s }: { s: Status }) {
       <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[13px] text-muted">
         <li className="flex items-center gap-1.5">
           <span aria-hidden="true" className="h-3.5 w-0.5 bg-text" />
-          {t.rToday} <span className="num text-text">{kg(latest)}</span>
+          {t.rToday}
         </li>
         {s.avg7 != null && (
           <li className="flex items-center gap-1.5">
             <span aria-hidden="true" className="h-3 w-3 rounded-full border-2 border-accent" />
-            {t.rAvg} <span className="num text-text">{kg(s.avg7)}</span>
+            {t.rAvg}
           </li>
         )}
         {band && (

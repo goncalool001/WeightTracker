@@ -22,14 +22,9 @@ export function LogScreen() {
   const setGranularity = useStore((s) => s.setGranularity);
   const periods = usePeriods('all');
 
-  const sub =
-    entries.length > 0
-      ? t.logScreenSub(entries.length, t.fmtDate(entries[0].date), t.fmtDate(entries[entries.length - 1].date))
-      : t.noEntriesRange;
-
   return (
     <>
-      <ScreenTitle title={t.logScreenTitle} sub={sub} />
+      <ScreenTitle title={t.logScreenTitle} />
       {/* From 1024px the two tables share one height and scroll inside their
           panels (headers stay in view), so the row ends on one line. */}
       <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-12">

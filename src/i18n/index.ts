@@ -31,20 +31,9 @@ export interface T {
   localOnly: string;
 
   // today — h1 parts
-  headInBand: (low: string, high: string) => string;
-  headAboveBand: (kg: string) => string;
-  headBelowBand: (kg: string) => string;
-  headToGo: (kg: string, target: string) => string;
-  headReached: (target: string) => string;
-  headPastTarget: (kg: string) => string;
-  trendWord: Record<DeltaDirection, string>;
   emptyHead: string;
   emptySub: string;
-  todayLine: (date: string) => string;
   lastWeighIn: (date: string) => string;
-  avg7Line: (kg: string, n: number) => string;
-
-  // today — KPIs
   kAvg7: string;
   kAvg7Cap: (n: number) => string;
   kVsPrev: string;
@@ -61,8 +50,12 @@ export interface T {
   kToGoCap: (target: string) => string;
   kPace: string;
   kPaceUnit: string;
-  kPaceEta: (date: string) => string;
-  kPaceNoEta: string;
+  kPaceCap: string;
+  kPaceNoGoal: string;
+  kEta: string;
+  kEtaFrom: (date: string) => string;
+  kEtaCap: string;
+  kEtaUnsteady: string;
   kNoData: string;
 
   // today — ruler
@@ -74,11 +67,11 @@ export interface T {
   rAvg: string;
   rGoal: string;
   rBand: string;
-  rCapInside: (kg: string, low: string, aboveLow: string, belowHigh: string) => string;
-  rCapAbove: (kg: string, over: string) => string;
-  rCapBelow: (kg: string, under: string) => string;
-  rCapReach: (pct: string, start: string, target: string) => string;
-  rCapReached: (target: string, date: string, kg: string) => string;
+  rCapInside: (aboveLow: string, belowHigh: string) => string;
+  rCapAbove: (over: string) => string;
+  rCapBelow: (under: string) => string;
+  rCapReach: (pct: string) => string;
+  rCapReached: (target: string, date: string) => string;
   rCapNone: string;
   setMaintain: string;
   setGoal: string;
@@ -106,7 +99,6 @@ export interface T {
   yesterdayWord: string;
   save: string;
   replaceBtn: (kg: string) => string;
-  existsNote: (kg: string, date: string) => string;
   errEmpty: string;
   errRange: string;
   errFuture: string;
@@ -129,7 +121,6 @@ export interface T {
   categoriesLbl: string;
   noteAbout: (prevDay: string) => string;
   effTitle: string;
-  effSub: string;
   effFinding: (label: string, kg: string, n: number, heavier: boolean) => string;
   effNoFinding: string;
   effEmpty: string;
@@ -147,10 +138,7 @@ export interface T {
   driftDown: (limit: string, date: string, rate: string) => string;
   driftNear: (gap: string, limit: string) => string;
   streak: (n: number) => string;
-  kPaceRange: (early: string, late: string) => string;
-  kPaceFrom: (early: string) => string;
   compareBtn: string;
-  lPrevious: (from: string, to: string) => string;
   compareThis: string;
   comparePrev: string;
   compareNone: string;
@@ -180,7 +168,7 @@ export interface T {
   ranges: { '7d': string; '30d': string; '90d': string; ytd: string; all: string; custom: string };
   rangeFrom: string;
   rangeTo: string;
-  rangeDates: (from: string, to: string, n: number) => string;
+  rangeDates: (n: number) => string;
   chartWeight: string;
   chartAvg: string;
   chartChange: string;
@@ -211,7 +199,6 @@ export interface T {
 
   // entries screen
   logScreenTitle: string;
-  logScreenSub: (n: number, from: string, to: string) => string;
   pesagens: string;
   colDate: string;
   colWeight: string;
@@ -231,7 +218,6 @@ export interface T {
 
   // goal screen
   goalTitle: string;
-  goalSub: string;
   currentGoal: string;
   modeLabel: string;
   modeLose: string;
@@ -263,7 +249,6 @@ export interface T {
 
   // data screen
   dataTitle: string;
-  dataSub: (n: number) => string;
   importTitle: string;
   importDesc: string;
   chooseFile: string;
@@ -341,37 +326,31 @@ const en: T = {
   offlineMsg: 'Offline. Changes sync when you are back online.',
   localOnly: 'Saved on this device only',
 
-  headInBand: (low, high) => `inside ${low}–${high} kg`,
-  headAboveBand: (kg) => `${kg} kg above your range`,
-  headBelowBand: (kg) => `${kg} kg below your range`,
-  headToGo: (kg, target) => `${kg} kg to ${target}`,
-  headReached: (target) => `${target} kg goal reached`,
-  headPastTarget: (kg) => `${kg} kg past your goal`,
-  trendWord: { down: 'trending down', up: 'trending up', flat: 'holding steady' },
   emptyHead: 'Log your first weight',
   emptySub: 'Your averages, trend and goal appear from the first few weigh-ins.',
-  todayLine: (date) => date,
-  lastWeighIn: (date) => `last weigh-in ${date}`,
-  avg7Line: (kg, n) => `7-day average ${kg} kg from ${n} ${plural(n, 'weigh-in', 'weigh-ins')}`,
-
-  kAvg7: '7-day average',
-  kAvg7Cap: (n) => `${n} ${plural(n, 'weigh-in', 'weigh-ins')} in 7 days`,
-  kVsPrev: 'vs the 7 days before',
-  kVsPrevCap: { down: 'going down', up: 'going up', flat: 'steady' },
+  lastWeighIn: (date) => `Last weigh-in ${date}`,
+  kAvg7: 'Weekly average',
+  kAvg7Cap: (n) => `from ${n} ${plural(n, 'weigh-in', 'weigh-ins')}`,
+  kVsPrev: 'Change this week',
+  kVsPrevCap: { down: 'vs last week', up: 'vs last week', flat: 'vs last week, steady' },
   kBelow: (kg) => `Below ${kg} kg`,
   kDays: (n) => `${n} ${plural(n, 'day', 'days')}`,
   kSince: (date) => `since ${date}`,
   kNotBelow: (kg) => `at or above ${kg} kg today`,
   kAbove: (kg) => `Above ${kg} kg`,
   kNotAbove: (kg) => `at or below ${kg} kg today`,
-  kSinceStart: 'Since the start',
-  kSinceStartCap: (kg, date) => `from ${kg} kg on ${date}`,
-  kToGo: 'To go',
-  kToGoCap: (target) => `to ${target} kg`,
-  kPace: 'Pace, 28 days',
+  kSinceStart: 'Total change',
+  kSinceStartCap: (kg, date) => `since ${kg} kg on ${date}`,
+  kToGo: 'Left to goal',
+  kToGoCap: (target) => `goal ${target} kg`,
+  kPace: 'Weekly pace',
   kPaceUnit: 'kg/wk',
-  kPaceEta: (date) => `goal around ${date}`,
-  kPaceNoEta: 'not heading to the goal yet',
+  kPaceCap: 'average of the last 4 weeks',
+  kPaceNoGoal: 'last 4 weeks, away from the goal',
+  kEta: 'Expected arrival',
+  kEtaFrom: (date) => `after ${date}`,
+  kEtaCap: 'over the last 4 weeks',
+  kEtaUnsteady: 'pace too uneven for an end date',
   kNoData: 'not enough weigh-ins',
 
   rulerMaintain: 'Maintaining weight',
@@ -382,12 +361,11 @@ const en: T = {
   rAvg: '7-day avg',
   rGoal: 'goal',
   rBand: 'range',
-  rCapInside: (kg, low, aboveLow, belowHigh) =>
-    `Today's ${kg} kg is ${aboveLow} kg above the bottom of the range (${low} kg) and ${belowHigh} kg under the top.`,
-  rCapAbove: (kg, over) => `Today's ${kg} kg is ${over} kg over the top of the range.`,
-  rCapBelow: (kg, under) => `Today's ${kg} kg is ${under} kg under the bottom of the range.`,
-  rCapReach: (pct, start, target) => `${pct}% of the way from ${start} kg to ${target} kg.`,
-  rCapReached: (target, date, kg) => `Passed ${target} kg on ${date} (${kg} kg).`,
+  rCapInside: (aboveLow, belowHigh) => `${aboveLow} kg above the bottom, ${belowHigh} kg under the top.`,
+  rCapAbove: (over) => `${over} kg over the range.`,
+  rCapBelow: (under) => `${under} kg under the range.`,
+  rCapReach: (pct) => `${pct}% of the way.`,
+  rCapReached: (target, date) => `Passed ${target} kg on ${date}.`,
   rCapNone: 'Set a goal to see your target or the weight to maintain here.',
   setMaintain: 'Set a weight to maintain',
   setGoal: 'Set a goal',
@@ -414,7 +392,6 @@ const en: T = {
   yesterdayWord: 'Yesterday',
   save: 'Save',
   replaceBtn: (kg) => `Replace ${kg}`,
-  existsNote: (kg, date) => `${date} already has ${kg} kg.`,
   errEmpty: 'Enter your weight.',
   errRange: 'Use a weight between 30 and 250 kg.',
   errFuture: 'Pick today or an earlier day.',
@@ -469,9 +446,8 @@ const en: T = {
   saveNote: 'Save note',
   editNote: 'Edit note',
   categoriesLbl: 'Categories',
-  noteAbout: (prevDay) => `What happened the day before (${prevDay}) that may explain this weight.`,
+  noteAbout: (prevDay) => `About the day before (${prevDay}).`,
   effTitle: 'What explains the swings',
-  effSub: 'How far a weigh-in sits from your previous 7-day average after a day with each category, against weigh-ins with no category.',
   effFinding: (label, kg, n, heavier) =>
     `After a day with "${label}" you weigh ${kg} kg ${heavier ? 'more' : 'less'} on average (${n} weigh-ins).`,
   effNoFinding: 'No category has a clear effect yet. Keep tagging the days that stand out.',
@@ -485,26 +461,20 @@ const en: T = {
   effUnclear: 'no clear effect',
   effExplained: (withTag, total) =>
     `${withTag} of your ${total} rises above 0.5 kg have a category.`,
-  effMethod:
-    'Bars show the average difference with an 80% range. 5 to 9 weigh-ins: indicative. A day with two categories counts for both. These are patterns in your data, not causes.',
+  effMethod: 'Difference from your previous 7-day average, against weigh-ins with no category, with an 80% range. 5 to 9 weigh-ins: indicative. Patterns, not causes.',
   effAria: (label, kg, low, high, n) =>
     `${label}: ${kg} kg on average, range ${low} to ${high} kg, ${n} weigh-ins`,
-  driftUp: (limit, date, rate) =>
-    `At the last two weeks' pace (${rate} kg/wk), your 7-day average passes ${limit} kg around ${date}.`,
-  driftDown: (limit, date, rate) =>
-    `At the last two weeks' pace (${rate} kg/wk), your 7-day average drops below ${limit} kg around ${date}.`,
+  driftUp: (limit, date, rate) => `At ${rate} kg/wk, your 7-day average passes ${limit} kg around ${date}.`,
+  driftDown: (limit, date, rate) => `At ${rate} kg/wk, your 7-day average drops below ${limit} kg around ${date}.`,
   driftNear: (gap, limit) => `Your 7-day average is ${gap} kg from the ${limit} kg limit.`,
   streak: (n) => `${n} ${plural(n, 'day', 'days')} in a row with a weigh-in.`,
-  kPaceRange: (early, late) => `goal between ${early} and ${late}`,
-  kPaceFrom: (early) => `goal not before ${early}, pace unsteady`,
   compareBtn: 'Compare with previous',
-  lPrevious: (from, to) => `Previous period, ${from} – ${to}`,
   compareThis: 'This period',
   comparePrev: 'Previous period',
   compareNone: 'No weigh-ins in the previous period.',
   compareRange: (low, high) => `${low}–${high} kg`,
   compareNoneShort: 'no weigh-ins',
-  compareAvg: (now, before) => `Average ${now} kg, against ${before} kg in the previous period.`,
+  compareAvg: (now, before) => `Average ${now} vs ${before} kg.`,
   chartPrev: 'Previous period',
   tReplaced: (prev, kg, date) => `${date}: ${prev} kg replaced by ${kg} kg`,
   tDeleted: (kg, date) => `Deleted ${kg} kg on ${date}`,
@@ -527,7 +497,7 @@ const en: T = {
   ranges: { '7d': '7D', '30d': '30D', '90d': '90D', ytd: 'YTD', all: 'All', custom: 'Dates' },
   rangeFrom: 'From',
   rangeTo: 'To',
-  rangeDates: (from, to, n) => `${from} to ${to}, ${n} ${plural(n, 'weigh-in', 'weigh-ins')}`,
+  rangeDates: (n) => `${n} ${plural(n, 'weigh-in', 'weigh-ins')}`,
   chartWeight: 'Weigh-in',
   chartAvg: '7-day avg',
   chartChange: 'Change',
@@ -578,8 +548,6 @@ const en: T = {
   },
 
   logScreenTitle: 'Entries',
-  logScreenSub: (n, from, to) =>
-    `${n} ${plural(n, 'weigh-in', 'weigh-ins')} from ${from} to ${to}`,
   pesagens: 'Weigh-ins',
   colDate: 'Date',
   colWeight: 'Weight',
@@ -598,7 +566,6 @@ const en: T = {
   noEntriesRange: 'No weigh-ins in this range.',
 
   goalTitle: 'Goal',
-  goalSub: 'Lose weight, gain weight, or maintain it.',
   currentGoal: 'Current goal',
   modeLabel: 'Kind of goal',
   modeLose: 'Lose',
@@ -631,10 +598,8 @@ const en: T = {
   hNotYet: 'not reached yet',
 
   dataTitle: 'Data',
-  dataSub: (n) => `${n} ${plural(n, 'weigh-in', 'weigh-ins')} saved`,
   importTitle: 'Import',
-  importDesc:
-    'CSV or Excel with a Date column (2026-10-25 or 25/10/2026) and a Weight column in kg. You see every row before anything is saved.',
+  importDesc: 'CSV or Excel with Date and Weight (kg) columns. You check every row before saving.',
   chooseFile: 'Choose a file',
   readFailed: 'That file could not be read. Use a .csv or .xlsx file.',
   noColumns: 'No Date and Weight columns in that file.',
@@ -666,7 +631,7 @@ const en: T = {
   rejectedTitle: 'Rows left out',
   validTitle: 'Rows to save',
   exportTitle: 'Export',
-  exportDesc: (n) => `All ${n} weigh-ins with their dates, in kg.`,
+  exportDesc: (n) => `${n} ${plural(n, 'weigh-in', 'weigh-ins')}, with categories and notes.`,
   exportXlsx: 'Download .xlsx',
   exportCsv: 'Download .csv',
   nothingToExport: 'There is nothing to export yet.',
@@ -715,37 +680,31 @@ const pt: T = {
   offlineMsg: 'Sem ligação. As alterações sincronizam quando voltares a estar online.',
   localOnly: 'Guardado só neste dispositivo',
 
-  headInBand: (low, high) => `dentro de ${low}–${high} kg`,
-  headAboveBand: (kg) => `${kg} kg acima do intervalo`,
-  headBelowBand: (kg) => `${kg} kg abaixo do intervalo`,
-  headToGo: (kg, target) => `faltam ${kg} kg para ${target}`,
-  headReached: (target) => `meta de ${target} kg atingida`,
-  headPastTarget: (kg) => `${kg} kg além da meta`,
-  trendWord: { down: 'a descer', up: 'a subir', flat: 'tendência estável' },
   emptyHead: 'Regista o teu primeiro peso',
   emptySub: 'As médias, a tendência e a meta aparecem a partir das primeiras pesagens.',
-  todayLine: (date) => date,
-  lastWeighIn: (date) => `última pesagem a ${date}`,
-  avg7Line: (kg, n) => `média de 7 dias ${kg} kg em ${n} ${plural(n, 'pesagem', 'pesagens')}`,
-
-  kAvg7: 'Média 7 dias',
-  kAvg7Cap: (n) => `${n} ${plural(n, 'pesagem', 'pesagens')} em 7 dias`,
-  kVsPrev: 'vs 7 dias antes',
-  kVsPrevCap: { down: 'a descer', up: 'a subir', flat: 'estável' },
+  lastWeighIn: (date) => `Última pesagem a ${date}`,
+  kAvg7: 'Média semanal',
+  kAvg7Cap: (n) => `de ${n} ${plural(n, 'pesagem', 'pesagens')}`,
+  kVsPrev: 'Variação esta semana',
+  kVsPrevCap: { down: 'face à semana passada', up: 'face à semana passada', flat: 'face à semana passada, estável' },
   kBelow: (kg) => `Abaixo de ${kg} kg`,
   kDays: (n) => `${n} ${plural(n, 'dia', 'dias')}`,
   kSince: (date) => `desde ${date}`,
   kNotBelow: (kg) => `hoje em ${kg} kg ou mais`,
   kAbove: (kg) => `Acima de ${kg} kg`,
   kNotAbove: (kg) => `hoje em ${kg} kg ou menos`,
-  kSinceStart: 'Desde o início',
-  kSinceStartCap: (kg, date) => `de ${kg} kg a ${date}`,
-  kToGo: 'Falta',
-  kToGoCap: (target) => `até ${target} kg`,
-  kPace: 'Ritmo, 28 dias',
+  kSinceStart: 'Variação total',
+  kSinceStartCap: (kg, date) => `desde ${kg} kg a ${date}`,
+  kToGo: 'Falta para a meta',
+  kToGoCap: (target) => `meta ${target} kg`,
+  kPace: 'Ritmo semanal',
   kPaceUnit: 'kg/sem',
-  kPaceEta: (date) => `meta por volta de ${date}`,
-  kPaceNoEta: 'ainda sem direção à meta',
+  kPaceCap: 'média das últimas 4 semanas',
+  kPaceNoGoal: 'últimas 4 semanas, longe da meta',
+  kEta: 'Chegada prevista',
+  kEtaFrom: (date) => `depois de ${date}`,
+  kEtaCap: 'nas últimas 4 semanas',
+  kEtaUnsteady: 'ritmo irregular, sem data final',
   kNoData: 'poucas pesagens',
 
   rulerMaintain: 'Manter peso',
@@ -756,12 +715,11 @@ const pt: T = {
   rAvg: 'média 7 dias',
   rGoal: 'meta',
   rBand: 'intervalo',
-  rCapInside: (kg, low, aboveLow, belowHigh) =>
-    `Hoje, ${kg} kg está ${aboveLow} kg acima do limite inferior (${low} kg) e ${belowHigh} kg abaixo do superior.`,
-  rCapAbove: (kg, over) => `Hoje, ${kg} kg está ${over} kg acima do limite superior.`,
-  rCapBelow: (kg, under) => `Hoje, ${kg} kg está ${under} kg abaixo do limite inferior.`,
-  rCapReach: (pct, start, target) => `${pct}% do caminho entre ${start} kg e ${target} kg.`,
-  rCapReached: (target, date, kg) => `Passaste os ${target} kg a ${date} (${kg} kg).`,
+  rCapInside: (aboveLow, belowHigh) => `${aboveLow} kg acima do limite inferior, ${belowHigh} kg abaixo do superior.`,
+  rCapAbove: (over) => `${over} kg acima do intervalo.`,
+  rCapBelow: (under) => `${under} kg abaixo do intervalo.`,
+  rCapReach: (pct) => `${pct}% do caminho.`,
+  rCapReached: (target, date) => `Passaste os ${target} kg a ${date}.`,
   rCapNone: 'Define uma meta para ver aqui o alvo ou o peso a manter.',
   setMaintain: 'Definir peso a manter',
   setGoal: 'Definir meta',
@@ -788,7 +746,6 @@ const pt: T = {
   yesterdayWord: 'Ontem',
   save: 'Gravar',
   replaceBtn: (kg) => `Substituir ${kg}`,
-  existsNote: (kg, date) => `${date} já tem ${kg} kg.`,
   errEmpty: 'Escreve o teu peso.',
   errRange: 'Usa um peso entre 30 e 250 kg.',
   errFuture: 'Escolhe hoje ou um dia anterior.',
@@ -843,9 +800,8 @@ const pt: T = {
   saveNote: 'Gravar nota',
   editNote: 'Editar nota',
   categoriesLbl: 'Categorias',
-  noteAbout: (prevDay) => `O que aconteceu no dia anterior (${prevDay}) e pode explicar este peso.`,
+  noteAbout: (prevDay) => `Sobre o dia anterior (${prevDay}).`,
   effTitle: 'O que explica as variações',
-  effSub: 'Quanto uma pesagem se afasta da tua média dos 7 dias anteriores depois de um dia com cada categoria, comparado com as pesagens sem categoria.',
   effFinding: (label, kg, n, heavier) =>
     `Depois de um dia com "${label}" pesas, em média, ${kg} kg ${heavier ? 'a mais' : 'a menos'} (${n} pesagens).`,
   effNoFinding: 'Nenhuma categoria tem ainda um efeito claro. Continua a marcar os dias que se destacam.',
@@ -859,26 +815,20 @@ const pt: T = {
   effUnclear: 'sem efeito claro',
   effExplained: (withTag, total) =>
     `${withTag} das tuas ${total} subidas acima de 0.5 kg têm categoria.`,
-  effMethod:
-    'As barras mostram a diferença média com um intervalo de 80%. 5 a 9 pesagens: indicativo. Um dia com duas categorias conta para as duas. São padrões nos teus dados, não causas.',
+  effMethod: 'Diferença face à média dos 7 dias anteriores, comparada com pesagens sem categoria, com intervalo de 80%. 5 a 9 pesagens: indicativo. Padrões, não causas.',
   effAria: (label, kg, low, high, n) =>
     `${label}: ${kg} kg em média, intervalo de ${low} a ${high} kg, ${n} pesagens`,
-  driftUp: (limit, date, rate) =>
-    `Ao ritmo das últimas 2 semanas (${rate} kg/sem), a média de 7 dias passa os ${limit} kg por volta de ${date}.`,
-  driftDown: (limit, date, rate) =>
-    `Ao ritmo das últimas 2 semanas (${rate} kg/sem), a média de 7 dias desce abaixo dos ${limit} kg por volta de ${date}.`,
+  driftUp: (limit, date, rate) => `A ${rate} kg/sem, a média de 7 dias passa os ${limit} kg por volta de ${date}.`,
+  driftDown: (limit, date, rate) => `A ${rate} kg/sem, a média de 7 dias desce abaixo dos ${limit} kg por volta de ${date}.`,
   driftNear: (gap, limit) => `A média de 7 dias está a ${gap} kg do limite de ${limit} kg.`,
   streak: (n) => `${n} ${plural(n, 'dia seguido', 'dias seguidos')} com pesagem.`,
-  kPaceRange: (early, late) => `meta entre ${early} e ${late}`,
-  kPaceFrom: (early) => `meta não antes de ${early}, ritmo instável`,
   compareBtn: 'Comparar com o anterior',
-  lPrevious: (from, to) => `Período anterior, ${from} – ${to}`,
   compareThis: 'Este período',
   comparePrev: 'Período anterior',
   compareNone: 'Sem pesagens no período anterior.',
   compareRange: (low, high) => `${low}–${high} kg`,
   compareNoneShort: 'sem pesagens',
-  compareAvg: (now, before) => `Média ${now} kg, contra ${before} kg no período anterior.`,
+  compareAvg: (now, before) => `Média ${now} vs ${before} kg.`,
   chartPrev: 'Período anterior',
   tReplaced: (prev, kg, date) => `${date}: ${prev} kg substituído por ${kg} kg`,
   tDeleted: (kg, date) => `Apagado ${kg} kg de ${date}`,
@@ -901,7 +851,7 @@ const pt: T = {
   ranges: { '7d': '7D', '30d': '30D', '90d': '90D', ytd: 'Ano', all: 'Tudo', custom: 'Datas' },
   rangeFrom: 'De',
   rangeTo: 'Até',
-  rangeDates: (from, to, n) => `${from} a ${to}, ${n} ${plural(n, 'pesagem', 'pesagens')}`,
+  rangeDates: (n) => `${n} ${plural(n, 'pesagem', 'pesagens')}`,
   chartWeight: 'Pesagem',
   chartAvg: 'Média 7 dias',
   chartChange: 'Variação',
@@ -952,8 +902,6 @@ const pt: T = {
   },
 
   logScreenTitle: 'Registos',
-  logScreenSub: (n, from, to) =>
-    `${n} ${plural(n, 'pesagem', 'pesagens')} de ${from} a ${to}`,
   pesagens: 'Pesagens',
   colDate: 'Data',
   colWeight: 'Peso',
@@ -972,7 +920,6 @@ const pt: T = {
   noEntriesRange: 'Sem pesagens neste intervalo.',
 
   goalTitle: 'Meta',
-  goalSub: 'Perder peso, ganhar peso ou manter.',
   currentGoal: 'Meta atual',
   modeLabel: 'Tipo de meta',
   modeLose: 'Perder',
@@ -1005,10 +952,8 @@ const pt: T = {
   hNotYet: 'ainda não atingida',
 
   dataTitle: 'Dados',
-  dataSub: (n) => `${n} ${plural(n, 'pesagem guardada', 'pesagens guardadas')}`,
   importTitle: 'Importar',
-  importDesc:
-    'CSV ou Excel com uma coluna Data (2026-10-25 ou 25/10/2026) e uma coluna Peso em kg. Vês todas as linhas antes de gravar.',
+  importDesc: 'CSV ou Excel com colunas Data e Peso (kg). Vês todas as linhas antes de gravar.',
   chooseFile: 'Escolher ficheiro',
   readFailed: 'Não foi possível ler o ficheiro. Usa um .csv ou .xlsx.',
   noColumns: 'O ficheiro não tem colunas Data e Peso.',
@@ -1040,7 +985,7 @@ const pt: T = {
   rejectedTitle: 'Linhas rejeitadas',
   validTitle: 'Linhas a gravar',
   exportTitle: 'Exportar',
-  exportDesc: (n) => `As ${n} pesagens com as datas, em kg.`,
+  exportDesc: (n) => `${n} ${plural(n, 'pesagem', 'pesagens')}, com categorias e notas.`,
   exportXlsx: 'Descarregar .xlsx',
   exportCsv: 'Descarregar .csv',
   nothingToExport: 'Ainda não há nada para exportar.',

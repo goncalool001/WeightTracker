@@ -133,11 +133,7 @@ export function DailyPanel() {
             aria-live="polite"
             className="col-span-2 text-[13px] text-muted sm:pb-2.5 lg:pb-2"
           >
-            {t.rangeDates(
-              t.fmtDate(bounds.from),
-              t.fmtDate(bounds.to),
-              entries.length,
-            )}
+            {t.rangeDates(entries.length)}
           </p>
         </div>
       )}
@@ -227,7 +223,7 @@ export function DailyPanel() {
                 aria-hidden="true"
                 className="h-0.5 w-4 bg-[var(--chart-dot)]"
               />
-              {t.lPrevious(t.fmtShort(cmp.prev.from), t.fmtShort(cmp.prev.to))}
+              {t.comparePrev}
             </li>
           )}
           {hasGaps && (
