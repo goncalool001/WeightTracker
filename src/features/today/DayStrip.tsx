@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent as ReactPointerEvent } from 'react';
 import { addDaysISO, consecutiveDays, goodDirection, roundWeight, todayISO, type Status } from '@/domain';
 import { kg } from '@/lib/format';
 import { cn } from '@/lib/cn';
@@ -33,6 +33,7 @@ export function DayStrip({ s, entries }: { s: Status; entries: WeightEntry[] }) 
   const listRef = useRef<HTMLOListElement>(null);
   const [active, setActive] = useState<number | null>(null);
   const [focusIdx, setFocusIdx] = useState(29);
+  const pressed = useRef(false);
 
   // A tap elsewhere closes the tooltip on touch screens.
   useEffect(() => {
@@ -103,6 +104,33 @@ export function DayStrip({ s, entries }: { s: Status; entries: WeightEntry[] }) 
     (listRef.current?.children[next]?.firstElementChild as HTMLElement | null)?.focus();
   };
 
+  // Scrubbing: press anywhere on the strip (including the padding above and
+  // below the cells) and slide the finger; the day under it is selected.
+  // The strip keeps vertical page scrolling (touch-action: pan-y).
+  const dayAt = (clientX: number) => {
+    const r = listRef.current!.getBoundingClientRect();
+    return Math.min(29, Math.max(0, Math.floor(((clientX - r.left) / r.width) * 30)));
+  };
+  const onPointerDown = (e: ReactPointerEvent<HTMLOListElement>) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    pressed.current = true;
+    // Keep receiving moves when the finger drifts off the strip.
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      /* the pointer is already gone */
+    }
+    const i = dayAt(e.clientX);
+    setFocusIdx(i);
+    setActive(i);
+  };
+  const onPointerMove = (e: ReactPointerEvent<HTMLOListElement>) => {
+    // A mouse selects by hovering; a finger or pen only while pressed.
+    if (e.pointerType !== 'mouse' && !pressed.current) return;
+    const i = dayAt(e.clientX);
+    if (i !== active) setActive(i);
+  };
+
   const tip = active != null ? days[active] : null;
   const legend: Array<{ cls: string; text: string }> = [
     { cls: 'bg-positive', text: band ? t.sInBandOrBack : hasGoal ? t.sToward : t.sDown },
@@ -154,8 +182,14 @@ export function DayStrip({ s, entries }: { s: Status; entries: WeightEntry[] }) 
         <ol
           ref={listRef}
           aria-label={summary}
-          className="flex gap-[3px]"
-          onMouseLeave={() => setActive(null)}
+          className="-my-3 flex cursor-pointer touch-pan-y select-none gap-[3px] py-3"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={() => (pressed.current = false)}
+          onPointerCancel={() => (pressed.current = false)}
+          onPointerLeave={(e) => {
+            if (e.pointerType === 'mouse') setActive(null);
+          }}
           onKeyDown={onKey}
           onBlur={(e) => {
             if (!e.currentTarget.contains(e.relatedTarget as Node)) setActive(null);
@@ -167,12 +201,10 @@ export function DayStrip({ s, entries }: { s: Status; entries: WeightEntry[] }) 
                 type="button"
                 tabIndex={i === focusIdx ? 0 : -1}
                 aria-label={label(d)}
-                onMouseEnter={() => setActive(i)}
                 onFocus={() => {
                   setFocusIdx(i);
                   setActive(i);
                 }}
-                onClick={() => setActive((a) => (a === i ? null : i))}
                 className={cn(
                   'block h-10 w-full rounded-[3px] transition-opacity lg:h-8',
                   d.mark === 'none'

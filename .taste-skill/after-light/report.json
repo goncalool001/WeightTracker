@@ -1,6 +1,6 @@
 {
  "url": ".taste-skill/demo-light/index.html",
- "at": "2026-10-25T22:05:23.099Z",
+ "at": "2026-10-25T22:20:16.538Z",
  "allow": [],
  "viewports": [
   {
@@ -28,7 +28,7 @@
     "page": {
      "height": 1414,
      "screens": 1.6,
-     "words": 184,
+     "words": 186,
      "img": 0,
      "video": 0,
      "canvas": 2,
@@ -92,6 +92,8 @@
      ],
      "familyCount": 1,
      "sizes": [
+      10,
+      11,
       13,
       14,
       15,
@@ -99,7 +101,7 @@
       19,
       24
      ],
-     "sizeCount": 6,
+     "sizeCount": 8,
      "notLoaded": [],
      "body": {
       "font": "Instrument Sans",
@@ -124,7 +126,7 @@
      "microLabelShare": 0,
      "microSamples": [],
      "upperShare": 0,
-     "centerShare": 0.14,
+     "centerShare": 0.15,
      "smallText": 0
     },
     "eyebrows": [],
@@ -164,10 +166,10 @@
       },
       {
        "color": "#1f201d",
-       "share": 0.31
+       "share": 0.32
       },
       {
-       "color": "#b42318",
+       "color": "#2e7d32",
        "share": 0.05
       },
       {
@@ -279,9 +281,9 @@
        "tag": "span"
       },
       "left": 319,
-      "right": 119,
+      "right": 103,
       "textLeft": 319,
-      "textRight": 119,
+      "textRight": 103,
       "fullBleed": false,
       "footer": false,
       "hero": true,
@@ -293,7 +295,7 @@
       "tag": "div",
       "top": 180,
       "height": 402,
-      "words": 57,
+      "words": 59,
       "media": 0,
       "middle": 58,
       "heading": {
@@ -466,10 +468,13 @@
     "chartHues": 0,
     "placeholders": [],
     "type": {
-     "under13": 0,
-     "tiny": 0,
-     "tinySamples": [],
+     "under13": 0.01,
+     "tiny": 1,
+     "tinySamples": [
+      "kg/wk 10px"
+     ],
      "sizes": [
+      10,
       13,
       14,
       15,
@@ -512,7 +517,7 @@
     "page": {
      "height": 2005,
      "screens": 2,
-     "words": 170,
+     "words": 172,
      "img": 0,
      "video": 0,
      "canvas": 2,
@@ -576,6 +581,8 @@
      ],
      "familyCount": 1,
      "sizes": [
+      10,
+      11,
       13,
       14,
       15,
@@ -584,7 +591,7 @@
       19,
       24
      ],
-     "sizeCount": 7,
+     "sizeCount": 9,
      "notLoaded": [],
      "body": {
       "font": "Instrument Sans",
@@ -609,7 +616,7 @@
      "microLabelShare": 0,
      "microSamples": [],
      "upperShare": 0,
-     "centerShare": 0.12,
+     "centerShare": 0.13,
      "smallText": 0
     },
     "eyebrows": [],
@@ -645,14 +652,14 @@
      "textColors": [
       {
        "color": "#5e5e5b",
-       "share": 0.6
+       "share": 0.59
       },
       {
        "color": "#1f201d",
-       "share": 0.33
+       "share": 0.34
       },
       {
-       "color": "#b42318",
+       "color": "#2e7d32",
        "share": 0.05
       },
       {
@@ -760,9 +767,9 @@
        "tag": "span"
       },
       "left": 33,
-      "right": 170,
+      "right": 154,
       "textLeft": 33,
-      "textRight": 170,
+      "textRight": 154,
       "fullBleed": false,
       "footer": false,
       "hero": true,
@@ -774,9 +781,9 @@
       "tag": "div",
       "top": 330,
       "height": 419,
-      "words": 45,
+      "words": 47,
       "media": 0,
-      "middle": 28,
+      "middle": 23,
       "heading": {
        "text": "Way to the goal",
        "size": 15,
@@ -931,10 +938,13 @@
     "chartHues": 0,
     "placeholders": [],
     "type": {
-     "under13": 0,
-     "tiny": 0,
-     "tinySamples": [],
+     "under13": 0.01,
+     "tiny": 1,
+     "tinySamples": [
+      "kg/wk 10px"
+     ],
      "sizes": [
+      10,
       13,
       14,
       15,
@@ -978,7 +988,7 @@
     "page": {
      "height": 2097,
      "screens": 2.5,
-     "words": 170,
+     "words": 172,
      "img": 0,
      "video": 0,
      "canvas": 2,
@@ -1087,9 +1097,9 @@
       "kind": "statement"
      },
      {
-      "text": "−0.44kg/wk",
-      "words": 1,
-      "chars": 10,
+      "text": "14–25 Nov",
+      "words": 2,
+      "chars": 9,
       "lines": 1,
       "size": 22,
       "vw": 5.6,
@@ -1102,9 +1112,9 @@
       "mono": false,
       "align": "left",
       "position": "right",
-      "widthRatio": 0.29,
+      "widthRatio": 0.36,
       "top": 233,
-      "tag": "span",
+      "tag": "dd",
       "kind": "heading"
      }
     ],
@@ -1127,6 +1137,8 @@
      ],
      "familyCount": 1,
      "sizes": [
+      10,
+      11,
       13,
       14,
       15,
@@ -1134,7 +1146,7 @@
       18,
       22
      ],
-     "sizeCount": 6,
+     "sizeCount": 8,
      "notLoaded": [],
      "body": {
       "font": "Instrument Sans",
@@ -1159,7 +1171,7 @@
      "microLabelShare": 0,
      "microSamples": [],
      "upperShare": 0,
-     "centerShare": 0.12,
+     "centerShare": 0.13,
      "smallText": 0
     },
     "eyebrows": [],
@@ -1195,14 +1207,14 @@
      "textColors": [
       {
        "color": "#5e5e5b",
-       "share": 0.6
+       "share": 0.59
       },
       {
        "color": "#1f201d",
-       "share": 0.33
+       "share": 0.34
       },
       {
-       "color": "#b42318",
+       "color": "#2e7d32",
        "share": 0.05
       },
       {
@@ -1305,9 +1317,9 @@
        "tag": "span"
       },
       "left": 33,
-      "right": 33,
+      "right": 41,
       "textLeft": 33,
-      "textRight": 33,
+      "textRight": 41,
       "fullBleed": false,
       "footer": false,
       "hero": true,
@@ -1319,7 +1331,7 @@
       "tag": "div",
       "top": 337,
       "height": 476,
-      "words": 45,
+      "words": 47,
       "media": 0,
       "middle": 0,
       "heading": {
@@ -1476,10 +1488,13 @@
     "chartHues": 0,
     "placeholders": [],
     "type": {
-     "under13": 0,
-     "tiny": 0,
-     "tinySamples": [],
+     "under13": 0.01,
+     "tiny": 1,
+     "tinySamples": [
+      "kg/wk 10px"
+     ],
      "sizes": [
+      10,
       13,
       14,
       15,
@@ -1493,7 +1508,7 @@
      "size": 15,
      "top": 68
     },
-    "colourShare": 0.018
+    "colourShare": 0.019
    },
    "consoleErrors": []
   }
