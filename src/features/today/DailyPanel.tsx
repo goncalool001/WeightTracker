@@ -165,53 +165,40 @@ export function DailyPanel() {
       </div>
 
       {cmp && canCompare && (
-        <dl
-          aria-live="polite"
-          className="mt-3 grid grid-cols-2 gap-3 px-1 sm:grid-cols-[1fr_1fr_auto] sm:px-0"
-        >
-          {[
-            { label: t.compareThis, s: cmp.now, range: current! },
-            { label: t.comparePrev, s: cmp.before, range: cmp.prev },
-          ].map((c) => (
-            <div
-              key={c.label}
-              className="rounded-inner bg-active px-3 py-2.5"
-            >
-              <dt className="text-[13px] text-muted">
-                {c.label} · {t.fmtShort(c.range.from)} –{' '}
-                {t.fmtShort(c.range.to)}
-              </dt>
-              <dd className="num mt-0.5 text-[17px] text-text">
-                {c.s ? (
-                  <>
-                    {kg(c.s.average)}
-                    <span className="unit">kg</span>
-                    <span className="ml-2 text-[13px] text-muted">
-                      {t.compareRange(kg(c.s.low), kg(c.s.high))} · {c.s.count} {t.colWeighIns.toLowerCase()}
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-[14px] text-muted">
-                    {t.compareNone}
+        // One card: how much each period moved (7-day average, first day to
+        // last), then the two averages side by side.
+        <div aria-live="polite" className="mx-1 mt-3 min-w-0 rounded-inner bg-active px-3 py-2.5 sm:mx-0 sm:px-4">
+          <dl className="flex flex-col">
+            {[
+              { label: t.compareThis, s: cmp.now, range: current! },
+              { label: t.comparePrev, s: cmp.before, range: cmp.prev },
+            ].map((c) => (
+              <div
+                key={c.label}
+                className="flex min-w-0 items-baseline justify-between gap-3 border-b border-rule py-1.5 last:border-b-0"
+              >
+                <dt className="min-w-0 text-[14px] text-text">
+                  {c.label}
+                  <span className="num block text-[13px] text-muted sm:ml-2 sm:inline">
+                    {t.fmtShort(c.range.from)} – {t.fmtShort(c.range.to)}
                   </span>
-                )}
-              </dd>
-            </div>
-          ))}
-          {cmp.now && cmp.before && (
-            <div className="col-span-2 flex items-center px-1 sm:col-span-1 sm:px-0">
-              <dt className="sr-only">{t.chartChange}</dt>
-              <dd className="text-[17px]">
-                <Delta
-                  value={roundWeight(
-                    roundWeight(cmp.now.average) -
-                      roundWeight(cmp.before.average),
+                </dt>
+                <dd className="shrink-0 text-[17px]">
+                  {c.s ? (
+                    <Delta value={c.s.change == null ? null : roundWeight(c.s.change)} />
+                  ) : (
+                    <span className="text-[14px] text-muted">{t.compareNoneShort}</span>
                   )}
-                />
-              </dd>
-            </div>
+                </dd>
+              </div>
+            ))}
+          </dl>
+          {cmp.now && cmp.before && (
+            <p className="mt-1 text-[13px] text-muted">
+              {t.compareAvg(kg(cmp.now.average), kg(cmp.before.average))}
+            </p>
           )}
-        </dl>
+        </div>
       )}
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-1 sm:px-0">

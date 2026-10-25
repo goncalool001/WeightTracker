@@ -43,7 +43,10 @@ export function Ruler({ s }: { s: Status }) {
   );
   const lo = Math.floor(Math.min(...values) - 0.5);
   const hi = Math.ceil(Math.max(...values) + 0.5);
-  const x = (v: number) => ((v - lo) / (hi - lo)) * 100;
+  // For a target the bar reads as a journey: start on the left, goal on the
+  // right, so a loss goal runs the scale from high to low.
+  const flip = target != null && target < start;
+  const x = (v: number) => ((flip ? hi - v : v - lo) / (hi - lo)) * 100;
 
   // Labels under the track.
   const candidates: Label[] = [];
@@ -108,14 +111,14 @@ export function Ruler({ s }: { s: Status }) {
         {s.phase === 'reach' && (
           <div
             className="absolute top-[30px] h-2 rounded-full bg-accent"
-            style={{ left: `${x(Math.min(latest, start))}%`, width: `${Math.abs(x(start) - x(latest))}%` }}
+            style={{ left: `${Math.min(x(latest), x(start))}%`, width: `${Math.abs(x(start) - x(latest))}%` }}
           />
         )}
         {/* maintenance band */}
         {band && (
           <div
             className="absolute top-[24px] h-5 rounded-[4px] border-x-2 border-accent bg-accent-soft"
-            style={{ left: `${x(band.low)}%`, width: `${x(band.high) - x(band.low)}%` }}
+            style={{ left: `${Math.min(x(band.low), x(band.high))}%`, width: `${Math.abs(x(band.high) - x(band.low))}%` }}
           />
         )}
         {/* target tick */}

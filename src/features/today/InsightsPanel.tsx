@@ -2,6 +2,39 @@ import { useId, useState } from 'react';
 import { useT } from '@/i18n';
 import { useInsights } from '@/store/selectors';
 import { cn } from '@/lib/cn';
+import type { InsightTone } from '@/types';
+
+/** Values in a sentence: decimals, and whole numbers with a unit. */
+const VALUE = /([+\-−]?\d+\.\d+(?:\s?kg(?:\/(?:wk|sem))?)?|\d+\s?(?:kg|%))/;
+
+/**
+ * The sentence with its values set in full ink and weight. The first value
+ * carries the insight's colour when it says something about the goal: green
+ * towards it, red away from it.
+ */
+function Sentence({ text, tone }: { text: string; tone: InsightTone }) {
+  let first = true;
+  return (
+    <>
+      {text.split(VALUE).map((part, i) => {
+        if (i % 2 === 0) return part;
+        const colour = first && (tone === 'good' || tone === 'bad');
+        first = false;
+        return (
+          <span
+            key={i}
+            className={cn(
+              'num whitespace-nowrap font-semibold',
+              colour ? (tone === 'good' ? 'text-positive' : 'text-negative') : 'text-text',
+            )}
+          >
+            {part}
+          </span>
+        );
+      })}
+    </>
+  );
+}
 
 const VISIBLE = 6;
 
@@ -28,8 +61,8 @@ export function InsightsPanel({ className }: { className?: string }) {
       ) : (
         <ul className="flex flex-col">
           {shown.map((i) => (
-            <li key={i.id} className="border-t border-rule py-3 text-[15px] leading-snug text-text first:border-t-0 first:pt-1 lg:text-sm">
-              {i.text}
+            <li key={i.id} className="border-t border-rule py-3 text-[15px] leading-snug text-muted first:border-t-0 first:pt-1 lg:text-sm">
+              <Sentence text={i.text} tone={i.tone} />
             </li>
           ))}
         </ul>

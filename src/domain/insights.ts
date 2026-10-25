@@ -1,7 +1,7 @@
 import { differenceInCalendarDays, format, parseISO } from 'date-fns';
 import { signed } from '@/lib/format';
 import { daysBetween, rollingCalendarAverage, weekdayOffsets } from './calendar';
-import { currentGoal } from './goals';
+import { currentGoal, goodDirection } from './goals';
 import { monthlyPeriods, weeklyPeriods } from './periods';
 import { categoryEffects } from './effects';
 import type { CategoryId } from './categories';
@@ -121,6 +121,14 @@ export function buildInsights(input: InsightInput): Insight[] {
   );
 
   const goal = currentGoal(goals);
+  // Colour follows the goal: a loss is good for a lose goal, bad for a gain
+  // goal, and neither while maintaining (or with no goal).
+  const toneFor = (delta: number): Insight['tone'] =>
+    !goal || goal.mode === 'maintain'
+      ? 'neutral'
+      : (delta < 0 ? 'down' : 'up') === goodDirection(goal)
+        ? 'good'
+        : 'bad';
 
   // 0 · The category most clearly linked to the scale, once it is reliable
   // (10+ weigh-ins and a range that excludes zero). See effects.ts.
@@ -130,7 +138,7 @@ export function buildInsights(input: InsightInput): Insight[] {
       insights.push({
         id: 'category',
         icon: 'category',
-        tone: 'neutral',
+        tone: toneFor(f.effect),
         text: s.categoryEffect(catLabel(f.id), Math.abs(f.effect).toFixed(1), f.n, f.effect > 0),
       });
     }
@@ -181,7 +189,7 @@ export function buildInsights(input: InsightInput): Insight[] {
       insights.push({
         id: 'window',
         icon: 'window',
-        tone: change.delta < 0 ? 'good' : 'bad',
+        tone: toneFor(change.delta),
         text:
           change.delta < 0
             ? s.windowLost(absKg(change.delta), window)
@@ -206,7 +214,7 @@ export function buildInsights(input: InsightInput): Insight[] {
           insights.push({
             id: 'accel',
             icon: 'accel',
-            tone: accelerating ? 'good' : 'neutral',
+            tone: accelerating ? toneFor(-1) : 'neutral',
             text: accelerating
               ? s.accelAccel(absKg(recent), absKg(prior))
               : s.accelSlow(absKg(recent), absKg(prior)),
@@ -228,7 +236,7 @@ export function buildInsights(input: InsightInput): Insight[] {
       insights.push({
         id: 'consistency',
         icon: 'consistency',
-        tone: 'good',
+        tone: toneFor(-1),
         text: s.consistency(drops, m),
       });
     }
@@ -251,7 +259,7 @@ export function buildInsights(input: InsightInput): Insight[] {
       insights.push({
         id: 'best',
         icon: 'best',
-        tone: 'good',
+        tone: toneFor(-1),
         text: s.bestWeek(fmtDate(w.start), fmtDate(w.end), absKg(bestDelta)),
       });
     }
@@ -266,7 +274,7 @@ export function buildInsights(input: InsightInput): Insight[] {
         insights.push({
           id: 'contribution',
           icon: 'contribution',
-          tone: 'accent',
+          tone: toneFor(-1),
           text: s.contribution(pct.toFixed(0)),
         });
       }
@@ -289,7 +297,7 @@ export function buildInsights(input: InsightInput): Insight[] {
           insights.push({
             id: 'compare',
             icon: 'compare',
-            tone: stronger ? 'good' : 'neutral',
+            tone: stronger ? toneFor(-1) : 'neutral',
             text: stronger
               ? s.compareStronger(
                   signed(thisRate, 2),

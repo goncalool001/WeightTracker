@@ -217,19 +217,34 @@ export function previousBounds(bounds: CustomRange): CustomRange {
   return { from: addDaysISO(bounds.from, -len), to: addDaysISO(bounds.from, -1) };
 }
 
-/** Mean, lowest and highest weigh-in between two dates (inclusive). */
+/**
+ * Mean, lowest and highest weigh-in between two dates (inclusive), and the
+ * change across the period: the 7-day average on its last day with one minus
+ * on its first, or the last weigh-in minus the first when the averages are
+ * missing. `change` is null with a single weigh-in.
+ */
 export function periodSummary(
   entries: WeightEntry[],
   bounds: CustomRange,
-): { average: number; low: number; high: number; count: number } | null {
+): { average: number; low: number; high: number; count: number; change: number | null } | null {
   const inside = entries.filter((e) => e.date >= bounds.from && e.date <= bounds.to);
   if (inside.length === 0) return null;
   const ws = inside.map((e) => e.weight);
+  const avgs = rollingCalendarAverage(entries)
+    .filter((p) => p.date >= bounds.from && p.date <= bounds.to && p.average != null)
+    .map((p) => p.average as number);
+  const change =
+    avgs.length >= 2
+      ? avgs[avgs.length - 1] - avgs[0]
+      : ws.length >= 2
+        ? ws[ws.length - 1] - ws[0]
+        : null;
   return {
     average: ws.reduce((a, b) => a + b, 0) / ws.length,
     low: Math.min(...ws),
     high: Math.max(...ws),
     count: ws.length,
+    change,
   };
 }
 

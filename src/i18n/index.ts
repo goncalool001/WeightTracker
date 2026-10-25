@@ -86,9 +86,16 @@ export interface T {
   stripTitle: string;
   stripInBand: (n: number, total: number) => string;
   stripLogged: (n: number) => string;
-  sInBand: string;
-  sOut: string;
-  sWeighed: string;
+  stripToward: (n: number, total: number) => string;
+  stripTip: (date: string, kg: string, delta: string, prev: string) => string;
+  stripVs: (prev: string) => string;
+  sInBandOrBack: string;
+  sAway: string;
+  sToward: string;
+  sAgainst: string;
+  sDown: string;
+  sUp: string;
+  sFlat: string;
   sNone: string;
 
   // log
@@ -148,6 +155,8 @@ export interface T {
   comparePrev: string;
   compareNone: string;
   compareRange: (low: string, high: string) => string;
+  compareNoneShort: string;
+  compareAvg: (now: string, before: string) => string;
   chartPrev: string;
   tReplaced: (prev: string, kg: string, date: string) => string;
   tDeleted: (kg: string, date: string) => string;
@@ -386,9 +395,16 @@ const en: T = {
   stripTitle: 'Last 30 days',
   stripInBand: (n, total) => `Inside the range on ${n} of ${total} days with a weigh-in.`,
   stripLogged: (n) => `${n} of the last 30 days have a weigh-in.`,
-  sInBand: 'inside',
-  sOut: 'outside',
-  sWeighed: 'weigh-in',
+  stripToward: (n, total) => `${n} of ${total} weigh-ins moved towards your goal.`,
+  stripTip: (date, kg, delta, prev) => `${date}: ${kg} kg, ${delta} kg vs ${prev}`,
+  stripVs: (prev) => `vs ${prev}`,
+  sInBandOrBack: 'inside or heading back',
+  sAway: 'moving away',
+  sToward: 'towards goal',
+  sAgainst: 'against goal',
+  sDown: 'down',
+  sUp: 'up',
+  sFlat: 'no change',
   sNone: 'no weigh-in',
 
   logTitle: 'Log weight',
@@ -487,6 +503,8 @@ const en: T = {
   comparePrev: 'Previous period',
   compareNone: 'No weigh-ins in the previous period.',
   compareRange: (low, high) => `${low}–${high} kg`,
+  compareNoneShort: 'no weigh-ins',
+  compareAvg: (now, before) => `Average ${now} kg, against ${before} kg in the previous period.`,
   chartPrev: 'Previous period',
   tReplaced: (prev, kg, date) => `${date}: ${prev} kg replaced by ${kg} kg`,
   tDeleted: (kg, date) => `Deleted ${kg} kg on ${date}`,
@@ -751,9 +769,16 @@ const pt: T = {
   stripTitle: 'Últimos 30 dias',
   stripInBand: (n, total) => `Dentro do intervalo em ${n} dos ${total} dias com pesagem.`,
   stripLogged: (n) => `${n} dos últimos 30 dias têm pesagem.`,
-  sInBand: 'dentro',
-  sOut: 'fora',
-  sWeighed: 'pesagem',
+  stripToward: (n, total) => `${n} de ${total} pesagens foram na direção da meta.`,
+  stripTip: (date, kg, delta, prev) => `${date}: ${kg} kg, ${delta} kg vs ${prev}`,
+  stripVs: (prev) => `vs ${prev}`,
+  sInBandOrBack: 'dentro ou a voltar',
+  sAway: 'a afastar-se',
+  sToward: 'na direção da meta',
+  sAgainst: 'contra a meta',
+  sDown: 'desceu',
+  sUp: 'subiu',
+  sFlat: 'sem variação',
   sNone: 'sem pesagem',
 
   logTitle: 'Registar peso',
@@ -852,6 +877,8 @@ const pt: T = {
   comparePrev: 'Período anterior',
   compareNone: 'Sem pesagens no período anterior.',
   compareRange: (low, high) => `${low}–${high} kg`,
+  compareNoneShort: 'sem pesagens',
+  compareAvg: (now, before) => `Média ${now} kg, contra ${before} kg no período anterior.`,
   chartPrev: 'Período anterior',
   tReplaced: (prev, kg, date) => `${date}: ${prev} kg substituído por ${kg} kg`,
   tDeleted: (kg, date) => `Apagado ${kg} kg de ${date}`,

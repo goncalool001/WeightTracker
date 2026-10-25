@@ -1,6 +1,6 @@
 {
  "url": ".taste-skill/demo-light/index.html",
- "at": "2026-10-25T18:57:07.245Z",
+ "at": "2026-10-25T21:49:27.294Z",
  "allow": [],
  "viewports": [
   {
@@ -26,9 +26,9 @@
      "h": 900
     },
     "page": {
-     "height": 1560,
+     "height": 1515,
      "screens": 1.7,
-     "words": 245,
+     "words": 218,
      "img": 0,
      "video": 0,
      "canvas": 2,
@@ -49,9 +49,9 @@
      "videosNoPoster": 0
     },
     "hero": {
-     "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
-     "words": 9,
-     "chars": 44,
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "chars": 39,
      "lines": 1,
      "size": 32,
      "vw": 2.2,
@@ -66,17 +66,17 @@
      "position": "left"
     },
     "h1": {
-     "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
-     "words": 9,
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
      "lines": 1,
      "size": 32,
      "font": "Instrument Serif"
     },
     "headings": [
      {
-      "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
-      "words": 9,
-      "chars": 44,
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+      "words": 10,
+      "chars": 39,
       "lines": 1,
       "size": 32,
       "vw": 2.2,
@@ -143,7 +143,7 @@
       "size": 32,
       "vw": 2.2,
       "font": "Instrument Serif",
-      "text": "76.5 kg · inside 76⁠–⁠78 kg · holding st"
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady"
      },
      "monoShare": 0,
      "monoProseShare": 0,
@@ -153,7 +153,7 @@
      "microLabelShare": 0,
      "microSamples": [],
      "upperShare": 0,
-     "centerShare": 0.11,
+     "centerShare": 0.12,
      "smallText": 0
     },
     "eyebrows": [],
@@ -188,16 +188,16 @@
      ],
      "textColors": [
       {
-       "color": "#1f201d",
+       "color": "#5e5e5b",
        "share": 0.61
       },
       {
-       "color": "#5e5e5b",
-       "share": 0.37
+       "color": "#1f201d",
+       "share": 0.34
       },
       {
-       "color": "#2e7d32",
-       "share": 0.01
+       "color": "#b42318",
+       "share": 0.04
       },
       {
        "color": "#ffffff",
@@ -240,7 +240,7 @@
      "scrims": 0,
      "gradientSamples": [],
      "gradientText": 0,
-     "hairlines": 6,
+     "hairlines": 5,
      "hairlineSamples": [
       "aside.sticky.top-0 232px",
       "div.mt-5.border-t 755px",
@@ -289,7 +289,7 @@
      "w": 1440,
      "h": 900
     },
-    "pageH": 1560,
+    "pageH": 1515,
     "margins": {
      "left": 28,
      "right": 91
@@ -300,18 +300,18 @@
       "tag": "dl",
       "top": 137,
       "height": 128,
-      "words": 36,
+      "words": 35,
       "media": 0,
-      "middle": 187,
+      "middle": 211,
       "heading": {
        "text": "76.7",
        "size": 24,
        "tag": "span"
       },
       "left": 319,
-      "right": 179,
+      "right": 149,
       "textLeft": 319,
-      "textRight": 179,
+      "textRight": 149,
       "fullBleed": false,
       "footer": false,
       "hero": true,
@@ -323,11 +323,11 @@
       "tag": "div",
       "top": 281,
       "height": 402,
-      "words": 82,
+      "words": 70,
       "media": 0,
       "middle": 58,
       "heading": {
-       "text": "Maintaining weight",
+       "text": "Way to the goal",
        "size": 14,
        "tag": "h2"
       },
@@ -346,7 +346,7 @@
       "tag": "section",
       "top": 699,
       "height": 478,
-      "words": 22,
+      "words": 21,
       "media": 1,
       "middle": 0,
       "heading": {
@@ -368,10 +368,10 @@
       "sel": "div.grid.grid-cols-1",
       "tag": "div",
       "top": 1193,
-      "height": 303,
-      "words": 66,
+      "height": 258,
+      "words": 56,
       "media": 1,
-      "middle": 80,
+      "middle": 70,
       "heading": {
        "text": "Insights",
        "size": 14,
@@ -391,7 +391,7 @@
     "gaps": [],
     "h1s": [
      {
-      "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady",
       "size": 32,
       "top": 52,
       "firstScreen": true
@@ -401,7 +401,7 @@
     "edges": [
      {
       "x": 323,
-      "n": 4
+      "n": 3
      },
      {
       "x": 302,
@@ -416,7 +416,7 @@
       "n": 1
      }
     ],
-    "leftBlocks": 8,
+    "leftBlocks": 7,
     "bodySize": 14,
     "stage": false,
     "explains": false,
@@ -444,13 +444,13 @@
     },
     "topbar": null,
     "canvas": {
-     "left": 70,
+     "left": 87,
      "right": 91
     },
     "hero": {
-     "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
-     "words": 9,
-     "chars": 44,
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "chars": 39,
      "lines": 1,
      "size": 32,
      "vw": 2.2,
@@ -499,7 +499,7 @@
     "numbers": {
      "cells": 0,
      "leftAligned": 0,
-     "figures": 6,
+     "figures": 3,
      "tabularShare": 1,
      "kpiMax": 14
     },
@@ -521,11 +521,11 @@
      ]
     },
     "title": {
-     "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
      "size": 32,
      "top": 52
     },
-    "colourShare": 0.008
+    "colourShare": 0.01
    },
    "consoleErrors": []
   },
@@ -535,9 +535,9 @@
    "load": "load",
    "screens": 3,
    "filled": [
-    0.88,
+    0.81,
     0.84,
-    0.78
+    0.84
    ],
    "motion": {
     "elements": 13,
@@ -553,9 +553,9 @@
      "h": 1024
     },
     "page": {
-     "height": 2132,
-     "screens": 2.1,
-     "words": 231,
+     "height": 2094,
+     "screens": 2,
+     "words": 204,
      "img": 0,
      "video": 0,
      "canvas": 2,
@@ -576,9 +576,9 @@
      "videosNoPoster": 0
     },
     "hero": {
-     "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
-     "words": 9,
-     "chars": 44,
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "chars": 39,
      "lines": 1,
      "size": 30,
      "vw": 3.9,
@@ -593,17 +593,17 @@
      "position": "left"
     },
     "h1": {
-     "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
-     "words": 9,
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
      "lines": 1,
      "size": 30,
      "font": "Instrument Serif"
     },
     "headings": [
      {
-      "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
-      "words": 9,
-      "chars": 44,
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+      "words": 10,
+      "chars": 39,
       "lines": 1,
       "size": 30,
       "vw": 3.9,
@@ -670,7 +670,7 @@
       "size": 30,
       "vw": 3.9,
       "font": "Instrument Serif",
-      "text": "76.5 kg · inside 76⁠–⁠78 kg · holding st"
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady"
      },
      "monoShare": 0,
      "monoProseShare": 0,
@@ -715,16 +715,16 @@
      ],
      "textColors": [
       {
-       "color": "#1f201d",
-       "share": 0.64
-      },
-      {
        "color": "#5e5e5b",
-       "share": 0.33
+       "share": 0.58
       },
       {
-       "color": "#2e7d32",
-       "share": 0.01
+       "color": "#1f201d",
+       "share": 0.36
+      },
+      {
+       "color": "#b42318",
+       "share": 0.05
       },
       {
        "color": "#ffffff",
@@ -763,7 +763,7 @@
      "scrims": 0,
      "gradientSamples": [],
      "gradientText": 0,
-     "hairlines": 7,
+     "hairlines": 6,
      "hairlineSamples": [
       "header.sticky.top-0 768px",
       "div.mt-5.border-t 694px",
@@ -807,7 +807,7 @@
      "w": 768,
      "h": 1024
     },
-    "pageH": 2132,
+    "pageH": 2094,
     "margins": {
      "left": 33,
      "right": 37
@@ -818,7 +818,7 @@
       "tag": "dl",
       "top": 158,
       "height": 241,
-      "words": 36,
+      "words": 35,
       "media": 0,
       "middle": 254,
       "heading": {
@@ -827,9 +827,9 @@
        "tag": "span"
       },
       "left": 33,
-      "right": 230,
+      "right": 200,
       "textLeft": 33,
-      "textRight": 230,
+      "textRight": 200,
       "fullBleed": false,
       "footer": false,
       "hero": true,
@@ -840,12 +840,12 @@
       "sel": "div.grid.grid-cols-1",
       "tag": "div",
       "top": 419,
-      "height": 411,
-      "words": 65,
+      "height": 419,
+      "words": 53,
       "media": 0,
-      "middle": 18,
+      "middle": 28,
       "heading": {
-       "text": "Maintaining weight",
+       "text": "Way to the goal",
        "size": 15,
        "tag": "h2"
       },
@@ -862,9 +862,9 @@
      {
       "sel": "section.panel.flex",
       "tag": "section",
-      "top": 850,
+      "top": 858,
       "height": 482,
-      "words": 22,
+      "words": 21,
       "media": 1,
       "middle": 0,
       "heading": {
@@ -885,9 +885,9 @@
      {
       "sel": "div.grid.grid-cols-1",
       "tag": "div",
-      "top": 1351,
-      "height": 617,
-      "words": 66,
+      "top": 1359,
+      "height": 571,
+      "words": 56,
       "media": 1,
       "middle": 0,
       "heading": {
@@ -909,7 +909,7 @@
     "gaps": [],
     "h1s": [
      {
-      "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady",
       "size": 30,
       "top": 73,
       "firstScreen": true
@@ -919,14 +919,14 @@
     "edges": [
      {
       "x": 37,
-      "n": 6
+      "n": 5
      },
      {
       "x": 16,
       "n": 2
      }
     ],
-    "leftBlocks": 8,
+    "leftBlocks": 7,
     "bodySize": 15,
     "stage": false,
     "explains": false,
@@ -946,13 +946,13 @@
      "h": 49
     },
     "canvas": {
-     "left": 15,
+     "left": 16,
      "right": 16
     },
     "hero": {
-     "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
-     "words": 9,
-     "chars": 44,
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "chars": 39,
      "lines": 1,
      "size": 30,
      "vw": 3.9,
@@ -1001,7 +1001,7 @@
     "numbers": {
      "cells": 0,
      "leftAligned": 0,
-     "figures": 6,
+     "figures": 3,
      "tabularShare": 1,
      "kpiMax": 14
     },
@@ -1023,11 +1023,11 @@
      ]
     },
     "title": {
-     "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
      "size": 30,
      "top": 73
     },
-    "colourShare": 0.014
+    "colourShare": 0.024
    },
    "consoleErrors": []
   },
@@ -1037,9 +1037,9 @@
    "load": "load",
    "screens": 3,
    "filled": [
-    0.84,
     0.83,
-    0.83
+    0.86,
+    0.84
    ],
    "motion": {
     "elements": 13,
@@ -1055,9 +1055,9 @@
      "h": 844
     },
     "page": {
-     "height": 2219,
+     "height": 2200,
      "screens": 2.6,
-     "words": 231,
+     "words": 204,
      "img": 0,
      "video": 0,
      "canvas": 2,
@@ -1078,9 +1078,9 @@
      "videosNoPoster": 0
     },
     "hero": {
-     "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
-     "words": 9,
-     "chars": 44,
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "chars": 39,
      "lines": 1,
      "size": 26,
      "vw": 6.7,
@@ -1095,17 +1095,17 @@
      "position": "left"
     },
     "h1": {
-     "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
-     "words": 9,
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
      "lines": 1,
      "size": 26,
      "font": "Instrument Serif"
     },
     "headings": [
      {
-      "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
-      "words": 9,
-      "chars": 44,
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+      "words": 10,
+      "chars": 39,
       "lines": 1,
       "size": 26,
       "vw": 6.7,
@@ -1166,9 +1166,9 @@
       "kind": "statement"
      },
      {
-      "text": "53 days",
-      "words": 2,
-      "chars": 7,
+      "text": "1.5kg",
+      "words": 1,
+      "chars": 5,
       "lines": 1,
       "size": 22,
       "vw": 5.6,
@@ -1187,9 +1187,9 @@
       "kind": "statement"
      },
      {
-      "text": "−9.6kg",
+      "text": "−0.44kg/wk",
       "words": 1,
-      "chars": 6,
+      "chars": 10,
       "lines": 1,
       "size": 22,
       "vw": 5.6,
@@ -1202,7 +1202,7 @@
       "mono": false,
       "align": "left",
       "position": "right",
-      "widthRatio": 0.18,
+      "widthRatio": 0.29,
       "top": 336,
       "tag": "span",
       "kind": "statement"
@@ -1255,7 +1255,7 @@
       "size": 26,
       "vw": 6.7,
       "font": "Instrument Serif",
-      "text": "76.5 kg · inside 76⁠–⁠78 kg · holding st"
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady"
      },
      "monoShare": 0,
      "monoProseShare": 0,
@@ -1290,7 +1290,7 @@
       },
       {
        "color": "#ffffff",
-       "top": 420,
+       "top": 439,
        "hsl": {
         "h": 0,
         "s": 0,
@@ -1300,16 +1300,16 @@
      ],
      "textColors": [
       {
-       "color": "#1f201d",
-       "share": 0.64
-      },
-      {
        "color": "#5e5e5b",
-       "share": 0.33
+       "share": 0.58
       },
       {
-       "color": "#2e7d32",
-       "share": 0.01
+       "color": "#1f201d",
+       "share": 0.36
+      },
+      {
+       "color": "#b42318",
+       "share": 0.05
       },
       {
        "color": "#ffffff",
@@ -1348,7 +1348,7 @@
      "scrims": 0,
      "gradientSamples": [],
      "gradientText": 0,
-     "hairlines": 7,
+     "hairlines": 6,
      "hairlineSamples": [
       "header.sticky.top-0 390px",
       "div.mt-5.border-t 324px",
@@ -1392,7 +1392,7 @@
      "w": 390,
      "h": 844
     },
-    "pageH": 2219,
+    "pageH": 2200,
     "margins": {
      "left": 29,
      "right": 31
@@ -1402,8 +1402,8 @@
       "sel": "dl.grid.grid-cols-2",
       "tag": "dl",
       "top": 172,
-      "height": 232,
-      "words": 36,
+      "height": 252,
+      "words": 35,
       "media": 0,
       "middle": 63,
       "heading": {
@@ -1412,9 +1412,9 @@
        "tag": "span"
       },
       "left": 33,
-      "right": 43,
+      "right": 35,
       "textLeft": 33,
-      "textRight": 43,
+      "textRight": 35,
       "fullBleed": false,
       "footer": false,
       "hero": true,
@@ -1424,13 +1424,13 @@
      {
       "sel": "div.grid.grid-cols-1",
       "tag": "div",
-      "top": 420,
-      "height": 448,
-      "words": 65,
+      "top": 439,
+      "height": 476,
+      "words": 53,
       "media": 0,
       "middle": 0,
       "heading": {
-       "text": "Maintaining weight",
+       "text": "Way to the goal",
        "size": 15,
        "tag": "h2"
       },
@@ -1440,16 +1440,16 @@
       "textRight": 33,
       "fullBleed": false,
       "footer": false,
-      "hero": true,
+      "hero": false,
       "continues": false,
       "pinned": false
      },
      {
       "sel": "section.panel.flex",
       "tag": "section",
-      "top": 883,
+      "top": 931,
       "height": 488,
-      "words": 22,
+      "words": 21,
       "media": 1,
       "middle": 0,
       "heading": {
@@ -1460,7 +1460,7 @@
       "left": 33,
       "right": 34,
       "textLeft": 33,
-      "textRight": 35,
+      "textRight": 57,
       "fullBleed": false,
       "footer": false,
       "hero": false,
@@ -1470,9 +1470,9 @@
      {
       "sel": "div.grid.grid-cols-1",
       "tag": "div",
-      "top": 1387,
-      "height": 671,
-      "words": 66,
+      "top": 1435,
+      "height": 605,
+      "words": 56,
       "media": 1,
       "middle": 0,
       "heading": {
@@ -1483,7 +1483,7 @@
       "left": 29,
       "right": 29,
       "textLeft": 33,
-      "textRight": 48,
+      "textRight": 41,
       "fullBleed": false,
       "footer": true,
       "hero": false,
@@ -1494,7 +1494,7 @@
     "gaps": [],
     "h1s": [
      {
-      "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
+      "text": "76.5 kg · 1.5 kg to 78 · holding steady",
       "size": 26,
       "top": 73,
       "firstScreen": true
@@ -1504,14 +1504,14 @@
     "edges": [
      {
       "x": 33,
-      "n": 6
+      "n": 5
      },
      {
       "x": 16,
       "n": 2
      }
     ],
-    "leftBlocks": 8,
+    "leftBlocks": 7,
     "bodySize": 15,
     "stage": false,
     "explains": false,
@@ -1535,9 +1535,9 @@
      "right": 16
     },
     "hero": {
-     "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
-     "words": 9,
-     "chars": 44,
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
+     "words": 10,
+     "chars": 39,
      "lines": 1,
      "size": 26,
      "vw": 6.7,
@@ -1586,7 +1586,7 @@
     "numbers": {
      "cells": 0,
      "leftAligned": 0,
-     "figures": 6,
+     "figures": 3,
      "tabularShare": 1,
      "kpiMax": 14
     },
@@ -1608,11 +1608,11 @@
      ]
     },
     "title": {
-     "text": "76.5 kg · inside 76⁠–⁠78 kg · holding steady",
+     "text": "76.5 kg · 1.5 kg to 78 · holding steady",
      "size": 26,
      "top": 73
     },
-    "colourShare": 0.006
+    "colourShare": 0.001
    },
    "consoleErrors": []
   }
