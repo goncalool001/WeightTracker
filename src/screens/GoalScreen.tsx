@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useState } from 'react';
 import {
   countInBand,
   currentGoal,
+  deleteGoalAt,
   goalReachedOn,
   isTargetGoal,
   makeGoal,
@@ -15,7 +16,8 @@ import { useStore } from '@/store/useStore';
 import { useStatus } from '@/store/selectors';
 import { Button } from '@/components/ui/Button';
 import { Segmented } from '@/components/ui/Segmented';
-import { changeGoal } from '@/features/log/actions';
+import { changeGoal, setGoalHistory } from '@/features/log/actions';
+import { GoalDatesDialog } from '@/features/goal/GoalDatesDialog';
 import { trimKg } from '@/features/today/headline';
 import { kg } from '@/lib/format';
 import { ScreenTitle } from './ScreenTitle';
@@ -43,6 +45,7 @@ export function GoalScreen() {
   const [low, setLow] = useState(goal?.mode === 'maintain' ? trimKg(goal.low) : String(centre - 1));
   const [high, setHigh] = useState(goal?.mode === 'maintain' ? trimKg(goal.high) : String(centre + 1));
   const [error, setError] = useState<string | null>(null);
+  const [editing, setEditing] = useState<number | null>(null);
 
   useEffect(() => setError(null), [mode, target, low, high]);
 
@@ -79,7 +82,8 @@ export function GoalScreen() {
     }
   }
 
-  const history = [...goals].reverse();
+  // Newest first, keeping each goal's index in the stored history.
+  const history = goals.map((g, i) => ({ g, i })).reverse();
   const goalName = (g: Goal) =>
     g.mode === 'lose'
       ? t.hLose(trimKg(g.target))
@@ -195,11 +199,6 @@ export function GoalScreen() {
             <Button type="submit" variant="primary">
               {t.saveGoal}
             </Button>
-            {goal && (
-              <Button variant="ghost" onClick={() => changeGoal(null, t)}>
-                {t.removeGoal}
-              </Button>
-            )}
           </div>
         </form>
 
@@ -213,13 +212,14 @@ export function GoalScreen() {
             <p className="text-[15px] text-muted">{t.historyEmpty}</p>
           ) : (
             <ul>
-              {history.map((g) => {
+              {history.map(({ g, i }) => {
                 const reached = goalReachedOn(g, entries);
                 return (
                   <li
                     key={`${g.setOn}-${g.mode}-${g.low}-${g.high}`}
-                    className="flex flex-col gap-0.5 border-b border-rule py-3 first:pt-0 last:border-b-0 last:pb-0"
+                    className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-rule py-3 first:pt-0 last:border-b-0 last:pb-0"
                   >
+                    <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                     <div className="flex items-center gap-2">
                       <span className="text-[15px] text-text lg:text-sm">
                         {goalName(g)}
@@ -235,6 +235,21 @@ export function GoalScreen() {
                       {isTargetGoal(g) &&
                         ` · ${reached ? t.hReached(t.fmtShort(reached.date), kg(reached.weight)) : g.endedOn ? t.hNotReached : t.hNotYet}`}
                     </span>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button size="sm" variant="ghost" aria-label={`${t.hEditDates}: ${goalName(g)}`} onClick={() => setEditing(i)}>
+                        {t.hEditDates}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        aria-label={`${t.del}: ${goalName(g)}`}
+                        className="text-negative"
+                        onClick={() => setGoalHistory(deleteGoalAt(goals, i), t.tGoalDeleted, t)}
+                      >
+                        {t.del}
+                      </Button>
+                    </div>
                   </li>
                 );
               })}
@@ -242,6 +257,7 @@ export function GoalScreen() {
           )}
         </section>
       </div>
+      <GoalDatesDialog index={editing} name={goalName} onClose={() => setEditing(null)} />
     </>
   );
 }

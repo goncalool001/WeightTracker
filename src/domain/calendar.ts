@@ -20,6 +20,33 @@ export function isoFromDay(day: number): string {
   return new Date(day * DAY_MS).toISOString().slice(0, 10);
 }
 
+/** The Monday of the calendar week holding `iso`. */
+export function weekStartISO(iso: string): string {
+  const day = dayNumber(iso);
+  // Day 0 (1 Jan 1970) was a Thursday: Monday-based weekday = (day + 3) % 7.
+  return isoFromDay(day - ((day + 3) % 7));
+}
+
+/** The first day of the calendar month holding `iso`, and of the month before. */
+export function monthStartISO(iso: string): string {
+  return `${iso.slice(0, 8)}01`;
+}
+export function prevMonthStartISO(iso: string): string {
+  const y = Number(iso.slice(0, 4));
+  const m = Number(iso.slice(5, 7));
+  return m === 1 ? `${y - 1}-12-01` : `${y}-${String(m - 1).padStart(2, '0')}-01`;
+}
+
+/** Mean of the weigh-ins between two dates (inclusive) and how many there are. */
+export function averageBetween(
+  entries: WeightEntry[],
+  from: string,
+  to: string,
+): { average: number | null; count: number } {
+  const ws = entries.filter((e) => e.date >= from && e.date <= to).map((e) => e.weight);
+  return { average: ws.length ? ws.reduce((a, b) => a + b, 0) / ws.length : null, count: ws.length };
+}
+
 /** Shift an ISO date by `n` calendar days. */
 export function addDaysISO(iso: string, n: number): string {
   return isoFromDay(dayNumber(iso) + n);

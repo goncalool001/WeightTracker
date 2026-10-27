@@ -1,12 +1,13 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { StickyNote } from 'lucide-react';
-import { addDaysISO, cleanTags, todayISO, type CategoryId } from '@/domain';
+import { addDaysISO, cleanTags, roundWeight, todayISO, type CategoryId } from '@/domain';
 import { kg } from '@/lib/format';
 import { cn } from '@/lib/cn';
 import { useT } from '@/i18n';
 import { useStore } from '@/store/useStore';
 import { useKeyboardInset } from '@/hooks/useViewport';
 import { Button } from '@/components/ui/Button';
+import { Delta } from '@/components/ui/Delta';
 import { NoteSheet } from '@/features/notes/NoteSheet';
 import { noteText } from '@/features/notes/noteText';
 import { checkWeight, saveWeight } from './actions';
@@ -78,6 +79,15 @@ export function LogForm({ variant }: { variant: 'bar' | 'panel' }) {
   }
 
   const message = error;
+  const recent = useMemo(
+    () =>
+      entries
+        .slice(-13)
+        .map((e, i, arr) => ({ ...e, delta: i > 0 ? roundWeight(e.weight - arr[i - 1].weight) : null }))
+        .slice(1)
+        .reverse(),
+    [entries],
+  );
   const buttonLabel = noteOnly ? t.saveNote : existing ? t.replaceBtn(kg(existing.weight)) : t.save;
   const summary = noteText({ tags, note }, t);
   const count = tags.length + (note.trim() ? 1 : 0);
@@ -159,6 +169,21 @@ export function LogForm({ variant }: { variant: 'bar' | 'panel' }) {
         <Button type="submit" variant="primary" className="w-full">
           {buttonLabel}
         </Button>
+        {/* The latest weigh-ins fill what is left of the panel's height and
+            never add to it: rows that do not fit wrap into a hidden column. */}
+        <div className="relative mt-4 min-h-0 flex-1 border-t border-rule">
+          <ul aria-label={t.recentTitle} className="absolute inset-0 flex flex-col flex-wrap overflow-hidden pt-2">
+            {recent.map((e) => (
+              <li key={e.date} className="flex h-8 w-full items-baseline justify-between gap-2 text-[13px]">
+                <span className="num text-muted">{t.fmtShort(e.date)}</span>
+                <span className="num ml-auto text-text">{kg(e.weight)}</span>
+                <span className="w-[64px] text-right">
+                  <Delta value={e.delta} band={0.05} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
         {sheet}
       </form>
     );

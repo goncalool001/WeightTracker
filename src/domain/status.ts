@@ -10,10 +10,15 @@ import {
 } from '@/lib/constants';
 import {
   addDaysISO,
+  averageBetween,
+  monthStartISO,
+  prevMonthStartISO,
   countInBand,
   rateOverWindow,
   rateWithError,
   staySince,
+  todayISO,
+  weekStartISO,
   windowAverage,
 } from './calendar';
 import { roundWeight } from './entries';
@@ -54,6 +59,27 @@ export interface Status {
   avg7Prev: number | null;
   /** avg7 − avg7Prev, from the rounded values. */
   avg7Delta: number | null;
+  /**
+   * This calendar week (Monday to today) against the whole week before:
+   * averages rounded to 0.1, delta from the rounded values.
+   */
+  week: {
+    start: string;
+    avg: number | null;
+    count: number;
+    prevAvg: number | null;
+    prevCount: number;
+    delta: number | null;
+  } | null;
+  /** The same for this calendar month against the whole month before. */
+  month: {
+    start: string;
+    avg: number | null;
+    count: number;
+    prevAvg: number | null;
+    prevCount: number;
+    delta: number | null;
+  } | null;
   /** down / up / flat by the 0.2 kg band; null with too little data. */
   trend: DeltaDirection | null;
   /** kg per week over the last 28 days, or null. */
@@ -109,6 +135,8 @@ function emptyStatus(goal: Goal | null): Status {
     avg7Count: 0,
     avg7Prev: null,
     avg7Delta: null,
+    week: null,
+    month: null,
     trend: null,
     rate: null,
     goal,
@@ -126,7 +154,7 @@ function emptyStatus(goal: Goal | null): Status {
   };
 }
 
-export function buildStatus(entries: WeightEntry[], goals: Goal[]): Status {
+export function buildStatus(entries: WeightEntry[], goals: Goal[], today: string = todayISO()): Status {
   const goal = currentGoal(goals);
   if (entries.length === 0) return emptyStatus(goal);
 
@@ -141,6 +169,33 @@ export function buildStatus(entries: WeightEntry[], goals: Goal[]): Status {
   const avg7Delta = avg7 != null && avg7Prev != null ? r1(avg7 - avg7Prev) : null;
 
   const rate = rateOverWindow(entries, end, RATE_WINDOW);
+
+  const start = weekStartISO(today);
+  const wk = averageBetween(entries, start, today);
+  const wkPrev = averageBetween(entries, addDaysISO(start, -7), addDaysISO(start, -1));
+  const wkAvg = wk.average == null ? null : r1(wk.average);
+  const wkPrevAvg = wkPrev.average == null ? null : r1(wkPrev.average);
+  const week = {
+    start,
+    avg: wkAvg,
+    count: wk.count,
+    prevAvg: wkPrevAvg,
+    prevCount: wkPrev.count,
+    delta: wkAvg != null && wkPrevAvg != null ? r1(wkAvg - wkPrevAvg) : null,
+  };
+  const mStart = monthStartISO(today);
+  const mo = averageBetween(entries, mStart, today);
+  const moPrev = averageBetween(entries, prevMonthStartISO(today), addDaysISO(mStart, -1));
+  const moAvg = mo.average == null ? null : r1(mo.average);
+  const moPrevAvg = moPrev.average == null ? null : r1(moPrev.average);
+  const month = {
+    start: mStart,
+    avg: moAvg,
+    count: mo.count,
+    prevAvg: moPrevAvg,
+    prevCount: moPrev.count,
+    delta: moAvg != null && moPrevAvg != null ? r1(moAvg - moPrevAvg) : null,
+  };
 
   let trend: DeltaDirection | null = null;
   if (avg7Delta != null) {
@@ -159,6 +214,8 @@ export function buildStatus(entries: WeightEntry[], goals: Goal[]): Status {
     avg7Count: cur.count,
     avg7Prev,
     avg7Delta,
+    week,
+    month,
     trend,
     rate,
   };

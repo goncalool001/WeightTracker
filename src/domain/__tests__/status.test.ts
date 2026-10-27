@@ -13,6 +13,8 @@ import {
   parseDateCell,
   parseWeightCell,
   replaceGoal,
+  deleteGoalAt,
+  editGoalDates,
   rollingCalendarAverage,
   windowAverage,
 } from '@/domain';
@@ -68,6 +70,31 @@ describe('belowSince', () => {
   });
 });
 
+describe('goal history edits', () => {
+  const a = makeGoal('lose', { target: 80 }, '2026-04-18');
+  const b = makeGoal('lose', { target: 75 }, '2026-07-12');
+  const c = makeGoal('maintain', { low: 76, high: 78 }, '2026-09-01');
+  const hist = [
+    { ...a, endedOn: '2026-07-12' },
+    { ...b, endedOn: '2026-09-01' },
+    c,
+  ];
+  it('deletes any goal, not only the current one', () => {
+    expect(deleteGoalAt(hist, 0).map((g) => g.target)).toEqual([75, 77]);
+  });
+  it('edits dates; touching periods are fine, overlaps are not', () => {
+    const ok = editGoalDates(hist, 1, '2026-07-12', '2026-08-31', '2026-10-27');
+    expect('goals' in ok && ok.goals[1].endedOn).toBe('2026-08-31');
+    expect(editGoalDates(hist, 1, '2026-07-01', '2026-09-01', '2026-10-27')).toMatchObject({ error: 'overlap' });
+    expect(editGoalDates(hist, 1, '2026-08-01', '2026-07-20', '2026-10-27')).toMatchObject({ error: 'order' });
+    expect(editGoalDates(hist, 2, '2026-11-01', null, '2026-10-27')).toMatchObject({ error: 'future' });
+  });
+  it('keeps the current goal open-ended', () => {
+    const r = editGoalDates(hist, 2, '2026-09-05', '2026-10-01', '2026-10-27');
+    expect('goals' in r && r.goals[2]).toMatchObject({ setOn: '2026-09-05', endedOn: null });
+  });
+});
+
 describe('goals', () => {
   it('records when the 80 kg goal was passed (strictly below)', () => {
     const g = SEED_GOALS_MAINTAIN[0];
@@ -106,6 +133,22 @@ describe('goals', () => {
 });
 
 describe('buildStatus', () => {
+  it('this calendar week against the whole week before', () => {
+    // 26–27 Oct 2026 (Mon, Tue) after the seed week of 19–25 Oct.
+    const entries = [
+      ...SEED_ENTRIES,
+      { date: '2026-10-26', weight: 75.8 },
+      { date: '2026-10-27', weight: 75.7 },
+    ];
+    const s = buildStatus(entries, SEED_GOALS_LOSE, '2026-10-27');
+    expect(s.week).toEqual({ start: '2026-10-26', avg: 75.8, count: 2, prevAvg: 76.7, prevCount: 6, delta: -0.9 });
+    expect(s.month).toMatchObject({ start: '2026-10-01', prevCount: expect.any(Number) });
+    const sep = SEED_ENTRIES.filter((e) => e.date.startsWith('2026-09'));
+    expect(s.month?.prevAvg).toBe(Math.round((sep.reduce((a, e) => a + e.weight, 0) / sep.length) * 10) / 10);
+    // Monday morning, nothing logged yet this week.
+    expect(buildStatus(SEED_ENTRIES, SEED_GOALS_LOSE, '2026-10-26').week).toMatchObject({ avg: null, count: 0, prevAvg: 76.7, delta: null });
+  });
+
   it('maintaining 76–78 kg', () => {
     const s = buildStatus(SEED_ENTRIES, SEED_GOALS_MAINTAIN);
     expect(s.phase).toBe('maintain');

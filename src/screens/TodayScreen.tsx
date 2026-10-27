@@ -1,5 +1,4 @@
 import { useT } from '@/i18n';
-import { todayISO } from '@/domain';
 import { useStore } from '@/store/useStore';
 import { useStatus } from '@/store/selectors';
 import { routeHref } from '@/hooks/useRoute';
@@ -24,15 +23,13 @@ export function TodayScreen() {
   const s = useStatus();
   const total = useStore((st) => st.entries.length);
   const empty = s.phase === 'empty';
-  // Shown only when the cards are not about today.
-  const stale = s.latest && s.latest.date !== todayISO() ? t.lastWeighIn(t.fmtShort(s.latest.date)) : undefined;
 
   return (
     <>
       {empty ? (
         <ScreenTitle title={t.emptyHead} serif />
       ) : (
-        <ScreenTitle title={t.nav.today} sub={stale} hidden />
+        <ScreenTitle title={t.nav.today} hidden />
       )}
 
       <KpiStrip s={s} />
@@ -53,7 +50,7 @@ export function TodayScreen() {
             <Ruler s={s} />
           </div>
         )}
-        <div className="hidden lg:col-span-3 lg:block">
+        <div className="hidden lg:col-span-3 lg:block [&>form]:h-full">
           <LogForm variant="panel" />
         </div>
       </div>

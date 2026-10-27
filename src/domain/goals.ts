@@ -135,3 +135,39 @@ export function lastReachedTarget(
   }
   return null;
 }
+
+/** Remove one goal from the history (any of them, the current one included). */
+export function deleteGoalAt(goals: Goal[], index: number): Goal[] {
+  return goals.filter((_, i) => i !== index);
+}
+
+export type GoalDatesError = 'order' | 'future' | 'overlap';
+
+/**
+ * Change when a goal started and, for a past goal, when it ended. The current
+ * goal keeps no end date. Periods may touch (one ends the day the next
+ * starts, as when a goal replaces another) but must not overlap. The history
+ * stays sorted by start date.
+ */
+export function editGoalDates(
+  goals: Goal[],
+  index: number,
+  setOn: string,
+  endedOn: string | null,
+  today: string,
+): { goals: Goal[] } | { error: GoalDatesError; other?: Goal } {
+  const g = goals[index];
+  const end = g.endedOn === null ? null : endedOn;
+  if (setOn > today || (end && end > today)) return { error: 'future' };
+  if (end && end < setOn) return { error: 'order' };
+  const until = (x: { endedOn: string | null }) => x.endedOn ?? '9999-12-31';
+  const mine = { setOn, endedOn: end };
+  for (let i = 0; i < goals.length; i++) {
+    if (i === index) continue;
+    const o = goals[i];
+    if (mine.setOn < until(o) && o.setOn < until(mine)) return { error: 'overlap', other: o };
+  }
+  const out = goals.map((x, i) => (i === index ? { ...x, setOn, endedOn: end } : x));
+  out.sort((a, b) => (a.setOn < b.setOn ? -1 : a.setOn > b.setOn ? 1 : 0));
+  return { goals: out };
+}

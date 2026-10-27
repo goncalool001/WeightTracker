@@ -8,6 +8,7 @@ import { routeHref } from '@/hooks/useRoute';
 import { useStore } from '@/store/useStore';
 import { trimKg } from './headline';
 import { DayStrip } from './DayStrip';
+import { goalFacts } from './goalFacts';
 
 interface Label {
   v: number;
@@ -67,7 +68,7 @@ export function Ruler({ s }: { s: Status }) {
     if (!clash || width === 0) placed.push({ ...c, left, w });
   }
 
-  let caption: string;
+  let caption: string | null;
   if (s.phase === 'maintain' && band) {
     if (s.bandPosition === 'inside') {
       caption = t.rCapInside(abs1(latest - band.low), abs1(band.high - latest));
@@ -77,13 +78,15 @@ export function Ruler({ s }: { s: Status }) {
       caption = t.rCapBelow(abs1(s.bandDistance ?? 0));
     }
   } else if (s.phase === 'reach' && target != null) {
-    caption = t.rCapReach((s.progress ?? 0).toFixed(0));
+    // The share covered sits beside the title; the facts below say the rest.
+    caption = null;
   } else if (s.phase === 'reached' && target != null && s.reached) {
     caption = t.rCapReached(trimKg(target), t.fmtShort(s.reached.date));
   } else {
     caption = t.rCapNone;
   }
 
+  const facts = goalFacts(s, t);
   const title = s.phase === 'maintain' ? t.rulerMaintain : s.phase === 'none' ? t.rulerNone : t.rulerReach;
   const aria = [
     `${t.rToday} ${kg(latest)} kg`,
@@ -100,9 +103,14 @@ export function Ruler({ s }: { s: Status }) {
 
   return (
     <section aria-labelledby={titleId} className="panel flex min-w-0 flex-col p-4 sm:p-5">
-      <h2 id={titleId} className="text-[15px] font-semibold text-text lg:text-sm">
-        {title}
-      </h2>
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 id={titleId} className="text-[15px] font-semibold text-text lg:text-sm">
+          {title}
+        </h2>
+        {s.phase === 'reach' && s.progress != null && (
+          <span className="num text-[14px] text-muted">{t.rProgress(s.progress.toFixed(0))}</span>
+        )}
+      </div>
 
       <div ref={ref} role="img" aria-label={t.rulerAria(aria)} className="relative mt-6 h-[96px]">
         {/* track */}
@@ -184,7 +192,16 @@ export function Ruler({ s }: { s: Status }) {
         )}
       </ul>
 
-      <p className="mt-4 text-[15px] text-text lg:text-sm">{caption}</p>
+      {caption && <p className="mt-4 text-[15px] text-text lg:text-sm">{caption}</p>}
+      <dl className="mt-4 grid grid-cols-3 gap-x-3 gap-y-3 sm:gap-x-4">
+        {facts.map((f) => (
+          <div key={f.label} className="flex min-w-0 flex-col">
+            <dt className="text-[13px] text-muted">{f.label}</dt>
+            <dd className="text-[17px] leading-tight text-text sm:text-[19px]">{f.value}</dd>
+            {f.caption && <dd className="text-[13px] text-muted">{f.caption}</dd>}
+          </div>
+        ))}
+      </dl>
       {s.drift && (
         // Early warning while maintaining: before the range is left, not after.
         <p

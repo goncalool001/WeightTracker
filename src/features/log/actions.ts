@@ -104,3 +104,19 @@ export function changeGoal(next: Goal | null, t: T): void {
     },
   });
 }
+
+/** Replace the goal history (an edit or a deletion) with an undo toast. */
+export function setGoalHistory(next: Goal[], message: string, t: T): void {
+  const before = store().goals;
+  store().restoreGoals(next);
+  toast(message, {
+    duration: UNDO_MS,
+    action: {
+      label: t.tUndo,
+      onClick: () => {
+        store().restoreGoals(before);
+        undone(t);
+      },
+    },
+  });
+}
