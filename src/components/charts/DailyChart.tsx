@@ -88,13 +88,21 @@ export function DailyChart({ entries, all, series, goal, overlay, coarse, narrow
       [last, entries[last]?.weight === entries[lo]?.weight ? 'bottom' : 'top'],
     ]);
 
+    // Dense ranges (more days than the plot has room for, e.g. "All" on a
+    // phone): the weigh-ins step back into small translucent dots and the
+    // 7-day line comes forward, thicker and above them. The labelled points
+    // keep full strength.
+    const spanDays = entries.length > 1 ? dayNumber(entries[last].date) - dayNumber(entries[0].date) : 0;
+    const dense = spanDays > (narrow ? 60 : 150);
+    const dotSize = dense ? (narrow ? 3 : 4) : narrow ? 5 : 6;
+
     const dotData = entries.map((e, i) => {
       const pos = labelled.get(i);
       const isLast = i === last;
       return {
         value: [ms(e.date), e.weight],
-        symbolSize: isLast ? (narrow ? 8 : 9) : narrow ? 5 : 6,
-        itemStyle: { color: isLast ? tok.ink : tok.dot },
+        symbolSize: isLast ? (narrow ? 8 : 9) : pos && dense ? dotSize + 2 : dotSize,
+        itemStyle: { color: isLast ? tok.ink : tok.dot, opacity: dense && !isLast && !pos ? 0.45 : 1 },
         label: pos
           ? {
               show: true,
@@ -148,10 +156,10 @@ export function DailyChart({ entries, all, series, goal, overlay, coarse, narrow
         smooth: false,
         connectNulls: false,
         data: series.map((p) => [ms(p.date), p.average == null ? null : Number(p.average.toFixed(2))]),
-        lineStyle: { color: tok.accent, width: 2 },
+        lineStyle: { color: tok.accent, width: dense ? 2.5 : 2 },
         itemStyle: { color: tok.accent },
         emphasis: { disabled: true },
-        z: 2,
+        z: dense ? 4 : 2,
       });
       // Where a 7-day window holds fewer than 2 weigh-ins there is no average:
       // the two sides are joined by a dashed segment so the line does not
@@ -169,10 +177,10 @@ export function DailyChart({ entries, all, series, goal, overlay, coarse, narrow
             [ms(g.to.date), Number(g.to.average.toFixed(2))],
             [ms(g.to.date), null],
           ]),
-          lineStyle: { color: tok.accent, width: 2, type: [4, 4] },
+          lineStyle: { color: tok.accent, width: dense ? 2.5 : 2, type: [4, 4] },
           emphasis: { disabled: true },
           silent: true,
-          z: 2,
+          z: dense ? 4 : 2,
         });
       }
     } else if (entries.length >= 2) {
@@ -189,9 +197,9 @@ export function DailyChart({ entries, all, series, goal, overlay, coarse, narrow
           [ms(a.date), fit.slope * xs[0] + fit.intercept],
           [ms(b.date), fit.slope * xs[last] + fit.intercept],
         ],
-        lineStyle: { color: tok.accent, width: 2, type: 'dashed' },
+        lineStyle: { color: tok.accent, width: dense ? 2.5 : 2, type: 'dashed' },
         emphasis: { disabled: true },
-        z: 2,
+        z: dense ? 4 : 2,
       });
     }
 
