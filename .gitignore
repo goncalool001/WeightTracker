@@ -6,3 +6,6 @@ dev-dist
 .vscode/*
 !.vscode/extensions.json
 coverage
+
+# design-taste skill working files (captures, demo builds, backups)
+.taste-skill/
