@@ -76,8 +76,9 @@ export function TopBar({ route }: { route: Route }) {
                     <ThemeToggle />
                   </div>
                 </div>
-                <div className="border-t border-border pt-6">
+                <div className="flex flex-col gap-6 border-t border-border pt-6">
                   <AuthControl />
+                  <p className="text-[12px] text-muted">{t.credit}</p>
                 </div>
               </div>
             </Dialog.Content>

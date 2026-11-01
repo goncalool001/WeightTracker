@@ -10,6 +10,7 @@ export type { Locale, InsightStrings };
 /** Full translation interface. Functions take already-formatted numbers. */
 export interface T {
   appName: string;
+  credit: string;
   skipToContent: string;
   nav: { today: string; log: string; goal: string; data: string };
   navLabel: string;
@@ -125,18 +126,17 @@ export interface T {
   categoriesLbl: string;
   noteAbout: (prevDay: string) => string;
   effTitle: string;
-  effFinding: (label: string, kg: string, n: number, heavier: boolean) => string;
-  effNoFinding: string;
   effEmpty: string;
   effOnDay: string;
   effNext: string;
   effNext2: string;
   effCount: (n: number) => string;
-  effFew: (n: number) => string;
+  effFewTitle: string;
+  effLighter: string;
+  effHeavier: string;
+  effReliability: string;
   effIndicative: string;
   effUnclear: string;
-  effExplained: (withTag: number, total: number) => string;
-  effMethod: string;
   effAria: (label: string, kg: string, low: string, high: string, n: number) => string;
   driftUp: (limit: string, date: string, rate: string) => string;
   driftDown: (limit: string, date: string, rate: string) => string;
@@ -320,6 +320,7 @@ const plural = (n: number, one: string, many: string) => (n === 1 ? one : many);
 
 const en: T = {
   appName: 'Weight Tracker',
+  credit: '© 2026 Gonçalo Sousa',
   skipToContent: 'Skip to content',
   nav: { today: 'Today', log: 'Entries', goal: 'Goal', data: 'Data' },
   navLabel: 'Main',
@@ -465,20 +466,17 @@ const en: T = {
   categoriesLbl: 'Categories',
   noteAbout: (prevDay) => `About the day before (${prevDay}).`,
   effTitle: 'What explains the swings',
-  effFinding: (label, kg, n, heavier) =>
-    `After a day with "${label}" you weigh ${kg} kg ${heavier ? 'more' : 'less'} on average (${n} weigh-ins).`,
-  effNoFinding: 'No category has a clear effect yet. Keep tagging the days that stand out.',
   effEmpty: 'No categories yet. Add them to a weigh-in to see what is linked to your ups and downs.',
-  effOnDay: 'Weigh-in',
-  effNext: '+1 day',
-  effNext2: '+2 days',
+  effOnDay: 'Next morning',
+  effNext: 'A day later',
+  effNext2: 'Two days later',
   effCount: (n) => `${n} ${plural(n, 'weigh-in', 'weigh-ins')}`,
-  effFew: (n) => `${n} ${plural(n, 'weigh-in', 'weigh-ins')}, not enough yet`,
+  effFewTitle: 'Not enough weigh-ins yet (5 needed)',
+  effLighter: 'lighter',
+  effHeavier: 'heavier',
+  effReliability: 'Reliability',
   effIndicative: 'indicative',
   effUnclear: 'no clear effect',
-  effExplained: (withTag, total) =>
-    `${withTag} of your ${total} rises above 0.5 kg have a category.`,
-  effMethod: 'Difference from your previous 7-day average, against weigh-ins with no category, with an 80% range. 5 to 9 weigh-ins: indicative. Patterns, not causes.',
   effAria: (label, kg, low, high, n) =>
     `${label}: ${kg} kg on average, range ${low} to ${high} kg, ${n} weigh-ins`,
   driftUp: (limit, date, rate) => `At ${rate} kg/wk, your 7-day average passes ${limit} kg around ${date}.`,
@@ -687,6 +685,7 @@ const en: T = {
 
 const pt: T = {
   appName: 'Weight Tracker',
+  credit: '© 2026 Gonçalo Sousa',
   skipToContent: 'Saltar para o conteúdo',
   nav: { today: 'Hoje', log: 'Registos', goal: 'Meta', data: 'Dados' },
   navLabel: 'Principal',
@@ -832,20 +831,17 @@ const pt: T = {
   categoriesLbl: 'Categorias',
   noteAbout: (prevDay) => `Sobre o dia anterior (${prevDay}).`,
   effTitle: 'O que explica as variações',
-  effFinding: (label, kg, n, heavier) =>
-    `Depois de um dia com "${label}" pesas, em média, ${kg} kg ${heavier ? 'a mais' : 'a menos'} (${n} pesagens).`,
-  effNoFinding: 'Nenhuma categoria tem ainda um efeito claro. Continua a marcar os dias que se destacam.',
   effEmpty: 'Ainda sem categorias. Junta-as às pesagens para veres o que está associado às subidas e descidas.',
-  effOnDay: 'Pesagem',
-  effNext: '+1 dia',
-  effNext2: '+2 dias',
+  effOnDay: 'Manhã seguinte',
+  effNext: '1 dia depois',
+  effNext2: '2 dias depois',
   effCount: (n) => `${n} ${plural(n, 'pesagem', 'pesagens')}`,
-  effFew: (n) => `${n} ${plural(n, 'pesagem', 'pesagens')}, ainda poucas`,
+  effFewTitle: 'Ainda com poucas pesagens (são precisas 5)',
+  effLighter: 'mais leve',
+  effHeavier: 'mais pesado',
+  effReliability: 'Fiabilidade',
   effIndicative: 'indicativo',
   effUnclear: 'sem efeito claro',
-  effExplained: (withTag, total) =>
-    `${withTag} das tuas ${total} subidas acima de 0.5 kg têm categoria.`,
-  effMethod: 'Diferença face à média dos 7 dias anteriores, comparada com pesagens sem categoria, com intervalo de 80%. 5 a 9 pesagens: indicativo. Padrões, não causas.',
   effAria: (label, kg, low, high, n) =>
     `${label}: ${kg} kg em média, intervalo de ${low} a ${high} kg, ${n} pesagens`,
   driftUp: (limit, date, rate) => `A ${rate} kg/sem, a média de 7 dias passa os ${limit} kg por volta de ${date}.`,

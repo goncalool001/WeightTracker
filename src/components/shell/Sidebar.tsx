@@ -27,6 +27,7 @@ export function Sidebar({ route }: { route: Route }) {
           <ThemeToggle />
         </div>
         <AuthControl />
+        <p className="text-[12px] text-muted">{t.credit}</p>
       </div>
     </aside>
   );
