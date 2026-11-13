@@ -5,6 +5,7 @@ import { kg } from '@/lib/format';
 import { cn } from '@/lib/cn';
 import { useT } from '@/i18n';
 import { useStore } from '@/store/useStore';
+import { useChangeDirection } from '@/store/selectors';
 import { useKeyboardInset } from '@/hooks/useViewport';
 import { Button } from '@/components/ui/Button';
 import { Delta } from '@/components/ui/Delta';
@@ -28,6 +29,7 @@ import { checkWeight, saveWeight } from './actions';
 export function LogForm({ variant }: { variant: 'bar' | 'panel' }) {
   const t = useT();
   const entries = useStore((s) => s.entries);
+  const changeGood = useChangeDirection();
   const today = todayISO();
   const [date, setDate] = useState(today);
   const [text, setText] = useState('');
@@ -83,7 +85,11 @@ export function LogForm({ variant }: { variant: 'bar' | 'panel' }) {
     () =>
       entries
         .slice(-13)
-        .map((e, i, arr) => ({ ...e, delta: i > 0 ? roundWeight(e.weight - arr[i - 1].weight) : null }))
+        .map((e, i, arr) => ({
+          ...e,
+          delta: i > 0 ? roundWeight(e.weight - arr[i - 1].weight) : null,
+          prevDate: i > 0 ? arr[i - 1].date : null,
+        }))
         .slice(1)
         .reverse(),
     [entries],
@@ -178,7 +184,7 @@ export function LogForm({ variant }: { variant: 'bar' | 'panel' }) {
                 <span className="num text-muted">{t.fmtShort(e.date)}</span>
                 <span className="num ml-auto text-text">{kg(e.weight)}</span>
                 <span className="w-[64px] text-right">
-                  <Delta value={e.delta} band={0.05} />
+                  <Delta value={e.delta} band={0.05} good={e.prevDate ? changeGood(e.prevDate, e.date) : null} />
                 </span>
               </li>
             ))}

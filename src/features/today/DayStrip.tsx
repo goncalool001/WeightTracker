@@ -1,5 +1,15 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent as ReactPointerEvent } from 'react';
-import { addDaysISO, consecutiveDays, goodDirection, roundWeight, todayISO, type Status } from '@/domain';
+import {
+  addDaysISO,
+  changeDirection,
+  consecutiveDays,
+  goalAt,
+  roundWeight,
+  todayISO,
+  type Good,
+  type Status,
+} from '@/domain';
+import { useStore } from '@/store/useStore';
 import { kg } from '@/lib/format';
 import { cn } from '@/lib/cn';
 import { useT } from '@/i18n';
@@ -18,18 +28,24 @@ interface Day {
   delta: number | null;
   prevDate: string | null;
   mark: Mark;
+  /** How the change is judged, for the tooltip's colour. */
+  good: Good;
 }
 
 /**
- * The last 30 calendar days, one cell each, ending on the latest weigh-in.
- * Each weigh-in is compared with the one before it: green when it moved
- * towards the goal, red when it moved away, grey when it did not move.
- * Maintaining, a weigh-in inside the range is green, and one outside is green
- * only while it is heading back. Days without a weigh-in stay empty; nothing
- * is filled in. Hover, focus or tap a cell for its change.
+ * The last 30 calendar days, one cell each, ending on the latest weigh-in of
+ * what Today covers. Each weigh-in is compared with the one before it and
+ * judged by the goal in force on that day: green when it moved towards that
+ * goal, red when it moved away, grey when it did not move (or when the change
+ * runs across two goals). So the last days of a cut stay green after a bulk
+ * starts. Under a goal to maintain, a weigh-in inside the range is green, and
+ * one outside is green only while it is heading back. With everything shown,
+ * a loss is green. Days without a weigh-in stay empty; nothing is filled in.
+ * Hover, focus, tap or slide along the cells for each day's change.
  */
 export function DayStrip({ s, entries }: { s: Status; entries: WeightEntry[] }) {
   const t = useT();
+  const goals = useStore((st) => st.goals);
   const listRef = useRef<HTMLOListElement>(null);
   const [active, setActive] = useState<number | null>(null);
   const [focusIdx, setFocusIdx] = useState(29);
@@ -46,42 +62,55 @@ export function DayStrip({ s, entries }: { s: Status; entries: WeightEntry[] }) 
   }, [active]);
 
   if (!s.latest) return null;
+  const everything = s.scope.kind === 'all';
+  const closed = s.scope.closed;
   const band = s.phase === 'maintain' ? s.band : null;
-  const hasGoal = s.phase !== 'none' && s.goal != null;
-  const good = goodDirection(s.goal);
+  const hasGoal = !everything && s.goal != null;
   const index = new Map(entries.map((e, i) => [e.date, i]));
 
   const days: Day[] = Array.from({ length: 30 }, (_, i) => {
     const date = addDaysISO(s.latest!.date, i - 29);
     const at = index.get(date);
-    if (at == null) return { date, w: null, delta: null, prevDate: null, mark: 'none' };
+    if (at == null) return { date, w: null, delta: null, prevDate: null, mark: 'none', good: null };
     const w = entries[at].weight;
     const prev = at > 0 ? entries[at - 1] : null;
     const delta = prev ? roundWeight(w - prev.weight) : null;
+    // The goal that day decides; on the day two goals meet, the one that ended.
+    const goal = everything ? null : goalAt(goals, date, 'earlier');
     let mark: Mark = 'flat';
-    if (band) {
-      const dist = (v: number) => (v < band.low ? band.low - v : v > band.high ? v - band.high : 0);
+    let good: Good = null;
+    if (goal?.mode === 'maintain') {
+      const dist = (v: number) => (v < goal.low ? goal.low - v : v > goal.high ? v - goal.high : 0);
       if (dist(w) === 0) mark = 'good';
       else if (prev) mark = dist(w) < dist(prev.weight) ? 'good' : 'bad';
       else mark = 'bad';
-    } else if (delta != null && Math.abs(delta) >= FLAT_KG) {
-      mark = (delta < 0 ? 'down' : 'up') === good ? 'good' : 'bad';
+    } else if (prev && delta != null) {
+      good = changeDirection(s.scope, goals, prev.date, date);
+      if (good != null && Math.abs(delta) >= FLAT_KG) {
+        mark = (delta < 0 ? 'down' : 'up') === good ? 'good' : 'bad';
+      }
     }
-    return { date, w, delta, prevDate: prev?.date ?? null, mark };
+    return { date, w, delta, prevDate: prev?.date ?? null, mark, good };
   });
 
   const weighed = days.filter((d) => d.w != null);
   const goodCount = weighed.filter((d) => d.mark === 'good').length;
-  const summary = band
+  // The range only counts for the days it has been the goal.
+  const sinceBand = weighed.filter((d) => s.scope.from == null || d.date >= s.scope.from);
+  const bandShown = band != null && sinceBand.length > 0;
+  const summary = bandShown
     ? t.stripInBand(
-        weighed.filter((d) => d.w! >= band.low && d.w! <= band.high).length,
-        weighed.length,
+        sinceBand.filter((d) => d.w! >= band.low && d.w! <= band.high).length,
+        sinceBand.length,
       )
-    : hasGoal
-      ? t.stripToward(goodCount, weighed.length)
-      : t.stripLogged(weighed.length);
+    : band
+      ? // A range set before its first weigh-in: nothing judged by it yet.
+        t.stripLogged(weighed.length)
+      : hasGoal
+        ? t.stripToward(goodCount, weighed.length)
+        : t.stripLogged(weighed.length);
   // Days in a row with a weigh-in, ending today (or yesterday, before today's).
-  const streak = consecutiveDays(entries, todayISO());
+  const streak = closed ? 0 : consecutiveDays(entries, todayISO());
   const anyFlat = weighed.some((d) => d.mark === 'flat');
 
   const label = (d: Day) =>
@@ -133,8 +162,8 @@ export function DayStrip({ s, entries }: { s: Status; entries: WeightEntry[] }) 
 
   const tip = active != null ? days[active] : null;
   const legend: Array<{ cls: string; text: string }> = [
-    { cls: 'bg-positive', text: band ? t.sInBandOrBack : hasGoal ? t.sToward : t.sDown },
-    { cls: 'bg-negative', text: band ? t.sAway : hasGoal ? t.sAgainst : t.sUp },
+    { cls: 'bg-positive', text: bandShown ? t.sInBandOrBack : hasGoal ? t.sToward : t.sDown },
+    { cls: 'bg-negative', text: bandShown ? t.sAway : hasGoal ? t.sAgainst : t.sUp },
     ...(anyFlat ? [{ cls: 'bg-cell-off', text: t.sFlat }] : []),
     { cls: 'border border-control', text: t.sNone },
   ];
@@ -142,7 +171,9 @@ export function DayStrip({ s, entries }: { s: Status; entries: WeightEntry[] }) 
   return (
     <div className="mt-5 border-t border-rule pt-5">
       <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-        <h3 className="text-[14px] font-medium text-text lg:text-[13px]">{t.stripTitle}</h3>
+        <h3 className="text-[14px] font-medium text-text lg:text-[13px]">
+          {closed ? t.stripTitleGoal : t.stripTitle}
+        </h3>
         <ul className="flex flex-wrap gap-x-3 text-[13px] text-muted">
           {legend.map((l) => (
             <li key={l.text} className="flex items-center gap-1.5">
@@ -171,7 +202,7 @@ export function DayStrip({ s, entries }: { s: Status; entries: WeightEntry[] }) 
                 {tip.delta != null && (
                   <>
                     {' '}
-                    <Delta value={tip.delta} band={FLAT_KG - 0.001} />
+                    <Delta value={tip.delta} band={FLAT_KG - 0.001} good={tip.good} />
                     <span className="text-muted"> {t.stripVs(t.fmtShort(tip.prevDate!))}</span>
                   </>
                 )}

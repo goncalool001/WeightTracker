@@ -31,13 +31,18 @@ export function Ruler({ s }: { s: Status }) {
   const width = useElementWidth(ref);
   const entries = useStore((st) => st.entries);
   if (!s.latest) return null;
+  const closed = s.scope.closed;
+  // An earlier goal ends on its last weigh-in, not on today.
+  const nowLabel = closed ? t.rEnd : t.rToday;
 
   const latest = s.latest.weight;
   // For a lose or gain goal the start mark is where progress is measured from.
   const start = s.journeyStart?.weight ?? s.first?.weight ?? latest;
   const band = s.phase === 'maintain' ? s.band : null;
   const target = isTargetGoal(s.goal) ? s.goal.target : null;
-  const passed = s.phase === 'maintain' && s.stay ? s.stay.threshold : null;
+  // The target passed before settling into the range (not the range's own top).
+  const passed =
+    s.phase === 'maintain' && s.stay && s.stay.threshold !== s.band?.high ? s.stay.threshold : null;
 
   const values = [latest, start, s.avg7, band?.low, band?.high, target, passed].filter(
     (v): v is number => v != null,
@@ -79,17 +84,21 @@ export function Ruler({ s }: { s: Status }) {
     }
   } else if (s.phase === 'reach' && target != null) {
     // The share covered sits beside the title; the facts below say the rest.
-    caption = null;
+    // An earlier goal that ended before its target says how far short.
+    caption = s.closed?.short != null ? t.rCapShort(abs1(s.closed.short), trimKg(target)) : null;
   } else if (s.phase === 'reached' && target != null && s.reached) {
     caption = t.rCapReached(trimKg(target), t.fmtShort(s.reached.date));
+    // An earlier goal that was passed and then drifted back.
+    if (s.closed?.short != null) caption += ` ${t.rCapShort(abs1(s.closed.short), trimKg(target))}`;
   } else {
-    caption = t.rCapNone;
+    // Everything is shown: the prompt to set a goal only when there is none.
+    caption = s.scope.hasCurrentGoal ? null : t.rCapNone;
   }
 
   const facts = goalFacts(s, t);
   const title = s.phase === 'maintain' ? t.rulerMaintain : s.phase === 'none' ? t.rulerNone : t.rulerReach;
   const aria = [
-    `${t.rToday} ${kg(latest)} kg`,
+    `${nowLabel} ${kg(latest)} kg`,
     s.avg7 != null ? `${t.rAvg} ${kg(s.avg7)} kg` : null,
     band ? `${t.rBand} ${trimKg(band.low)}–${trimKg(band.high)} kg` : null,
     target != null ? `${t.rGoal} ${trimKg(target)} kg` : null,
@@ -98,8 +107,13 @@ export function Ruler({ s }: { s: Status }) {
     .filter(Boolean)
     .join('; ');
 
-  const cta =
-    s.phase === 'reached' ? t.setMaintain : s.phase === 'none' ? t.setGoal : null;
+  const cta = closed
+    ? null
+    : s.phase === 'reached'
+      ? t.setMaintain
+      : s.phase === 'none' && !s.scope.hasCurrentGoal
+        ? t.setGoal
+        : null;
 
   return (
     <section aria-labelledby={titleId} className="panel flex min-w-0 flex-col p-4 sm:p-5">
@@ -173,7 +187,7 @@ export function Ruler({ s }: { s: Status }) {
       <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[13px] text-muted">
         <li className="flex items-center gap-1.5">
           <span aria-hidden="true" className="h-3.5 w-0.5 bg-text" />
-          {t.rToday}
+          {nowLabel}
         </li>
         {s.avg7 != null && (
           <li className="flex items-center gap-1.5">
@@ -193,15 +207,17 @@ export function Ruler({ s }: { s: Status }) {
       </ul>
 
       {caption && <p className="mt-4 text-[15px] text-text lg:text-sm">{caption}</p>}
-      <dl className="mt-4 grid grid-cols-3 gap-x-3 gap-y-3 sm:gap-x-4">
-        {facts.map((f) => (
-          <div key={f.label} className="flex min-w-0 flex-col">
-            <dt className="text-[13px] text-muted">{f.label}</dt>
-            <dd className="text-[17px] leading-tight text-text sm:text-[19px]">{f.value}</dd>
-            {f.caption && <dd className="text-[13px] text-muted">{f.caption}</dd>}
-          </div>
-        ))}
-      </dl>
+      {facts.length > 0 && (
+        <dl className="mt-4 grid grid-cols-3 gap-x-3 gap-y-3 sm:gap-x-4">
+          {facts.map((f) => (
+            <div key={f.label} className="flex min-w-0 flex-col">
+              <dt className="text-[13px] text-muted">{f.label}</dt>
+              <dd className="text-[17px] leading-tight text-text sm:text-[19px]">{f.value}</dd>
+              {f.caption && <dd className="text-[13px] text-muted">{f.caption}</dd>}
+            </div>
+          ))}
+        </dl>
+      )}
       {s.drift && (
         // Early warning while maintaining: before the range is left, not after.
         <p

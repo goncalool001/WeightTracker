@@ -39,6 +39,14 @@ export interface T {
   kMonth: string;
   kMonthNone: string;
   kLast: string;
+  kFinal: string;
+  kDuration: string;
+  kAvgPace: string;
+  scopeLabel: string;
+  scopeAll: string;
+  sLose: (kg: string) => string;
+  sGain: (kg: string) => string;
+  sMaintain: (low: string, high: string) => string;
   kLastToday: (date: string) => string;
   kLastYesterday: (date: string) => string;
   kTotalLost: string;
@@ -58,6 +66,11 @@ export interface T {
   kPace: string;
   kPaceUnit: string;
   kPaceCap: string;
+  kPaceTarget: (rate: string) => string;
+  kPaceOn: string;
+  kPaceSlow: string;
+  kPaceFast: string;
+  lTargetPace: string;
   kEta: string;
   kEtaFrom: (date: string) => string;
   kNoData: string;
@@ -67,6 +80,8 @@ export interface T {
   rulerReach: string;
   rulerNone: string;
   rStart: string;
+  rEnd: string;
+  rCapShort: (kg: string, target: string) => string;
   rToday: string;
   rAvg: string;
   rGoal: string;
@@ -81,6 +96,7 @@ export interface T {
   setGoal: string;
   rulerAria: (parts: string) => string;
   stripTitle: string;
+  stripTitleGoal: string;
   stripInBand: (n: number, total: number) => string;
   stripLogged: (n: number) => string;
   stripToward: (n: number, total: number) => string;
@@ -169,6 +185,8 @@ export interface T {
   lBand: string;
   lGoal: string;
   rangeLabel: string;
+  /** The widest range while one goal is shown: the whole of that goal. */
+  rangeGoal: string;
   ranges: { '7d': string; '30d': string; '90d': string; ytd: string; all: string; custom: string };
   rangeFrom: string;
   rangeTo: string;
@@ -199,6 +217,9 @@ export interface T {
   // insights
   insightsTitle: string;
   insightsEmpty: string;
+  insightsEmptyGoal: string;
+  insightsEmptyClosed: string;
+  insightsMoreGoal: string;
   insights: InsightStrings;
 
   // entries screen
@@ -228,6 +249,11 @@ export interface T {
   modeGain: string;
   modeMaintain: string;
   targetLbl: string;
+  paceLbl: string;
+  paceShortLbl: string;
+  gEditTitle: string;
+  errPace: string;
+  hRate: (rate: string) => string;
   lowLbl: string;
   highLbl: string;
   bandHint: string;
@@ -251,16 +277,14 @@ export interface T {
   hNotYet: string;
 
   // data screen
-  hEditDates: string;
-  gDatesTitle: string;
   gStart: string;
   gEnd: string;
   gEndCurrent: string;
   gErrOrder: string;
   gErrFuture: string;
+  gErrDate: string;
   gErrOverlap: (other: string) => string;
   tGoalDeleted: string;
-  tGoalDatesSaved: string;
   dataTitle: string;
   importTitle: string;
   importDesc: string;
@@ -347,6 +371,14 @@ const en: T = {
   kMonth: 'Month on month',
   kMonthNone: 'no weigh-ins yet this month',
   kLast: 'Last weigh-in',
+  kFinal: 'Final weigh-in',
+  kDuration: 'Duration',
+  kAvgPace: 'Average pace',
+  scopeLabel: 'Period shown',
+  scopeAll: 'All history',
+  sLose: (kg) => `Lose to ${kg}`,
+  sGain: (kg) => `Gain to ${kg}`,
+  sMaintain: (low, high) => `Maintain ${low}–${high}`,
   kLastToday: (date) => `today, ${date}`,
   kLastYesterday: (date) => `yesterday, ${date}`,
   kTotalLost: 'Total lost',
@@ -366,6 +398,11 @@ const en: T = {
   kPace: 'Weekly pace',
   kPaceUnit: 'kg/wk',
   kPaceCap: 'last 4 weeks',
+  kPaceTarget: (rate) => `target ${rate} kg/wk`,
+  kPaceOn: 'on pace',
+  kPaceSlow: 'below pace',
+  kPaceFast: 'above pace',
+  lTargetPace: 'Target pace',
   kEta: 'Arrival',
   kEtaFrom: (date) => `after ${date}`,
   kNoData: 'not enough weigh-ins',
@@ -374,6 +411,8 @@ const en: T = {
   rulerReach: 'Way to the goal',
   rulerNone: 'Where you are',
   rStart: 'start',
+  rEnd: 'end',
+  rCapShort: (kg, target) => `Ended ${kg} kg short of ${target} kg.`,
   rToday: 'today',
   rAvg: '7-day avg',
   rGoal: 'goal',
@@ -388,6 +427,7 @@ const en: T = {
   setGoal: 'Set a goal',
   rulerAria: (parts) => `Scale in kilograms: ${parts}`,
   stripTitle: 'Last 30 days',
+  stripTitleGoal: 'Last 30 days of the goal',
   stripInBand: (n, total) => `Inside the range on ${n} of ${total} days with a weigh-in.`,
   stripLogged: (n) => `${n} of the last 30 days have a weigh-in.`,
   stripToward: (n, total) => `${n} of ${total} weigh-ins moved towards your goal.`,
@@ -509,6 +549,7 @@ const en: T = {
   lBand: 'Range',
   lGoal: 'Goal',
   rangeLabel: 'Period',
+  rangeGoal: 'Goal',
   ranges: { '7d': '7D', '30d': '30D', '90d': '90D', ytd: 'YTD', all: 'All', custom: 'Dates' },
   rangeFrom: 'From',
   rangeTo: 'To',
@@ -540,6 +581,9 @@ const en: T = {
 
   insightsTitle: 'Insights',
   insightsEmpty: 'Insights appear once there are a few weeks of weigh-ins.',
+  insightsEmptyGoal: 'Insights appear after a few weeks on this goal.',
+  insightsEmptyClosed: 'Nothing stood out during this goal.',
+  insightsMoreGoal: 'More appears after a few weeks on this goal.',
   insights: {
     windowLost: (kg, days) => `You've lost ${kg} over the last ${days} days.`,
     windowGained: (kg, days) => `You've gained ${kg} over the last ${days} days.`,
@@ -550,6 +594,13 @@ const en: T = {
     consistency: (drops, m) => `Your weight went down in ${drops} of your last ${m} weigh-ins.`,
     bestWeek: (start, end, kg) => `Your fastest week was ${start} – ${end}, down ${kg}.`,
     contribution: (pct) => `The last 14 days account for ${pct}% of your total loss.`,
+    accelAccelGain: (recent, prior) =>
+      `Your gain is speeding up: ${recent} in the last 30 days against ${prior} in the 30 before.`,
+    accelSlowGain: (recent, prior) =>
+      `Your gain is slowing: ${recent} in the last 30 days against ${prior} in the 30 before.`,
+    consistencyUp: (rises, m) => `Your weight went up in ${rises} of your last ${m} weigh-ins.`,
+    bestWeekUp: (start, end, kg) => `Your fastest week was ${start} – ${end}, up ${kg}.`,
+    contributionGain: (pct) => `The last 14 days account for ${pct}% of your total gain.`,
     compareStronger: (thisRate, lastRate) =>
       `This month's pace (${thisRate} kg/wk) is faster than last month's (${lastRate} kg/wk).`,
     compareWeaker: (thisRate, lastRate) =>
@@ -587,6 +638,11 @@ const en: T = {
   modeGain: 'Gain',
   modeMaintain: 'Maintain',
   targetLbl: 'Target weight, kg',
+  paceLbl: 'Target pace, kg per week (optional)',
+  paceShortLbl: 'Pace, kg/wk (optional)',
+  gEditTitle: 'Edit goal',
+  errPace: 'Use a pace between 0.05 and 2 kg per week.',
+  hRate: (rate) => `${rate} kg/wk`,
   lowLbl: 'From, kg',
   highLbl: 'To, kg',
   bandHint: 'A range of 1 to 3 kg absorbs normal day-to-day swings.',
@@ -611,16 +667,14 @@ const en: T = {
   hNotReached: 'not reached',
   hNotYet: 'not reached yet',
 
-  hEditDates: 'Edit dates',
-  gDatesTitle: 'Goal dates',
   gStart: 'Start',
   gEnd: 'End',
   gEndCurrent: 'still current',
   gErrOrder: 'The end has to be on or after the start.',
   gErrFuture: 'Pick today or an earlier day.',
+  gErrDate: 'Pick a date.',
   gErrOverlap: (other) => `These dates overlap "${other}".`,
   tGoalDeleted: 'Goal deleted',
-  tGoalDatesSaved: 'Goal dates saved',
   dataTitle: 'Data',
   importTitle: 'Import',
   importDesc: 'CSV or Excel with Date and Weight (kg) columns. You check every row before saving.',
@@ -712,6 +766,14 @@ const pt: T = {
   kMonth: 'Mês a mês',
   kMonthNone: 'ainda sem pesagens este mês',
   kLast: 'Última pesagem',
+  kFinal: 'Pesagem final',
+  kDuration: 'Duração',
+  kAvgPace: 'Ritmo médio',
+  scopeLabel: 'Período mostrado',
+  scopeAll: 'Todo o histórico',
+  sLose: (kg) => `Perder até ${kg}`,
+  sGain: (kg) => `Ganhar até ${kg}`,
+  sMaintain: (low, high) => `Manter ${low}–${high}`,
   kLastToday: (date) => `hoje, ${date}`,
   kLastYesterday: (date) => `ontem, ${date}`,
   kTotalLost: 'Total perdido',
@@ -731,6 +793,11 @@ const pt: T = {
   kPace: 'Ritmo semanal',
   kPaceUnit: 'kg/sem',
   kPaceCap: 'últimas 4 semanas',
+  kPaceTarget: (rate) => `alvo ${rate} kg/sem`,
+  kPaceOn: 'no ritmo',
+  kPaceSlow: 'abaixo do ritmo',
+  kPaceFast: 'acima do ritmo',
+  lTargetPace: 'Ritmo-alvo',
   kEta: 'Chegada',
   kEtaFrom: (date) => `depois de ${date}`,
   kNoData: 'poucas pesagens',
@@ -739,6 +806,8 @@ const pt: T = {
   rulerReach: 'Caminho até à meta',
   rulerNone: 'Onde estás',
   rStart: 'início',
+  rEnd: 'fim',
+  rCapShort: (kg, target) => `Terminou a ${kg} kg dos ${target} kg.`,
   rToday: 'hoje',
   rAvg: 'média 7 dias',
   rGoal: 'meta',
@@ -753,6 +822,7 @@ const pt: T = {
   setGoal: 'Definir meta',
   rulerAria: (parts) => `Escala em quilos: ${parts}`,
   stripTitle: 'Últimos 30 dias',
+  stripTitleGoal: 'Últimos 30 dias da meta',
   stripInBand: (n, total) => `Dentro do intervalo em ${n} dos ${total} dias com pesagem.`,
   stripLogged: (n) => `${n} dos últimos 30 dias têm pesagem.`,
   stripToward: (n, total) => `${n} de ${total} pesagens foram na direção da meta.`,
@@ -874,6 +944,7 @@ const pt: T = {
   lBand: 'Intervalo',
   lGoal: 'Meta',
   rangeLabel: 'Período',
+  rangeGoal: 'Meta',
   ranges: { '7d': '7D', '30d': '30D', '90d': '90D', ytd: 'Ano', all: 'Tudo', custom: 'Datas' },
   rangeFrom: 'De',
   rangeTo: 'Até',
@@ -905,6 +976,9 @@ const pt: T = {
 
   insightsTitle: 'Análise',
   insightsEmpty: 'A análise aparece quando houver algumas semanas de pesagens.',
+  insightsEmptyGoal: 'A análise aparece depois de algumas semanas nesta meta.',
+  insightsEmptyClosed: 'Nada se destacou durante esta meta.',
+  insightsMoreGoal: 'Aparece mais depois de algumas semanas nesta meta.',
   insights: {
     windowLost: (kg, days) => `Perdeste ${kg} nos últimos ${days} dias.`,
     windowGained: (kg, days) => `Ganhaste ${kg} nos últimos ${days} dias.`,
@@ -915,6 +989,13 @@ const pt: T = {
     consistency: (drops, m) => `O peso desceu em ${drops} das tuas últimas ${m} pesagens.`,
     bestWeek: (start, end, kg) => `A tua semana mais rápida foi ${start} – ${end}, menos ${kg}.`,
     contribution: (pct) => `Os últimos 14 dias representam ${pct}% da tua perda total.`,
+    accelAccelGain: (recent, prior) =>
+      `O ganho está a acelerar: ${recent} nos últimos 30 dias contra ${prior} nos 30 anteriores.`,
+    accelSlowGain: (recent, prior) =>
+      `O ganho está a abrandar: ${recent} nos últimos 30 dias contra ${prior} nos 30 anteriores.`,
+    consistencyUp: (rises, m) => `O peso subiu em ${rises} das tuas últimas ${m} pesagens.`,
+    bestWeekUp: (start, end, kg) => `A tua semana mais rápida foi ${start} – ${end}, mais ${kg}.`,
+    contributionGain: (pct) => `Os últimos 14 dias representam ${pct}% do teu ganho total.`,
     compareStronger: (thisRate, lastRate) =>
       `O ritmo deste mês (${thisRate} kg/sem) é mais rápido do que o do mês passado (${lastRate} kg/sem).`,
     compareWeaker: (thisRate, lastRate) =>
@@ -952,6 +1033,11 @@ const pt: T = {
   modeGain: 'Ganhar',
   modeMaintain: 'Manter',
   targetLbl: 'Peso alvo, kg',
+  paceLbl: 'Ritmo-alvo, kg por semana (opcional)',
+  paceShortLbl: 'Ritmo, kg/sem (opcional)',
+  gEditTitle: 'Editar meta',
+  errPace: 'Usa um ritmo entre 0.05 e 2 kg por semana.',
+  hRate: (rate) => `${rate} kg/sem`,
   lowLbl: 'De, kg',
   highLbl: 'Até, kg',
   bandHint: 'Um intervalo de 1 a 3 kg absorve as oscilações normais de dia para dia.',
@@ -976,16 +1062,14 @@ const pt: T = {
   hNotReached: 'não atingida',
   hNotYet: 'ainda não atingida',
 
-  hEditDates: 'Editar datas',
-  gDatesTitle: 'Datas da meta',
   gStart: 'Início',
   gEnd: 'Fim',
   gEndCurrent: 'em curso',
   gErrOrder: 'O fim tem de ser no dia do início ou depois.',
   gErrFuture: 'Escolhe hoje ou um dia anterior.',
+  gErrDate: 'Escolhe uma data.',
   gErrOverlap: (other) => `Estas datas sobrepõem-se a "${other}".`,
   tGoalDeleted: 'Meta apagada',
-  tGoalDatesSaved: 'Datas da meta gravadas',
   dataTitle: 'Dados',
   importTitle: 'Importar',
   importDesc: 'CSV ou Excel com colunas Data e Peso (kg). Vês todas as linhas antes de gravar.',

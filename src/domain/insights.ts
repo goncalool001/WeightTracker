@@ -1,7 +1,7 @@
 import { differenceInCalendarDays, format, parseISO } from 'date-fns';
 import { signed } from '@/lib/format';
 import { daysBetween, rollingCalendarAverage, weekdayOffsets } from './calendar';
-import { currentGoal, goodDirection } from './goals';
+import type { Good } from './scope';
 import { monthlyPeriods, weeklyPeriods } from './periods';
 import { categoryEffects } from './effects';
 import type { CategoryId } from './categories';
@@ -28,6 +28,16 @@ const defaultStrings: InsightStrings = {
     `Your fastest week was ${start} – ${end}, down ${kg}.`,
   contribution: (pct) =>
     `The last 14 days account for ${pct}% of your total weight loss.`,
+  accelAccelGain: (recent, prior) =>
+    `Your gain is speeding up: ${recent} in the last 30 days against ${prior} in the 30 before.`,
+  accelSlowGain: (recent, prior) =>
+    `Your gain is slowing: ${recent} in the last 30 days against ${prior} in the 30 before.`,
+  consistencyUp: (rises, m) =>
+    `Weight increased in ${rises} of your last ${m} measurements.`,
+  bestWeekUp: (start, end, kg) =>
+    `Your fastest week was ${start} – ${end}, up ${kg}.`,
+  contributionGain: (pct) =>
+    `The last 14 days account for ${pct}% of your total weight gain.`,
   compareStronger: (thisRate, lastRate) =>
     `This month's pace (${thisRate} kg/wk) is stronger than last month's (${lastRate} kg/wk).`,
   compareWeaker: (thisRate, lastRate) =>
@@ -44,9 +54,16 @@ const defaultFmtDate = (iso: string) =>
   format(parseISO(iso), 'dd MMM yyyy');
 
 export interface InsightInput {
+  /** The weigh-ins of the scope being shown (see scope.ts). */
   entries: WeightEntry[];
-  /** Goal history; the current goal decides which insights apply. */
-  goals: Goal[];
+  /** The goal the scope is judged by, if any. */
+  goal: Goal | null;
+  /** Which way is progress: `down` for a loss, `up` for a gain, `null` for neither. */
+  good: Good;
+  /** A past goal: sentences about "the last N days" or "this month" are left out. */
+  closed?: boolean;
+  /** The whole history, for the patterns that do not depend on a goal. */
+  allEntries?: WeightEntry[];
   /** Category label for the category insight; without it that insight is skipped. */
   catLabel?: (id: CategoryId) => string;
   /** Locale-specific string factories. Defaults to English. */
@@ -103,69 +120,43 @@ function absKg(n: number): string {
 export function buildInsights(input: InsightInput): Insight[] {
   const {
     entries,
-    goals,
+    goal,
+    good,
+    closed = false,
+    allEntries = input.entries,
     catLabel,
     strings: s = defaultStrings,
     fmtDate = defaultFmtDate,
   } = input;
-  if (entries.length < 2) return [];
 
   const insights: Insight[] = [];
-  const weights = entries.map((e) => e.weight);
-  const current = weights[weights.length - 1];
-  const start = weights[0];
-  const totalLoss = start - current;
-  const spanDays = differenceInCalendarDays(
-    parseISO(entries[entries.length - 1].date),
-    parseISO(entries[0].date),
-  );
-
-  const goal = currentGoal(goals);
-  // Colour follows the goal: a loss is good for a lose goal, bad for a gain
-  // goal, and neither while maintaining (or with no goal).
+  // Green is a change in the scope's direction of progress, red against it.
   const toneFor = (delta: number): Insight['tone'] =>
-    !goal || goal.mode === 'maintain'
-      ? 'neutral'
-      : (delta < 0 ? 'down' : 'up') === goodDirection(goal)
-        ? 'good'
-        : 'bad';
+    good == null ? 'neutral' : (delta < 0 ? 'down' : 'up') === good ? 'good' : 'bad';
+  // The sentences below are written for a loss; `dir` mirrors them for a gain.
+  const dir = good === 'up' ? -1 : 1;
+  const towards = toneFor(-dir);
 
   // 0 · The category most clearly linked to the scale, once it is reliable
-  // (10+ weigh-ins and a range that excludes zero). See effects.ts.
+  // (10+ weigh-ins and a range that excludes zero). See effects.ts. A pattern
+  // of the whole history, whatever the goal: stated, not judged.
   if (catLabel) {
-    const f = categoryEffects(entries).finding;
+    const f = categoryEffects(allEntries).finding;
     if (f && f.effect != null) {
       insights.push({
         id: 'category',
         icon: 'category',
-        tone: toneFor(f.effect),
+        tone: 'neutral',
         text: s.categoryEffect(catLabel(f.id), Math.abs(f.effect).toFixed(1), f.n, f.effect > 0),
       });
     }
   }
 
-  // 1 · Maintenance: how far the 7-day average moved in the last 4 weeks
-  // (the share of weigh-ins in the band is on the Today ruler)
-  if (goal?.mode === 'maintain') {
-    const avgs = rollingCalendarAverage(entries)
-      .slice(-28)
-      .map((p) => p.average)
-      .filter((v): v is number => v != null);
-    if (avgs.length >= 14) {
-      insights.push({
-        id: 'spread',
-        icon: 'band',
-        tone: 'neutral',
-        text: s.avgSpread(Math.min(...avgs).toFixed(1), Math.max(...avgs).toFixed(1), 28),
-      });
-    }
-  }
-
-  // 2 · Weekday pattern: one weekday that sits clearly off its own week.
+  // 1 · Weekday pattern: one weekday that sits clearly off its own week.
   // Needs 8 weeks of history and 6 samples of that weekday; small offsets
   // are day-to-day noise and are not reported.
-  if (daysBetween(entries[0].date, entries[entries.length - 1].date) >= 56) {
-    const days = weekdayOffsets(entries);
+  if (allEntries.length >= 2 && daysBetween(allEntries[0].date, allEntries[allEntries.length - 1].date) >= 56) {
+    const days = weekdayOffsets(allEntries);
     let best = -1;
     days.forEach((d, i) => {
       if (d.n >= 6 && (best < 0 || Math.abs(d.offset) > Math.abs(days[best].offset))) best = i;
@@ -181,8 +172,35 @@ export function buildInsights(input: InsightInput): Insight[] {
     }
   }
 
+  if (entries.length < 2) return insights;
+
+  const weights = entries.map((e) => e.weight);
+  const current = weights[weights.length - 1];
+  const start = weights[0];
+  // Progress so far in the scope's own direction (kg lost, or gained).
+  const totalMoved = (start - current) * dir;
+  const spanDays = differenceInCalendarDays(
+    parseISO(entries[entries.length - 1].date),
+    parseISO(entries[0].date),
+  );
+
+  // 2 · Maintenance: how far the 7-day average moved in the last 4 weeks
+  // (the share of weigh-ins in the band is on the Today ruler)
+  if (goal?.mode === 'maintain' && !closed) {
+    const window = rollingCalendarAverage(entries).slice(-28);
+    const avgs = window.map((p) => p.average).filter((v): v is number => v != null);
+    if (avgs.length >= 14) {
+      insights.push({
+        id: 'spread',
+        icon: 'band',
+        tone: 'neutral',
+        text: s.avgSpread(Math.min(...avgs).toFixed(1), Math.max(...avgs).toFixed(1), window.length),
+      });
+    }
+  }
+
   // 3 · Change over a meaningful window
-  const window = [90, 60, 30].find((d) => spanDays >= d);
+  const window = closed ? undefined : [90, 60, 30].find((d) => spanDays >= d);
   if (window) {
     const change = changeOverDays(entries, window);
     if (change && Math.abs(change.delta) >= 0.3) {
@@ -199,7 +217,7 @@ export function buildInsights(input: InsightInput): Insight[] {
   }
 
   // 4 · Acceleration — compare the last 30 days to the 30 before
-  if (spanDays >= 60) {
+  if (spanDays >= 60 && !closed) {
     const latestISO = entries[entries.length - 1].date;
     const at0 = entries[entries.length - 1];
     const at30 = entryOnOrBefore(entries, shiftISO(latestISO, 30));
@@ -207,17 +225,17 @@ export function buildInsights(input: InsightInput): Insight[] {
     if (at30 && at60 && at30.date !== at0.date && at60.date !== at30.date) {
       const recent = at0.weight - at30.weight;
       const prior = at30.weight - at60.weight;
-      if (recent < -0.1 && prior < -0.1) {
+      if (recent * dir < -0.1 && prior * dir < -0.1) {
         const accelerating = Math.abs(recent) > Math.abs(prior) * 1.1;
         const slowing = Math.abs(recent) < Math.abs(prior) * 0.9;
         if (accelerating || slowing) {
           insights.push({
             id: 'accel',
             icon: 'accel',
-            tone: accelerating ? toneFor(-1) : 'neutral',
+            tone: accelerating ? towards : 'neutral',
             text: accelerating
-              ? s.accelAccel(absKg(recent), absKg(prior))
-              : s.accelSlow(absKg(recent), absKg(prior)),
+              ? (dir === 1 ? s.accelAccel : s.accelAccelGain)(absKg(recent), absKg(prior))
+              : (dir === 1 ? s.accelSlow : s.accelSlowGain)(absKg(recent), absKg(prior)),
           });
         }
       }
@@ -225,64 +243,71 @@ export function buildInsights(input: InsightInput): Insight[] {
   }
 
   // 5 · Direction consistency over recent measurements
-  if (entries.length >= 4) {
+  if (entries.length >= 4 && !closed) {
     const m = Math.min(10, entries.length - 1);
     const recent = weights.slice(-(m + 1));
-    let drops = 0;
+    let moves = 0;
     for (let i = 1; i < recent.length; i++) {
-      if (recent[i] < recent[i - 1] - 0.001) drops++;
+      if ((recent[i] - recent[i - 1]) * dir < -0.001) moves++;
     }
-    if (drops >= Math.ceil(m * 0.6)) {
+    if (moves >= Math.ceil(m * 0.6)) {
       insights.push({
         id: 'consistency',
         icon: 'consistency',
-        tone: toneFor(-1),
-        text: s.consistency(drops, m),
+        tone: towards,
+        text: (dir === 1 ? s.consistency : s.consistencyUp)(moves, m),
       });
     }
   }
 
-  // 6 · Fastest weight-loss week
-  const wp = weeklyPeriods(entries);
-  if (wp.length >= 2) {
-    let bestIdx = 1;
-    let bestDelta = wp[1].average - wp[0].average;
-    for (let i = 2; i < wp.length; i++) {
-      const d = wp[i].average - wp[i - 1].average;
-      if (d < bestDelta) {
-        bestDelta = d;
-        bestIdx = i;
-      }
+  // 6 · Fastest week in the scope's direction. Week averages come from the
+  // whole history, as in the weekly bars, and only changes between two weeks
+  // that both lie inside the scope count: the week a goal began is never
+  // measured against the goal before it. Needs two such changes.
+  const wp = weeklyPeriods(allEntries);
+  const whole = allEntries === entries;
+  const firstDate = entries[0].date;
+  const lastDate = entries[entries.length - 1].date;
+  let bestIdx = -1;
+  let bestDelta = 0;
+  let candidates = 0;
+  for (let i = 1; i < wp.length; i++) {
+    if (!whole && (wp[i - 1].start < firstDate || wp[i].start > lastDate)) continue;
+    candidates++;
+    const d = (wp[i].average - wp[i - 1].average) * dir;
+    if (bestIdx < 0 || d < bestDelta) {
+      bestDelta = d;
+      bestIdx = i;
     }
-    if (bestDelta < -0.2) {
-      const w = wp[bestIdx];
-      insights.push({
-        id: 'best',
-        icon: 'best',
-        tone: toneFor(-1),
-        text: s.bestWeek(fmtDate(w.start), fmtDate(w.end), absKg(bestDelta)),
-      });
-    }
+  }
+  if (candidates >= 2 && bestDelta < -0.2) {
+    const w = wp[bestIdx];
+    insights.push({
+      id: 'best',
+      icon: 'best',
+      tone: towards,
+      text: (dir === 1 ? s.bestWeek : s.bestWeekUp)(fmtDate(w.start), fmtDate(w.end), absKg(bestDelta)),
+    });
   }
 
   // 7 · Recent contribution to total loss
-  if (totalLoss > 0.5 && spanDays > 14) {
+  if (totalMoved > 0.5 && spanDays > 14 && !closed) {
     const recent14 = changeOverDays(entries, 14);
-    if (recent14 && recent14.delta < 0) {
-      const pct = (Math.abs(recent14.delta) / totalLoss) * 100;
+    if (recent14 && recent14.delta * dir < 0) {
+      const pct = (Math.abs(recent14.delta) / totalMoved) * 100;
       if (pct >= 15) {
         insights.push({
           id: 'contribution',
           icon: 'contribution',
-          tone: toneFor(-1),
-          text: s.contribution(pct.toFixed(0)),
+          tone: towards,
+          text: (dir === 1 ? s.contribution : s.contributionGain)(pct.toFixed(0)),
         });
       }
     }
   }
 
   // 8 · This month's pace vs last month's
-  const mp = monthlyPeriods(entries);
+  const mp = closed ? [] : monthlyPeriods(entries);
   if (mp.length >= 2) {
     const thisM = mp[mp.length - 1];
     const lastM = mp[mp.length - 2];
@@ -290,14 +315,14 @@ export function buildInsights(input: InsightInput): Insight[] {
     if (mp.length >= 3) {
       const prevM = mp[mp.length - 3];
       const lastRate = (lastM.average - prevM.average) / 4.345;
-      if (thisRate < -0.05 && lastRate < -0.05) {
+      if (thisRate * dir < -0.05 && lastRate * dir < -0.05) {
         const stronger = Math.abs(thisRate) > Math.abs(lastRate) * 1.1;
         const weaker = Math.abs(thisRate) < Math.abs(lastRate) * 0.9;
         if (stronger || weaker) {
           insights.push({
             id: 'compare',
             icon: 'compare',
-            tone: stronger ? toneFor(-1) : 'neutral',
+            tone: stronger ? towards : 'neutral',
             text: stronger
               ? s.compareStronger(
                   signed(thisRate, 2),

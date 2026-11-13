@@ -5,9 +5,15 @@ import {
   deleteGoalAt,
   goalReachedOn,
   isTargetGoal,
+  goalSignature,
   makeGoal,
+  PACE_MAX,
+  PACE_MIN,
   parseWeightCell,
+  roundWeight,
   todayISO,
+  windowAverage,
+  withGoalValues,
 } from '@/domain';
 import { WEIGHT_MAX, WEIGHT_MIN } from '@/lib/constants';
 import { abs1 } from '@/lib/format';
@@ -17,13 +23,18 @@ import { useStatus } from '@/store/selectors';
 import { Button } from '@/components/ui/Button';
 import { Segmented } from '@/components/ui/Segmented';
 import { changeGoal, setGoalHistory } from '@/features/log/actions';
-import { GoalDatesDialog } from '@/features/goal/GoalDatesDialog';
+import { GoalEditDialog } from '@/features/goal/GoalEditDialog';
 import { trimKg } from '@/features/today/headline';
 import { kg } from '@/lib/format';
 import { ScreenTitle } from './ScreenTitle';
 import type { Goal, GoalMode } from '@/types';
 
 const valid = (n: number | null): n is number => n != null && n >= WEIGHT_MIN && n <= WEIGHT_MAX;
+/** A typed weight as it will be stored (0.1 kg), so checks see the saved value. */
+const parseKg = (s: string) => {
+  const n = parseWeightCell(s);
+  return n == null ? null : roundWeight(n);
+};
 
 /**
  * Goal: lose or gain to a target weight, or maintain a range; see what it means against
@@ -32,22 +43,45 @@ const valid = (n: number | null): n is number => n != null && n >= WEIGHT_MIN &&
  */
 export function GoalScreen() {
   const t = useT();
-  const ids = { form: useId(), hist: useId(), target: useId(), low: useId(), high: useId(), err: useId(), hint: useId() };
+  const ids = { form: useId(), hist: useId(), target: useId(), pace: useId(), low: useId(), high: useId(), err: useId(), hint: useId() };
   const entries = useStore((s) => s.entries);
   const goals = useStore((s) => s.goals);
-  const status = useStatus();
+  const status = useStatus('current');
   const goal = currentGoal(goals);
 
-  // A range suggestion around the 7-day average when there is none yet.
-  const centre = Math.round(status.avg7 ?? status.latest?.weight ?? 75);
+  // A range suggestion around the 7-day average when there is none yet: of
+  // the whole history, so a goal set this morning does not narrow it to one day.
+  const newest = entries[entries.length - 1];
+  const centre = Math.round(
+    (newest ? windowAverage(entries, newest.date).average : null) ?? newest?.weight ?? 75,
+  );
   const [mode, setMode] = useState<GoalMode>(goal?.mode ?? (status.phase === 'reached' ? 'maintain' : 'lose'));
   const [target, setTarget] = useState(isTargetGoal(goal) ? trimKg(goal.target) : '');
   const [low, setLow] = useState(goal?.mode === 'maintain' ? trimKg(goal.low) : String(centre - 1));
   const [high, setHigh] = useState(goal?.mode === 'maintain' ? trimKg(goal.high) : String(centre + 1));
+  const [pace, setPace] = useState(isTargetGoal(goal) && goal.rate != null ? String(goal.rate) : '');
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<number | null>(null);
+  // The goal whose Edit button gets the focus back when the editor closes.
+  const [lastEdited, setLastEdited] = useState<number | null>(null);
 
-  useEffect(() => setError(null), [mode, target, low, high]);
+  useEffect(() => setError(null), [mode, target, low, high, pace]);
+  // The goal in force can change under the form (edited or deleted in the
+  // history, an undo, a sync): show what it is now.
+  useEffect(() => {
+    if (!goal) return;
+    setMode(goal.mode);
+    if (isTargetGoal(goal)) {
+      setTarget(trimKg(goal.target));
+      setPace(goal.rate != null ? String(goal.rate) : '');
+    } else {
+      setLow(trimKg(goal.low));
+      setHigh(trimKg(goal.high));
+    }
+    // Keyed on the goal's content: a cloud echo of the same goal does not
+    // reset what is being typed.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [goalSignature(goal)]);
 
   const preview = useMemo(() => {
     const latest = entries[entries.length - 1];
@@ -67,16 +101,24 @@ export function GoalScreen() {
   function onSave(e: React.FormEvent) {
     e.preventDefault();
     if (mode !== 'maintain') {
-      const tg = parseWeightCell(target);
+      const tg = parseKg(target);
       if (!valid(tg)) return setError(t.errRange);
+      // An optional pace to aim for, kg per week.
+      const rate = pace.trim() === '' ? null : parseWeightCell(pace);
+      if (pace.trim() !== '' && (rate == null || rate < PACE_MIN || rate > PACE_MAX)) return setError(t.errPace);
+      // Same goal, new pace: the goal carries on, only its pace changes.
+      if (goal && goal.mode === mode && goal.target === tg) {
+        const next = withGoalValues(goal, { target: tg, rate });
+        return setGoalHistory(goals.map((g) => (g === goal ? next : g)), t.tGoalSaved, t);
+      }
       // The target has to lie in the direction the goal names.
       const now = entries[entries.length - 1]?.weight;
       if (now != null && mode === 'lose' && tg >= now) return setError(t.errLoseAbove(kg(now)));
       if (now != null && mode === 'gain' && tg <= now) return setError(t.errGainBelow(kg(now)));
-      changeGoal(makeGoal(mode, { target: tg }, todayISO()), t);
+      changeGoal(makeGoal(mode, { target: tg, rate }, todayISO()), t);
     } else {
-      const lo = parseWeightCell(low);
-      const hi = parseWeightCell(high);
+      const lo = parseKg(low);
+      const hi = parseKg(high);
       if (!valid(lo) || !valid(hi) || lo === hi) return setError(t.errBand);
       changeGoal(makeGoal('maintain', { low: lo, high: hi }, todayISO()), t);
     }
@@ -141,6 +183,21 @@ export function GoalScreen() {
                 aria-invalid={error ? true : undefined}
                 aria-describedby={error ? ids.err : undefined}
                 onChange={(e) => setTarget(e.target.value)}
+                className={field}
+              />
+              <label htmlFor={ids.pace} className="mt-2.5 text-[13px] text-muted">
+                {t.paceLbl}
+              </label>
+              <input
+                id={ids.pace}
+                type="text"
+                inputMode="decimal"
+                autoComplete="off"
+                value={pace}
+                placeholder="0.5"
+                aria-invalid={error ? true : undefined}
+                aria-describedby={error ? ids.err : undefined}
+                onChange={(e) => setPace(e.target.value)}
                 className={field}
               />
             </div>
@@ -216,7 +273,7 @@ export function GoalScreen() {
                 const reached = goalReachedOn(g, entries);
                 return (
                   <li
-                    key={`${g.setOn}-${g.mode}-${g.low}-${g.high}`}
+                    key={i}
                     className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-rule py-3 first:pt-0 last:border-b-0 last:pb-0"
                   >
                     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -234,11 +291,21 @@ export function GoalScreen() {
                       {g.endedOn ? t.hRange(t.fmtDate(g.setOn), t.fmtDate(g.endedOn)) : t.hSince(t.fmtDate(g.setOn))}
                       {isTargetGoal(g) &&
                         ` · ${reached ? t.hReached(t.fmtShort(reached.date), kg(reached.weight)) : g.endedOn ? t.hNotReached : t.hNotYet}`}
+                      {isTargetGoal(g) && g.rate != null && ` · ${t.hRate(String(g.rate))}`}
                     </span>
                     </div>
                     <div className="flex gap-1">
-                      <Button size="sm" variant="ghost" aria-label={`${t.hEditDates}: ${goalName(g)}`} onClick={() => setEditing(i)}>
-                        {t.hEditDates}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        aria-label={`${t.edit}: ${goalName(g)}`}
+                        data-goal-edit={i === lastEdited ? 'last' : ''}
+                        onClick={() => {
+                          setLastEdited(i);
+                          setEditing(i);
+                        }}
+                      >
+                        {t.edit}
                       </Button>
                       <Button
                         size="sm"
@@ -257,7 +324,7 @@ export function GoalScreen() {
           )}
         </section>
       </div>
-      <GoalDatesDialog index={editing} name={goalName} onClose={() => setEditing(null)} />
+      <GoalEditDialog index={editing} name={goalName} onClose={() => setEditing(null)} />
     </>
   );
 }

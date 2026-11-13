@@ -6,7 +6,10 @@ import {
   migrateGoals,
   normalizeEntries,
   removeEntry,
+  remapScopeKey,
   replaceGoal,
+  resolveScope,
+  sameGoal,
   todayISO,
   upsertEntry,
   type EntryExtras,
@@ -28,14 +31,17 @@ import type {
   Overlay,
   PersistedState,
   RangeKey,
+  ScopeKey,
   SyncUser,
   Theme,
   WeightEntry,
 } from '@/types';
 
-interface AppState extends Omit<PersistedState, 'goals'> {
+interface AppState extends Omit<PersistedState, 'goals' | 'scope'> {
   /** Goal history, oldest first (always in the current lose/gain/maintain form). */
   goals: Goal[];
+  /** What Today covers: the goal in force, an earlier goal, or everything. */
+  scope: ScopeKey;
   /** True once the initial async hydrate has completed. */
   hydrated: boolean;
   /** Set when the local store could not be read. */
@@ -63,11 +69,15 @@ interface AppState extends Omit<PersistedState, 'goals'> {
   // ── goals ─────────────────────────────────────────────────
   /** Replace the current goal (null removes it); returns the previous history. */
   setGoal: (goal: Goal | null) => Goal[];
-  /** Put a whole goal history back (undo). */
-  restoreGoals: (goals: Goal[]) => void;
+  /**
+   * Replace the whole goal history (an edit, a deletion, an undo). `scope`
+   * puts back what Today was showing, when undoing a change that moved it.
+   */
+  restoreGoals: (goals: Goal[], scope?: ScopeKey) => void;
 
   // ── settings ──────────────────────────────────────────────
   setOverlay: (overlay: Overlay) => void;
+  setScope: (scope: ScopeKey) => void;
   setRange: (range: RangeKey) => void;
   setCustomRange: (range: CustomRange) => void;
   setGranularity: (granularity: Granularity) => void;
@@ -101,12 +111,16 @@ function defaultLocale(): Locale {
 
 /** Pull the persistable slice out of the full state. */
 function snapshot(s: AppState): PersistedState {
+  const visiting = s.scope !== 'current' && s.scope !== 'all';
   return {
     entries: s.entries,
     goals: s.goals,
     overlay: s.overlay,
-    range: s.range,
-    customRange: s.customRange ?? null,
+    range: visiting && s.range === 'custom' ? 'all' : s.range,
+    // An earlier goal is a visit: the app reopens on the goal in force, and
+    // dates picked inside that earlier goal do not come along.
+    customRange: visiting ? null : (s.customRange ?? null),
+    scope: s.scope === 'all' ? 'all' : 'current',
     granularity: s.granularity,
     theme: s.theme,
     locale: s.locale,
@@ -120,6 +134,16 @@ export const useStore = create<AppState>((set, get) => {
     if (!get().ephemeral) void saveState(snapshot(get()));
   };
   const uid = () => (get().ephemeral ? undefined : get().user?.uid);
+  /** Dates picked for one goal mean nothing in another: start it afresh. */
+  const freshRange = () => ({
+    customRange: null,
+    range: get().range === 'custom' ? ('all' as const) : get().range,
+  });
+  /** Where the view goes when the goal history is replaced under it. */
+  const scopeAfter = (goals: Goal[]) => {
+    const kept = remapScopeKey(get().scope, get().goals, goals);
+    return kept ? { scope: kept } : { scope: 'current' as const, ...freshRange() };
+  };
 
   return {
     // defaults (overwritten by hydrate)
@@ -128,6 +152,7 @@ export const useStore = create<AppState>((set, get) => {
     overlay: 'ma',
     range: '90d',
     customRange: null,
+    scope: 'current',
     granularity: 'weekly',
     theme: defaultTheme(),
     locale: defaultLocale(),
@@ -171,6 +196,7 @@ export const useStore = create<AppState>((set, get) => {
             goals: migrateGoals(saved.goals, saved.goalWeight, entries),
             locale: saved.locale ?? defaultLocale(),
             overlay: saved.overlay ?? 'ma',
+            scope: saved.scope === 'all' ? 'all' : 'current',
             hydrated: true,
             loadError: false,
           });
@@ -187,7 +213,19 @@ export const useStore = create<AppState>((set, get) => {
     addOrUpdate: (date, weight, extras) => {
       const previous = get().entries.find((e) => e.date === date) ?? null;
       const { entries, action } = upsertEntry(get().entries, date, weight, extras);
-      set({ entries });
+      // A new weigh-in logged after the earlier goal being viewed would not
+      // show: go back to the goal in force. Editing a day that already exists
+      // (or undoing such an edit) leaves the view alone.
+      const viewed = get().scope;
+      const past =
+        previous == null && viewed !== 'current' && viewed !== 'all'
+          ? resolveScope(viewed, get().goals, get().entries, todayISO())
+          : null;
+      set(
+        past?.closed && past.to != null && date > past.to
+          ? { entries, scope: 'current', ...freshRange() }
+          : { entries },
+      );
       const id = uid();
       if (id) void pushEntry(id, entries.find((e) => e.date === date)!);
       persist(); // keep the local cache warm for offline / pre-auth loads
@@ -220,15 +258,16 @@ export const useStore = create<AppState>((set, get) => {
     setGoal: (goal) => {
       const before = get().goals;
       const goals = replaceGoal(before, goal, todayISO());
-      set({ goals });
+      // A new goal is what Today is about from now on.
+      set(get().scope === 'current' ? { goals } : { goals, scope: 'current', ...freshRange() });
       const id = uid();
       if (id) void pushGoals(id, goals);
       persist();
       return before;
     },
 
-    restoreGoals: (goals) => {
-      set({ goals });
+    restoreGoals: (goals, scope) => {
+      set(scope ? { goals, scope } : { goals, ...scopeAfter(goals) });
       const id = uid();
       if (id) void pushGoals(id, goals);
       persist();
@@ -239,10 +278,17 @@ export const useStore = create<AppState>((set, get) => {
       persist();
     },
 
+    setScope: (scope) => {
+      set({ scope, ...freshRange() });
+      persist();
+    },
+
     setRange: (range) => {
-      // The first time Dates is picked, start from the last 30 days.
+      // The first time Dates is picked, start from the last 30 days of what
+      // Today is showing.
+      const shown = resolveScope(get().scope, get().goals, get().entries, todayISO()).entries;
       const customRange =
-        range === 'custom' && !get().customRange ? defaultCustomRange(get().entries) : get().customRange;
+        range === 'custom' && !get().customRange ? defaultCustomRange(shown) : get().customRange;
       set({ range, customRange });
       persist();
     },
@@ -278,7 +324,13 @@ export const useStore = create<AppState>((set, get) => {
 
     applyRemoteSettings: ({ goals, goalWeight }) => {
       if (goals) {
-        set({ goals: migrateGoals(goals, null, get().entries) });
+        const next = migrateGoals(goals, null, get().entries);
+        // The cloud echoes every save (and again when the server confirms it):
+        // the same history must not replace the goals, or forms in the middle
+        // of being typed in would be reset.
+        const now = get().goals;
+        if (now.length === next.length && now.every((g, i) => sameGoal(g, next[i]))) return;
+        set({ goals: next, ...scopeAfter(next) });
       } else {
         // Older cloud data: keep the local history when it already agrees.
         const local = currentGoal(get().goals);

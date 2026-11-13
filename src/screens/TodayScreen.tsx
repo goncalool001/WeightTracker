@@ -3,6 +3,7 @@ import { useStore } from '@/store/useStore';
 import { useStatus } from '@/store/selectors';
 import { routeHref } from '@/hooks/useRoute';
 import { KpiStrip } from '@/features/today/KpiStrip';
+import { ScopeControl } from '@/features/today/ScopeControl';
 import { Ruler } from '@/features/today/Ruler';
 import { DailyPanel } from '@/features/today/DailyPanel';
 import { PeriodPanel } from '@/features/today/PeriodPanel';
@@ -11,8 +12,10 @@ import { LogForm } from '@/features/log/LogForm';
 import { ScreenTitle } from './ScreenTitle';
 
 /**
- * Today. The KPIs answer "where am I, and am I on track?"; the ruler shows where today sits against
- * the goal; then the chart, the analysis and the period changes.
+ * Today. One pill says what the screen covers (the goal in force since it
+ * was set, an earlier goal, or everything); the KPIs answer "where am I, and
+ * am I on track?"; the ruler shows where today sits against the goal; then
+ * the chart, the analysis and the period changes.
  *
  * Grid (≥1024px): a 1100px column of 12 × 77px columns with 16px gutters
  * (12 × 77 + 11 × 16 = 1100). Rows span 3/3/3/3, then 9 + 3, then 12, then
@@ -31,6 +34,8 @@ export function TodayScreen() {
       ) : (
         <ScreenTitle title={t.nav.today} hidden />
       )}
+
+      {!empty && <ScopeControl />}
 
       <KpiStrip s={s} />
 

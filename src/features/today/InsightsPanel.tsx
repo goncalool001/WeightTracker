@@ -1,7 +1,8 @@
 import { useId, useState } from 'react';
 import { useT } from '@/i18n';
-import { useInsights } from '@/store/selectors';
+import { useInsights, useScope } from '@/store/selectors';
 import { cn } from '@/lib/cn';
+import { daysBetween } from '@/domain';
 import type { InsightTone } from '@/types';
 
 /** Values in a sentence: decimals, and whole numbers with a unit. */
@@ -46,6 +47,15 @@ export function InsightsPanel({ className }: { className?: string }) {
   const t = useT();
   const id = useId();
   const insights = useInsights();
+  const scope = useScope();
+  // A goal in its first weeks has little to say yet; say so instead of
+  // leaving the panel looking unfinished.
+  const young =
+    scope.kind === 'current' &&
+    insights.length > 0 &&
+    insights.length < 3 &&
+    scope.entries.length > 0 &&
+    daysBetween(scope.entries[0].date, scope.asOf) < 30;
   const [expanded, setExpanded] = useState(false);
   // Hiding a single row behind a button saves nothing.
   const cap = insights.length > VISIBLE + 1 ? VISIBLE : insights.length;
@@ -57,7 +67,7 @@ export function InsightsPanel({ className }: { className?: string }) {
         {t.insightsTitle}
       </h2>
       {insights.length === 0 ? (
-        <p className="text-[15px] text-muted">{t.insightsEmpty}</p>
+        <p className="text-[15px] text-muted">{scope.kind === 'all' ? t.insightsEmpty : scope.closed ? t.insightsEmptyClosed : t.insightsEmptyGoal}</p>
       ) : (
         <ul className="flex flex-col">
           {shown.map((i) => (
@@ -67,6 +77,7 @@ export function InsightsPanel({ className }: { className?: string }) {
           ))}
         </ul>
       )}
+      {young && <p className="border-t border-rule pt-3 text-[14px] text-muted lg:text-[13px]">{t.insightsMoreGoal}</p>}
       {insights.length > cap && (
         <button
           type="button"

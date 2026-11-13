@@ -145,20 +145,26 @@ export const SEED_ENTRIES: WeightEntry[] = [
 
 /** Goal history for the "maintaining" state (`?seed` or `?seed=maintain`). */
 export const SEED_GOALS_MAINTAIN: Goal[] = [
-  { mode: 'lose', target: 80, low: 80, high: 80, setOn: '2026-04-18', endedOn: '2026-10-25' },
-  { mode: 'maintain', target: 77, low: 76, high: 78, setOn: '2026-10-25', endedOn: null },
+  { mode: 'lose', target: 80, low: 80, high: 80, setOn: '2026-04-18', endedOn: '2026-09-26' },
+  { mode: 'maintain', target: 77, low: 76, high: 78, setOn: '2026-09-26', endedOn: null },
 ];
 
-/** Goal history for "on the way down" (`?seed=lose`): 75 kg still ahead. */
+/**
+ * Goal history for "on the way down" (`?seed=lose`): 75 kg still ahead. Two
+ * goals in the same direction, so Today measures from the very start.
+ */
 export const SEED_GOALS_LOSE: Goal[] = [
-  { mode: 'lose', target: 80, low: 80, high: 80, setOn: '2026-04-18', endedOn: '2026-10-25' },
-  { mode: 'lose', target: 75, low: 75, high: 75, setOn: '2026-10-25', endedOn: null },
+  { mode: 'lose', target: 80, low: 80, high: 80, setOn: '2026-04-18', endedOn: '2026-07-12' },
+  { mode: 'lose', target: 75, low: 75, high: 75, setOn: '2026-07-12', endedOn: null },
 ];
 
-/** Goal history for "on the way up" (`?seed=gain`): back up to 78 kg. */
+/**
+ * Goal history for "on the way up" (`?seed=gain`): a cut that ended on
+ * 10 Oct, then back up to 78 kg. Today starts from the change of direction.
+ */
 export const SEED_GOALS_GAIN: Goal[] = [
-  { mode: 'lose', target: 80, low: 80, high: 80, setOn: '2026-04-18', endedOn: '2026-10-25' },
-  { mode: 'gain', target: 78, low: 78, high: 78, setOn: '2026-10-25', endedOn: null },
+  { mode: 'lose', target: 77, low: 77, high: 77, setOn: '2026-04-18', endedOn: '2026-10-10' },
+  { mode: 'gain', target: 78, low: 78, high: 78, setOn: '2026-10-10', endedOn: null },
 ];
 
 /**

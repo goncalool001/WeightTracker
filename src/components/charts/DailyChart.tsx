@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import type { EChartsOption, SeriesOption } from 'echarts';
-import { addDaysISO, averageGaps, dayNumber, goodDirection, isTargetGoal, linearFit } from '@/domain';
+import { addDaysISO, averageGaps, dayNumber, linearFit, type GoalMark, type Good } from '@/domain';
 import { kg, signed } from '@/lib/format';
 import type { T } from '@/i18n';
-import type { CalendarAveragePoint, Goal, Overlay, WeightEntry } from '@/types';
+import type { CalendarAveragePoint, Overlay, WeightEntry } from '@/types';
 import { tooltipBase, useChartTokens } from './chartTokens';
 import { noteText } from '@/features/notes/noteText';
 import { niceYAxis } from './paddedRange';
@@ -12,11 +12,14 @@ import { BaseChart } from './BaseChart';
 interface DailyChartProps {
   /** Weigh-ins in the active range. */
   entries: WeightEntry[];
-  /** Every weigh-in, for the change against the previous one. */
+  /** Every weigh-in of what Today covers, for the change against the previous one. */
   all: WeightEntry[];
   /** 7-day calendar average for each day of the range. */
   series: CalendarAveragePoint[];
-  goal: Goal | null;
+  /** The goals to draw, each over its own dates. */
+  marks: GoalMark[];
+  /** How a change between two dates is judged (green, red or no verdict). */
+  changeGood: (from: string, to: string) => Good;
   overlay: Overlay;
   /** Touch screen: read on drag, no zoom. */
   coarse: boolean;
@@ -51,17 +54,20 @@ function isoOf(t: number): string {
  * weigh-ins is not drawn as if it had been measured. The one teal line is the
  * 7-day calendar average; where a week holds fewer than 2 weigh-ins it turns
  * into a dashed bridge.
- * The maintenance band is a pale field; a reach target is a dashed line.
+ * A goal to maintain is a pale field and a target a dashed line, each drawn
+ * only across the dates that goal was in force.
  * Only the latest, lowest and highest weigh-ins carry a value label; every
  * other value is read by hovering or by dragging a finger along the chart.
  */
-export function DailyChart({ entries, all, series, goal, overlay, coarse, narrow, previous, t }: DailyChartProps) {
+export function DailyChart({ entries, all, series, marks, changeGood, overlay, coarse, narrow, previous, t }: DailyChartProps) {
   const tok = useChartTokens();
 
   const option = useMemo<EChartsOption>(() => {
     const weights = entries.map((e) => e.weight);
     const avgValues = series.map((p) => p.average).filter((v): v is number => v != null);
-    const refs = goal ? (goal.mode === 'maintain' ? [goal.low, goal.high] : [goal.target]) : [];
+    const refs = marks.flatMap((m) => (m.goal.mode === 'maintain' ? [m.goal.low, m.goal.high] : [m.goal.target]));
+    const targets = marks.filter((m) => m.goal.mode !== 'maintain');
+    const bands = marks.filter((m) => m.goal.mode === 'maintain');
     const prevValues = (previous?.series ?? []).map((p) => p.average).filter((v): v is number => v != null);
     const { min, max, interval } = niceYAxis([...weights, ...avgValues, ...prevValues], refs, narrow ? 3 : 4);
     // The previous period, keyed by the day it lines up with in this one.
@@ -106,7 +112,9 @@ export function DailyChart({ entries, all, series, goal, overlay, coarse, narrow
         label: pos
           ? {
               show: true,
-              position: pos,
+              // The first point sits on the y-axis: its label goes beside
+              // it, clear of the axis numbers.
+              position: (i === 0 && i !== last ? 'right' : pos) as 'top' | 'bottom' | 'right',
               distance: 6,
               formatter: kg(e.weight),
               color: tok.ink,
@@ -124,26 +132,34 @@ export function DailyChart({ entries, all, series, goal, overlay, coarse, narrow
         type: 'scatter',
         data: dotData,
         z: 3,
-        markArea:
-          goal?.mode === 'maintain'
-            ? {
-                silent: true,
-                itemStyle: { color: tok.accentSoft },
-                data: [[{ yAxis: goal.low }, { yAxis: goal.high }]],
-              }
-            : undefined,
-        markLine:
-          isTargetGoal(goal)
-            ? {
-                silent: true,
-                symbol: 'none',
-                lineStyle: { color: tok.ink, type: 'dashed', width: 1 },
-                // Named in the legend under the chart; a label inside the plot
-                // collided with the value labels.
-                label: { show: false },
-                data: [{ yAxis: goal.target }],
-              }
-            : undefined,
+        markArea: bands.length
+          ? {
+              silent: true,
+              itemStyle: { color: tok.accentSoft },
+              // A mark with no span is the goal in force seen on its first
+              // day: it runs across the plot.
+              data: bands.map((m) =>
+                m.from === m.to
+                  ? [{ yAxis: m.goal.low }, { yAxis: m.goal.high }]
+                  : [{ coord: [ms(m.from), m.goal.low] }, { coord: [ms(m.to), m.goal.high] }],
+              ),
+            }
+          : undefined,
+        markLine: targets.length
+          ? {
+              silent: true,
+              symbol: 'none',
+              lineStyle: { color: tok.ink, type: 'dashed', width: 1 },
+              // Named in the legend under the chart; a label inside the plot
+              // collided with the value labels.
+              label: { show: false },
+              data: targets.map((m) =>
+                m.from === m.to
+                  ? { yAxis: m.goal.target }
+                  : [{ coord: [ms(m.from), m.goal.target] }, { coord: [ms(m.to), m.goal.target] }],
+              ),
+            }
+          : undefined,
       },
     ];
 
@@ -253,8 +269,9 @@ export function DailyChart({ entries, all, series, goal, overlay, coarse, narrow
           if (pp?.average != null) html += fmtRow(`${t.chartPrev} (${t.fmtShort(pp.date)})`, `${kg(pp.average)} kg`);
           if (w && prev) {
             const d = Number((w.weight - prev.weight).toFixed(1));
-            const good = goodDirection(goal) === 'up' ? d > 0.05 : d < -0.05;
-            const color = Math.abs(d) <= 0.05 ? tok.muted : good ? tok.positive : tok.negative;
+            const dir = changeGood(prev.date, w.date);
+            const towards = dir === 'up' ? d > 0.05 : d < -0.05;
+            const color = Math.abs(d) <= 0.05 || dir == null ? tok.muted : towards ? tok.positive : tok.negative;
             const arrow = d < -0.05 ? '▼ ' : d > 0.05 ? '▲ ' : '';
             html += fmtRow(`${t.chartChange} (${t.fmtShort(prev.date)})`, `${arrow}${signed(d)} kg`, color);
           }
@@ -312,7 +329,7 @@ export function DailyChart({ entries, all, series, goal, overlay, coarse, narrow
           ],
       series: series_,
     };
-  }, [entries, all, series, goal, overlay, coarse, narrow, previous, tok, t]);
+  }, [entries, all, series, marks, changeGood, overlay, coarse, narrow, previous, tok, t]);
 
   const first = entries[0];
   const latest = entries[entries.length - 1];

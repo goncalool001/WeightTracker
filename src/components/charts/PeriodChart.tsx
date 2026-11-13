@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import type { EChartsOption } from 'echarts';
-import { roundWeight } from '@/domain';
+import { roundWeight, type Good } from '@/domain';
 import { kg, signed } from '@/lib/format';
 import type { T } from '@/i18n';
 import type { Granularity, PeriodAverage } from '@/types';
@@ -14,8 +14,13 @@ interface PeriodChartProps {
   /** Index in `periods` of the first period to draw. */
   from: number;
   granularity: Granularity;
-  /** The direction that counts as progress (green). */
-  good: 'down' | 'up';
+  /**
+   * How the change from one period to the next is judged: the direction that
+   * counts as progress (green), or `null` for no verdict (grey).
+   */
+  goodFor: (prev: PeriodAverage, p: PeriodAverage) => Good;
+  /** The change per period the goal aims for (signed), drawn as a dashed line. */
+  target?: number | null;
   coarse: boolean;
   narrow: boolean;
   t: T;
@@ -24,27 +29,32 @@ interface PeriodChartProps {
 /**
  * How much the average moved from one week (or month) to the next. Columns
  * hang from one zero line: below it is weight lost, above it gained. Green
- * is a move towards the goal (down, unless the goal is to gain), red away
- * from it, a change inside ±0.05 kg grey. Changes are taken between the
- * averages as displayed (0.1 kg), so the tooltip and the table agree.
+ * is a move towards the goal in force over those periods, red away from it;
+ * a change inside ±0.05 kg, or one across two goals, is grey. Changes are
+ * taken between the averages as displayed (0.1 kg), so the tooltip and the
+ * table agree.
  */
-export function PeriodChart({ periods, from, granularity, good, coarse, narrow, t }: PeriodChartProps) {
+export function PeriodChart({ periods, from, granularity, goodFor, target, coarse, narrow, t }: PeriodChartProps) {
   const tok = useChartTokens();
-  /** Green towards the goal, red away from it, grey inside ±0.05 kg. */
-  const colourOf = (d: number) =>
-    Math.abs(d) <= 0.05 ? null : (good === 'up' ? d > 0 : d < 0) ? 'pos' : 'neg';
+  /** Green towards the goal, red away from it, grey inside ±0.05 kg or with no verdict. */
+  const colourOf = (d: number, good: Good) =>
+    Math.abs(d) <= 0.05 || good == null ? null : (good === 'up' ? d > 0 : d < 0) ? 'pos' : 'neg';
 
   const rows = useMemo(
     () =>
       periods.slice(Math.max(from, 1)).map((p, i) => {
         const prev = periods[Math.max(from, 1) + i - 1];
-        return { p, delta: roundWeight(roundWeight(p.average) - roundWeight(prev.average)) };
+        return {
+          p,
+          delta: roundWeight(roundWeight(p.average) - roundWeight(prev.average)),
+          good: goodFor(prev, p),
+        };
       }),
-    [periods, from],
+    [periods, from, goodFor],
   );
 
   const option = useMemo<EChartsOption>(() => {
-    const { min, max, interval } = signedAxis(rows.map((r) => r.delta));
+    const { min, max, interval } = signedAxis([...rows.map((r) => r.delta), ...(target != null ? [target] : [])]);
     const label = (p: PeriodAverage) =>
       granularity === 'monthly' ? t.fmtShort(p.start).replace(/^\d+\s/, '') : t.fmtShort(p.start);
 
@@ -61,8 +71,8 @@ export function PeriodChart({ periods, from, granularity, good, coarse, narrow, 
         axisPointer: { type: 'shadow', shadowStyle: { color: tok.grid, opacity: 0.6 } }, // taste-skill-ignore
         formatter: (params: unknown) => {
           const i = (Array.isArray(params) ? params[0] : params)?.dataIndex as number;
-          const { p, delta } = rows[i];
-          const c = colourOf(delta);
+          const { p, delta, good } = rows[i];
+          const c = colourOf(delta, good);
           const color = c === 'pos' ? tok.positive : c === 'neg' ? tok.negative : tok.muted;
           const arrow = delta < -0.05 ? '▼ ' : delta > 0.05 ? '▲ ' : '';
           const row = (a: string, b: string, c?: string) =>
@@ -102,7 +112,7 @@ export function PeriodChart({ periods, from, granularity, good, coarse, narrow, 
           data: rows.map((r) => ({
             value: r.delta,
             itemStyle: {
-              color: ((c) => (c === 'pos' ? tok.positive : c === 'neg' ? tok.negative : tok.dot))(colourOf(r.delta)),
+              color: ((c) => (c === 'pos' ? tok.positive : c === 'neg' ? tok.negative : tok.dot))(colourOf(r.delta, r.good)),
               borderRadius: 0,
             },
           })),
@@ -111,13 +121,18 @@ export function PeriodChart({ periods, from, granularity, good, coarse, narrow, 
             symbol: 'none',
             lineStyle: { color: tok.ink, width: 1, type: 'solid' },
             label: { show: false },
-            data: [{ yAxis: 0 }],
+            data: [
+              { yAxis: 0 },
+              ...(target != null
+                ? [{ yAxis: target, lineStyle: { color: tok.ink, width: 1, type: 'dashed' as const } }]
+                : []),
+            ],
           },
         },
       ],
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rows, granularity, good, coarse, narrow, tok, t]);
+  }, [rows, granularity, target, coarse, narrow, tok, t]);
 
   return <BaseChart option={option} resetLabel={t.resetZoom} ariaLabel={t.periodAria(rows.length)} />;
 }

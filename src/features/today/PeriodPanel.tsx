@@ -1,15 +1,24 @@
 import { useId } from 'react';
 import { useT } from '@/i18n';
+import { todayISO } from '@/domain';
 import { useStore } from '@/store/useStore';
-import { useGoodDirection, usePeriods } from '@/store/selectors';
+import { useCallback } from 'react';
+import { useChangeDirection, useGoodDirection, usePeriods, useStatus } from '@/store/selectors';
 import { useCoarsePointer, useMedia } from '@/hooks/useViewport';
 import { PeriodChart } from '@/components/charts/PeriodChart';
 import { ChartBoundary } from '@/components/states/ChartBoundary';
 import { Segmented } from '@/components/ui/Segmented';
 import { cn } from '@/lib/cn';
-import type { Granularity } from '@/types';
+import type { Granularity, PeriodAverage } from '@/types';
 
-/** Week-on-week (or month-on-month) change of the average, as signed columns. */
+/** Weeks in an average month (365.25 / 12 / 7). */
+const WEEKS_PER_MONTH = 4.348;
+
+/**
+ * Week-on-week (or month-on-month) change of the average, as signed columns.
+ * Each column is judged by the goal in force over its two periods; the one
+ * that runs across a change of direction is grey.
+ */
 export function PeriodPanel({ className }: { className?: string }) {
   const t = useT();
   const id = useId();
@@ -21,6 +30,19 @@ export function PeriodPanel({ className }: { className?: string }) {
   const narrow = !useMedia('(min-width: 640px)');
 
   const good = useGoodDirection();
+  const changeGood = useChangeDirection();
+  // The week or month in progress ends today, as on the cards above.
+  const cap = todayISO();
+  const goodFor = useCallback(
+    (prev: PeriodAverage, p: PeriodAverage) => changeGood(prev.start, p.end < cap ? p.end : cap),
+    [changeGood, cap],
+  );
+  // The goal's target pace as a line across the bars: per week, or the same
+  // pace over an average month.
+  const pace = useStatus().pace;
+  const target = pace ? (granularity === 'weekly' ? pace.target : pace.target * WEEKS_PER_MONTH) : null;
+  const swatch = (dir: 'down' | 'up') =>
+    good == null ? 'bg-cell-off' : good === dir ? 'bg-positive' : 'bg-negative';
   const from = inRange.length ? all.findIndex((p) => p.start === inRange[0].start) : all.length;
   const to = inRange.length ? all.findIndex((p) => p.start === inRange[inRange.length - 1].start) + 1 : 0;
   const drawable = to - Math.max(from, 1);
@@ -51,7 +73,8 @@ export function PeriodPanel({ className }: { className?: string }) {
                 periods={all.slice(0, to)}
                 from={from}
                 granularity={granularity}
-                good={good}
+                goodFor={goodFor}
+                target={target}
                 coarse={coarse}
                 narrow={narrow}
                 t={t}
@@ -60,17 +83,23 @@ export function PeriodPanel({ className }: { className?: string }) {
           </ChartBoundary>
         )}
       </div>
-      <ul className="mt-2 flex gap-4 px-1 text-[13px] text-muted sm:px-0">
+      <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 px-1 text-[13px] text-muted sm:px-0">
         <li className="flex items-center gap-1.5">
-          <span aria-hidden="true" className={`h-3 w-2 ${good === 'down' ? 'bg-positive' : 'bg-negative'}`} />
+          <span aria-hidden="true" className={`h-3 w-2 ${swatch('down')}`} />
           <span aria-hidden="true">{'▼'}</span>
           {t.axisLost}
         </li>
         <li className="flex items-center gap-1.5">
-          <span aria-hidden="true" className={`h-3 w-2 ${good === 'up' ? 'bg-positive' : 'bg-negative'}`} />
+          <span aria-hidden="true" className={`h-3 w-2 ${swatch('up')}`} />
           <span aria-hidden="true">{'▲'}</span>
           {t.axisGained}
         </li>
+        {target != null && drawable >= 1 && (
+          <li className="flex items-center gap-1.5">
+            <span aria-hidden="true" className="h-0 w-4 border-t border-dashed border-text" />
+            {t.lTargetPace}
+          </li>
+        )}
       </ul>
     </section>
   );

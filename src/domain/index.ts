@@ -10,5 +10,6 @@ export * from './periods';
 export * from './insights';
 export * from './calendar';
 export * from './goals';
+export * from './scope';
 export * from './status';
 export * from './importRows';

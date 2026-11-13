@@ -4,7 +4,7 @@ import { signed } from '@/lib/format';
 import { cn } from '@/lib/cn';
 import { useT } from '@/i18n';
 import { useStore } from '@/store/useStore';
-import { useGoodDirection } from '@/store/selectors';
+import { useCurrentGoalDirection } from '@/store/selectors';
 
 /**
  * What explains the swings: per category, how far the weigh-in after such a
@@ -21,7 +21,7 @@ export function EffectsPanel({ className }: { className?: string }) {
   const t = useT();
   const id = useId();
   const entries = useStore((s) => s.entries);
-  const good = useGoodDirection();
+  const good = useCurrentGoalDirection();
   const report = useMemo(() => categoryEffects(entries), [entries]);
   const measured = report.rows.filter((r) => r.effect != null);
   const few = report.rows.filter((r) => r.effect == null);

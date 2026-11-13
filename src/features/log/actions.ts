@@ -31,6 +31,7 @@ export function checkWeight(text: string, date: string, t: T): { value: number }
  * categories): undefined keeps what the day has, a value sets it, null removes it.
  */
 export function saveWeight(date: string, value: number, t: T, extras?: EntryExtras): void {
+  const scopeBefore = store().scope;
   const { previous } = store().addOrUpdate(date, value, extras);
   const day = t.fmtShort(date);
   const message =
@@ -44,8 +45,11 @@ export function saveWeight(date: string, value: number, t: T, extras?: EntryExtr
     action: {
       label: t.tUndo,
       onClick: () => {
-        if (previous == null) store().deleteEntry(date);
-        else
+        if (previous == null) {
+          store().deleteEntry(date);
+          // Logging it moved Today off an earlier goal: go back to it.
+          if (store().scope !== scopeBefore) store().setScope(scopeBefore);
+        } else
           store().addOrUpdate(date, previous.weight, {
             note: previous.note ?? null,
             tags: (previous.tags as CategoryId[] | undefined) ?? null,
@@ -58,6 +62,7 @@ export function saveWeight(date: string, value: number, t: T, extras?: EntryExtr
 
 /** Delete one weigh-in with an undo toast. */
 export function deleteWeight(date: string, t: T): void {
+  const { scope, range, customRange } = store();
   const removed = store().deleteEntry(date);
   if (!removed) return;
   toast(t.tDeleted(kg(removed.weight), t.fmtShort(date)), {
@@ -69,6 +74,8 @@ export function deleteWeight(date: string, t: T): void {
           note: removed.note ?? null,
           tags: (removed.tags as CategoryId[] | undefined) ?? null,
         });
+        // Putting a day back is not logging a new one: Today stays where it was.
+        if (store().scope !== scope) useStore.setState({ scope, range, customRange });
         undone(t);
       },
     },
@@ -92,13 +99,14 @@ export function replaceAll(next: WeightEntry[], message: string, t: T): void {
 
 /** Set or remove the current goal with an undo toast. */
 export function changeGoal(next: Goal | null, t: T): void {
+  const scopeBefore = store().scope;
   const before = store().setGoal(next);
   toast(next ? t.tGoalSaved : t.tGoalRemoved, {
     duration: UNDO_MS,
     action: {
       label: t.tUndo,
       onClick: () => {
-        store().restoreGoals(before);
+        store().restoreGoals(before, scopeBefore);
         undone(t);
       },
     },

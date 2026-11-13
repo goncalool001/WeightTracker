@@ -6,6 +6,7 @@ import {
   buildImportPreview,
   buildInsights,
   buildStatus,
+  resolveScope,
   currentGoal,
   goalReachedOn,
   makeGoal,
@@ -141,7 +142,7 @@ describe('buildStatus', () => {
       { date: '2026-10-27', weight: 75.7 },
     ];
     const s = buildStatus(entries, SEED_GOALS_LOSE, '2026-10-27');
-    expect(s.week).toEqual({ start: '2026-10-26', avg: 75.8, count: 2, prevAvg: 76.7, prevCount: 6, delta: -0.9 });
+    expect(s.week).toEqual({ start: '2026-10-26', avg: 75.8, count: 2, prevAvg: 76.7, prevCount: 6, delta: -0.9, good: 'down' });
     expect(s.month).toMatchObject({ start: '2026-10-01', prevCount: expect.any(Number) });
     const sep = SEED_ENTRIES.filter((e) => e.date.startsWith('2026-09'));
     expect(s.month?.prevAvg).toBe(Math.round((sep.reduce((a, e) => a + e.weight, 0) / sep.length) * 10) / 10);
@@ -149,8 +150,8 @@ describe('buildStatus', () => {
     expect(buildStatus(SEED_ENTRIES, SEED_GOALS_LOSE, '2026-10-26').week).toMatchObject({ avg: null, count: 0, prevAvg: 76.7, delta: null });
   });
 
-  it('maintaining 76–78 kg', () => {
-    const s = buildStatus(SEED_ENTRIES, SEED_GOALS_MAINTAIN);
+  it('maintaining 76–78 kg since 26 Sep', () => {
+    const s = buildStatus(SEED_ENTRIES, SEED_GOALS_MAINTAIN, '2026-10-25');
     expect(s.phase).toBe('maintain');
     expect(s.latest).toEqual({ date: '2026-10-25', weight: 76.5 });
     expect(s.avg7).toBe(76.7);
@@ -160,26 +161,35 @@ describe('buildStatus', () => {
     expect(s.bandPosition).toBe('inside');
     expect(s.stay).toEqual({ threshold: 80, side: 'below', since: '2026-09-02', days: 53 });
     expect(s.reached).toEqual({ date: '2026-07-12', weight: 79.9 });
-    expect(s.sinceStart).toBe(-9.6);
+    // Measured from the day the range became the goal (77.3 kg), not from 86.1.
+    expect(s.first).toEqual({ date: '2026-09-26', weight: 77.3 });
+    expect(s.sinceStart).toBe(-0.8);
+    expect(s.scope.good).toBeNull();
     expect(s.rate).toBeCloseTo(-0.436, 2);
   });
 
   it('on the way down to 75 kg', () => {
-    const s = buildStatus(SEED_ENTRIES, SEED_GOALS_LOSE);
+    const s = buildStatus(SEED_ENTRIES, SEED_GOALS_LOSE, '2026-10-25');
     expect(s.phase).toBe('reach');
     expect(s.toGo).toBe(1.5);
     expect(s.projection).not.toBeNull();
-    expect(s.progress).toBeGreaterThan(0);
+    // Lose to 80, then lose to 75: one stretch, measured from the first weigh-in.
+    expect(s.journeyStart).toEqual({ date: '2026-04-18', weight: 86.1 });
+    expect(s.progress).toBeCloseTo((9.6 / 11.1) * 100, 5);
+    expect(s.sinceStart).toBe(-9.6);
   });
 
   it('on the way up to 78 kg', () => {
-    const s = buildStatus(SEED_ENTRIES, SEED_GOALS_GAIN);
+    const s = buildStatus(SEED_ENTRIES, SEED_GOALS_GAIN, '2026-10-25');
     expect(s.phase).toBe('reach');
     expect(s.toGo).toBe(1.5);
-    // The first weigh-in (86.1) lies past 78, so progress starts from the day the goal was set.
-    expect(s.journeyStart).toEqual({ date: '2026-10-25', weight: 76.5 });
-    expect(s.progress).toBe(0);
-    // Losing at −0.44 kg/wk is the wrong way for a gain goal: no projection.
+    // The cut before it does not count: progress starts on the day the goal changed direction.
+    expect(s.journeyStart).toEqual({ date: '2026-10-10', weight: 76.4 });
+    expect(s.sinceStart).toBe(0.1);
+    expect(s.progress).toBeCloseTo((0.1 / 1.6) * 100, 5);
+    expect(s.scope.good).toBe('up');
+    // Fifteen days in and drifting down: the wrong way for a gain goal, so no date.
+    expect(s.rate).toBeLessThan(0);
     expect(s.projection).toBeNull();
   });
 
@@ -199,9 +209,8 @@ describe('buildStatus', () => {
   });
 
   it('feeds maintenance insights', () => {
-    const ids = buildInsights({ entries: SEED_ENTRIES, goals: SEED_GOALS_MAINTAIN }).map(
-      (i) => i.id,
-    );
+    const sc = resolveScope('current', SEED_GOALS_MAINTAIN, SEED_ENTRIES, '2026-10-25');
+    const ids = buildInsights({ entries: sc.entries, goal: sc.goal, good: sc.good }).map((i) => i.id);
     expect(ids).toContain('spread');
   });
 });

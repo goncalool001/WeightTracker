@@ -9,20 +9,24 @@ interface DeltaProps {
   unit?: string;
   decimals?: number;
   band?: number;
-  /** Override the goal's direction of progress. */
-  good?: 'down' | 'up';
+  /**
+   * The direction that counts as progress. Left out, it is the direction of
+   * what Today is showing; `null` gives no verdict (grey, arrow and sign kept).
+   */
+  good?: 'down' | 'up' | null;
   className?: string;
 }
 
 /**
  * A signed change. A move towards the goal is green, away from it red (down
  * is the good direction unless the goal is to gain); inside the dead-band it
- * is grey with no arrow. The sign and arrow carry the meaning
- * without colour; a missing value is a grey dash.
+ * is grey with no arrow, and it is grey with its arrow when neither direction
+ * is progress (maintaining, or a change across two goals). The sign and arrow
+ * carry the meaning without colour; a missing value is a grey dash.
  */
 export function Delta({ value, unit = 'kg', decimals = 1, band = DELTA_BAND, good, className }: DeltaProps) {
   const goalGood = useGoodDirection();
-  const goodDir = good ?? goalGood;
+  const goodDir = good === undefined ? goalGood : good;
   if (value == null) {
     return <span className={cn('text-muted', className)}>{'—'}</span>;
   }
@@ -31,7 +35,7 @@ export function Delta({ value, unit = 'kg', decimals = 1, band = DELTA_BAND, goo
     <span
       className={cn(
         'num inline-flex items-baseline gap-1',
-        dir === 'flat' ? 'text-muted' : dir === goodDir ? 'text-positive' : 'text-negative',
+        dir === 'flat' || goodDir == null ? 'text-muted' : dir === goodDir ? 'text-positive' : 'text-negative',
         className,
       )}
     >

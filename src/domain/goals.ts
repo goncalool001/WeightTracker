@@ -27,12 +27,14 @@ export function currentGoal(goals: Goal[]): Goal | null {
 /** Build a goal from the form values. */
 export function makeGoal(
   mode: GoalMode,
-  values: { target?: number; low?: number; high?: number },
+  values: { target?: number; low?: number; high?: number; rate?: number | null },
   setOn: string,
 ): Goal {
   if (mode !== 'maintain') {
     const target = roundWeight(values.target ?? 0);
-    return { mode, target, low: target, high: target, setOn, endedOn: null };
+    // `rate` is only written when one is set: the cloud store rejects `undefined`.
+    const rate = values.rate != null && values.rate > 0 ? { rate: Math.round(values.rate * 100) / 100 } : {};
+    return { mode, target, low: target, high: target, setOn, endedOn: null, ...rate };
   }
   const low = roundWeight(Math.min(values.low ?? 0, values.high ?? 0));
   const high = roundWeight(Math.max(values.low ?? 0, values.high ?? 0));
@@ -78,10 +80,15 @@ export function normalizeGoal(
   goal: StoredGoal,
   entries: WeightEntry[],
 ): Goal {
-  if (goal.mode !== 'reach') return { ...goal, mode: goal.mode, endedOn: goal.endedOn ?? null };
+  // A pace is kept only when it is a sane number on a goal that can have one
+  // (the key is dropped, never set to `undefined`).
+  const { rate, ...rest } = goal;
+  const pace =
+    goal.mode !== 'maintain' && typeof rate === 'number' && rate >= PACE_MIN && rate <= PACE_MAX ? { rate } : {};
+  if (goal.mode !== 'reach') return { ...rest, ...pace, mode: goal.mode, endedOn: goal.endedOn ?? null };
   const base = weightOnOrBefore(entries, goal.setOn) ?? entries[0]?.weight;
   const mode: GoalMode = base == null || base > goal.target ? 'lose' : 'gain';
-  return { ...goal, mode, endedOn: goal.endedOn ?? null };
+  return { ...rest, ...pace, mode, endedOn: goal.endedOn ?? null };
 }
 
 /**
@@ -170,4 +177,58 @@ export function editGoalDates(
   const out = goals.map((x, i) => (i === index ? { ...x, setOn, endedOn: end } : x));
   out.sort((a, b) => (a.setOn < b.setOn ? -1 : a.setOn > b.setOn ? 1 : 0));
   return { goals: out };
+}
+
+/** Limits for a target pace, kg per week. */
+export const PACE_MIN = 0.05;
+export const PACE_MAX = 2;
+
+export type PaceState = 'on' | 'slow' | 'fast';
+
+/**
+ * Is the real pace keeping up with the pace the goal aims for? Both in kg per
+ * week; `actual` is signed (negative while losing), `target` is the goal's
+ * positive pace. On pace within a quarter of the target (at least 0.1 kg/wk
+ * either way); slower, or heading the wrong way, is `slow`; quicker is `fast`.
+ */
+export function paceState(goal: Goal, actual: number): PaceState | null {
+  if (!isTargetGoal(goal) || goal.rate == null || goal.rate <= 0) return null;
+  const towards = goal.mode === 'lose' ? -actual : actual;
+  // Standing still or heading the wrong way is never on pace, however small the target.
+  if (towards <= 0) return 'slow';
+  const tol = Math.max(0.1, goal.rate * 0.25);
+  return towards < goal.rate - tol ? 'slow' : towards > goal.rate + tol ? 'fast' : 'on';
+}
+
+/**
+ * A goal with new weights, keeping its kind and dates: a new target and pace
+ * for a goal to lose or gain, a new range for a goal to maintain.
+ */
+export function withGoalValues(
+  goal: Goal,
+  values: { target?: number; low?: number; high?: number; rate?: number | null },
+): Goal {
+  const made = makeGoal(goal.mode, values, goal.setOn);
+  // Drop the old pace so an emptied field removes it (the key is left out,
+  // never set to `undefined`).
+  const { rate: _old, ...rest } = goal;
+  return { ...rest, ...made, setOn: goal.setOn, endedOn: goal.endedOn };
+}
+
+/** Two goals with the same content (kind, weights, pace and dates). */
+export function sameGoal(a: Goal, b: Goal): boolean {
+  return (
+    a.mode === b.mode &&
+    a.target === b.target &&
+    a.low === b.low &&
+    a.high === b.high &&
+    a.setOn === b.setOn &&
+    (a.endedOn ?? null) === (b.endedOn ?? null) &&
+    (a.rate ?? null) === (b.rate ?? null)
+  );
+}
+
+/** A goal's content as one string, to notice when it really changes. */
+export function goalSignature(g: Goal | null): string {
+  return g ? [g.mode, g.target, g.low, g.high, g.rate ?? '', g.setOn, g.endedOn ?? ''].join('|') : '';
 }

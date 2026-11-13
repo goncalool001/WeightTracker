@@ -29,7 +29,7 @@ function daily(start: string, days: number, w: (i: number) => number): WeightEnt
 
 describe('1 · early warning while maintaining', () => {
   it('stays quiet on your data (flat over the last two weeks, 0.7 kg from the floor)', () => {
-    expect(buildStatus(SEED_ENTRIES, SEED_GOALS_MAINTAIN).drift).toBeNull();
+    expect(buildStatus(SEED_ENTRIES, SEED_GOALS_MAINTAIN, '2026-10-25').drift).toBeNull();
   });
 
   it('warns with a date when the recent rate heads for an edge', () => {
@@ -96,20 +96,20 @@ describe('4 · weekday pattern', () => {
       return wd === 1 ? 80.8 : 80;
     });
     expect(weekdayOffsets(entries)[1].offset).toBeGreaterThan(0.5);
-    const weekday = buildInsights({ entries, goals: [] }).find((i) => i.id === 'weekday');
+    const weekday = buildInsights({ entries, goal: null, good: 'down' }).find((i) => i.id === 'weekday');
     expect(weekday?.text).toMatch(/Mondays/);
     expect(weekday?.text).toMatch(/more/);
   });
 
   it('says nothing when the offsets are within normal noise', () => {
     const entries = daily('2026-06-01', 70, (i) => 80 + (i % 3) * 0.1);
-    expect(buildInsights({ entries, goals: [] }).some((i) => i.id === 'weekday')).toBe(false);
+    expect(buildInsights({ entries, goal: null, good: 'down' }).some((i) => i.id === 'weekday')).toBe(false);
   });
 });
 
 describe('5 · forecast as a range', () => {
   it('gives an early and a late date around the 28-day rate', () => {
-    const s = buildStatus(SEED_ENTRIES, SEED_GOALS_LOSE);
+    const s = buildStatus(SEED_ENTRIES, SEED_GOALS_LOSE, '2026-10-25');
     expect(s.projection).not.toBeNull();
     const { early, late } = s.projection!;
     expect(early > '2026-10-25').toBe(true);
@@ -174,7 +174,7 @@ describe('categories and their effect', () => {
 
   it('feeds the Today analysis only with a label resolver', () => {
     const ids = (catLabel?: (id: CategoryId) => string) =>
-      buildInsights({ entries, goals: [], catLabel }).map((i) => i.id);
+      buildInsights({ entries, goal: null, good: 'down', catLabel }).map((i) => i.id);
     expect(ids((id) => id)).toContain('category');
     expect(ids()).not.toContain('category');
   });

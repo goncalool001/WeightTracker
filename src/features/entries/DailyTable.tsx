@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
-import { roundWeight } from '@/domain';
+import { roundWeight, spanDirection } from '@/domain';
+import { useStore } from '@/store/useStore';
 import { kg } from '@/lib/format';
 import { useT } from '@/i18n';
 import { Delta } from '@/components/ui/Delta';
@@ -14,6 +15,8 @@ const PAGE = 30;
 
 /**
  * Every weigh-in, newest first, with its change from the weigh-in before it.
+ * Each change is judged by the goal in force on that day (a loss during a
+ * cut and a gain during a bulk are both green; with no goal a loss is).
  * A table from 640px; below that, two-line rows (date and weight on the first
  * line, weekday and change on the second) so nothing wraps inside a number.
  * Edit and delete are on every row; delete has an undo toast instead of a
@@ -23,13 +26,18 @@ export function DailyTable({ entries }: { entries: WeightEntry[] }) {
   const t = useT();
   const [limit, setLimit] = useState(PAGE);
   const [editing, setEditing] = useState<WeightEntry | null>(null);
+  const goals = useStore((s) => s.goals);
 
   const rows = useMemo(
     () =>
       entries
-        .map((e, i) => ({ ...e, delta: i > 0 ? roundWeight(e.weight - entries[i - 1].weight) : null }))
+        .map((e, i) => ({
+          ...e,
+          delta: i > 0 ? roundWeight(e.weight - entries[i - 1].weight) : null,
+          good: i > 0 ? spanDirection(goals, entries[i - 1].date, e.date) : null,
+        }))
         .reverse(),
-    [entries],
+    [entries, goals],
   );
   const shown = rows.slice(0, limit);
 
@@ -85,7 +93,7 @@ export function DailyTable({ entries }: { entries: WeightEntry[] }) {
                 <span className="unit">kg</span>
               </td>
               <td className="h-12 pr-4 text-right">
-                <Delta value={r.delta} />
+                <Delta value={r.delta} good={r.good} />
               </td>
               <td className="h-12 w-[1%] whitespace-nowrap">{actions(r, false)}</td>
             </tr>
@@ -110,7 +118,7 @@ export function DailyTable({ entries }: { entries: WeightEntry[] }) {
                   {t.fmtWeekday(r.date)}
                   {(r.note || r.tags) && ` · ${noteText(r, t)}`}
                 </span>
-                <Delta value={r.delta} />
+                <Delta value={r.delta} good={r.good} />
               </div>
             </div>
             {actions(r, true)}

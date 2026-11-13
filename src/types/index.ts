@@ -97,7 +97,18 @@ export interface Goal {
   setOn: string;
   /** ISO date the goal was replaced or removed; `null` while current. */
   endedOn: string | null;
+  /**
+   * The pace the user aims for on a lose or gain goal, in kg per week (always
+   * positive: the goal gives the direction). Absent or `null` when none is set.
+   */
+  rate?: number | null;
 }
+
+/**
+ * What the Today screen covers: the goal in force (`current`), the whole
+ * history (`all`), or one earlier goal (`g:` + its key). See domain/scope.ts.
+ */
+export type ScopeKey = 'current' | 'all' | `g:${string}`;
 
 /** One calendar day of the rolling 7-day average. */
 export interface CalendarAveragePoint {
@@ -163,6 +174,12 @@ export interface InsightStrings {
   consistency: (drops: number, m: number) => string;
   bestWeek: (start: string, end: string, kg: string) => string;
   contribution: (pct: string) => string;
+  /** The same sentences for a goal to gain weight. */
+  accelAccelGain: (recent: string, prior: string) => string;
+  accelSlowGain: (recent: string, prior: string) => string;
+  consistencyUp: (rises: number, m: number) => string;
+  bestWeekUp: (start: string, end: string, kg: string) => string;
+  contributionGain: (pct: string) => string;
   compareStronger: (thisRate: string, lastRate: string) => string;
   compareWeaker: (thisRate: string, lastRate: string) => string;
   avgSpread: (lo: string, hi: string, days: number) => string;
@@ -197,6 +214,8 @@ export interface PersistedState {
   range: RangeKey;
   /** Dates for the `custom` range; kept when another range is picked. */
   customRange?: CustomRange | null;
+  /** What Today covers. A past goal is a visit and is not kept. */
+  scope?: 'current' | 'all';
   granularity: Granularity;
   theme: Theme;
   locale: Locale;

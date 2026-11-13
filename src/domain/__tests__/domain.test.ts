@@ -188,14 +188,14 @@ describe('periods', () => {
 
 describe('buildInsights', () => {
   it('returns an empty list with too little data', () => {
-    expect(buildInsights({ entries: [], goals: [] })).toEqual([]);
+    expect(buildInsights({ entries: [], goal: null, good: 'down' })).toEqual([]);
     expect(
-      buildInsights({ entries: [{ date: '2026-01-01', weight: 80 }], goals: [] }),
+      buildInsights({ entries: [{ date: '2026-01-01', weight: 80 }], goal: null, good: 'down' }),
     ).toEqual([]);
   });
 
   it('surfaces the fastest-loss week and avoids restating KPIs', () => {
-    const insights = buildInsights({ entries: sample, goals: [] });
+    const insights = buildInsights({ entries: sample, goal: null, good: 'down' });
     const ids = insights.map((i) => i.id);
     expect(ids).toContain('best');
     // Goal pace and progress live in the KPI strip and the ruler now.

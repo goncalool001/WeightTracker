@@ -1,20 +1,25 @@
 import { useId, useMemo, useState } from 'react';
 import { useT } from '@/i18n';
 import { useStore } from '@/store/useStore';
-import { useCalendarSeries, useFilteredEntries } from '@/store/selectors';
+import {
+  useCalendarSeries,
+  useChangeDirection,
+  useFilteredEntries,
+  useRangeBounds,
+  useScope,
+} from '@/store/selectors';
 import { useCoarsePointer, useMedia } from '@/hooks/useViewport';
 import {
   averageGaps,
-  currentGoal,
   daysBetween,
-  isTargetGoal,
+  goalMarks,
   periodSummary,
   previousBounds,
-  rangeBounds,
   roundWeight,
   rollingCalendarAverage,
   todayISO,
 } from '@/domain';
+import { trimKg } from './headline';
 import { kg } from '@/lib/format';
 import { cn } from '@/lib/cn';
 import { Delta } from '@/components/ui/Delta';
@@ -30,16 +35,23 @@ const RANGES: RangeKey[] = ['7d', '30d', '90d', 'ytd', 'all', 'custom'];
  * above it (the period); choosing "Dates" adds the two date fields under it.
  * The legend, the overlay choice and the comparison with the period before
  * sit underneath the chart.
+ *
+ * The chart shows what Today covers: the weigh-ins of the goal in force (or
+ * of an earlier goal, or everything), narrowed by the period buttons. While
+ * one goal is shown the widest button reads "Goal", since it is the whole of
+ * that goal and not the whole history.
  */
 export function DailyPanel() {
   const t = useT();
   const id = useId();
   const fromId = useId();
   const toId = useId();
-  const all = useStore((s) => s.entries);
   const goals = useStore((s) => s.goals);
   const range = useStore((s) => s.range);
-  const custom = useStore((s) => s.customRange);
+  const scope = useScope();
+  // Every weigh-in of what Today covers; the buttons narrow it.
+  const all = scope.entries;
+  const changeGood = useChangeDirection();
   const overlay = useStore((s) => s.overlay);
   const setRange = useStore((s) => s.setRange);
   const setCustomRange = useStore((s) => s.setCustomRange);
@@ -48,16 +60,50 @@ export function DailyPanel() {
   const series = useCalendarSeries();
   const coarse = useCoarsePointer();
   const narrow = !useMedia('(min-width: 640px)');
-  const goal = currentGoal(goals);
   const hasGaps = overlay === 'ma' && averageGaps(series).length > 0;
-  const bounds = range === 'custom' ? rangeBounds(all, 'custom', custom) : null;
+  const firstDate = all[0]?.date;
+  const lastDate = all[all.length - 1]?.date;
+  // The visible dates; `null` is the whole scope.
+  const current = useRangeBounds();
+  const bounds =
+    range === 'custom' && firstDate && lastDate ? (current ?? { from: firstDate, to: lastDate }) : null;
 
-  // Compare with the period of the same length just before this one. "All"
-  // has nothing before it, so the option is not offered there.
+  // Each goal over its own dates, clipped to what is visible.
+  const marks = useMemo(() => {
+    if (entries.length === 0) return [];
+    const shown = scope.kind === 'all' ? goals : (scope.phase?.goals ?? []);
+    // A goal set after the last weigh-in (nothing logged under it yet) still
+    // shows its line: the visible dates reach the day it was set.
+    const lastShown = entries[entries.length - 1].date;
+    const start = scope.kind === 'current' ? scope.goal?.setOn : null;
+    const to = start && start > lastShown && lastShown === lastDate ? start : lastShown;
+    const found = goalMarks(shown, entries[0].date, to);
+    // A goal with no span yet cannot be drawn beside others; when none has a
+    // span, the goal in force is drawn across the plot.
+    const spanned = found.filter((m) => m.from < m.to);
+    return spanned.length > 0 ? spanned : found.filter((m) => m.goal.endedOn === null).slice(-1);
+  }, [scope, goals, entries, lastDate]);
+  // One legend entry per distinct target or range.
+  const markLabels = [
+    ...new Map(
+      marks.map((m) =>
+        m.goal.mode === 'maintain'
+          ? [`b${m.goal.low}-${m.goal.high}`, { band: true, text: `${t.lBand} ${trimKg(m.goal.low)}–${trimKg(m.goal.high)} kg` }]
+          : [`t${m.goal.target}`, { band: false, text: `${t.lGoal} ${trimKg(m.goal.target)} kg` }],
+      ) as Array<[string, { band: boolean; text: string }]>,
+    ).values(),
+  ];
+
+  // Compare with the period of the same length just before this one. The
+  // whole scope has nothing before it, and a period that starts before the
+  // goal did has no fair match, so the option is not offered there.
   const [comparing, setComparing] = useState(false);
-  const current = rangeBounds(all, range, custom);
+  const canCompare =
+    current != null &&
+    firstDate != null &&
+    (scope.kind === 'all' || previousBounds(current).from >= firstDate);
   const cmp = useMemo(() => {
-    if (!comparing || !current) return null;
+    if (!comparing || !current || !canCompare) return null;
     const prev = previousBounds(current);
     const shift = daysBetween(prev.from, current.from);
     const avgs = rollingCalendarAverage(all).filter(
@@ -71,10 +117,8 @@ export function DailyPanel() {
       before: periodSummary(all, prev),
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [comparing, all, current?.from, current?.to]);
-  const canCompare = current != null;
-  const firstDate = all[0]?.date;
-  const maxDate = todayISO();
+  }, [comparing, canCompare, all, current?.from, current?.to]);
+  const maxDate = scope.to ?? todayISO();
 
   return (
     <section
@@ -89,7 +133,10 @@ export function DailyPanel() {
           ariaLabel={t.rangeLabel}
           value={range}
           onChange={setRange}
-          options={RANGES.map((r) => ({ value: r, label: t.ranges[r] }))}
+          options={RANGES.map((r) => ({
+            value: r,
+            label: r === 'all' && scope.kind !== 'all' ? t.rangeGoal : t.ranges[r],
+          }))}
         />
       </div>
 
@@ -149,7 +196,8 @@ export function DailyPanel() {
               entries={entries}
               all={all}
               series={series}
-              goal={goal}
+              marks={marks}
+              changeGood={changeGood}
               overlay={overlay}
               coarse={coarse}
               narrow={narrow}
@@ -235,24 +283,15 @@ export function DailyPanel() {
               {t.lGap}
             </li>
           )}
-          {goal?.mode === 'maintain' && (
-            <li className="flex items-center gap-1.5">
+          {markLabels.map((m) => (
+            <li key={m.text} className="flex items-center gap-1.5">
               <span
                 aria-hidden="true"
-                className="h-3 w-4 rounded-[2px] bg-accent-soft"
+                className={m.band ? 'h-3 w-4 rounded-[2px] bg-accent-soft' : 'h-0 w-4 border-t border-dashed border-text'}
               />
-              {t.lBand} {goal.low}–{goal.high} kg
+              {m.text}
             </li>
-          )}
-          {isTargetGoal(goal) && (
-            <li className="flex items-center gap-1.5">
-              <span
-                aria-hidden="true"
-                className="h-0 w-4 border-t border-dashed border-text"
-              />
-              {t.lGoal} {goal.target} kg
-            </li>
-          )}
+          ))}
         </ul>
         <div className="flex flex-wrap items-center gap-2">
           {canCompare && (

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { isTargetGoal, type Status } from '@/domain';
-import { abs1 } from '@/lib/format';
+import { abs1, signed } from '@/lib/format';
+import { cn } from '@/lib/cn';
 import type { T } from '@/i18n';
 import { Delta } from '@/components/ui/Delta';
 import { RATE_BAND } from '@/lib/constants';
@@ -23,15 +24,44 @@ function dateRange(from: string, to: string, fmt: (iso: string) => string): stri
 
 /**
  * The figures under the goal ruler. On the way: what is left, when it should
- * arrive and the pace behind that date. Past the goal or maintaining: how long
- * the weight has stayed past the target it passed. With no goal: the pace.
+ * arrive and the pace behind that date (the three stay in place while a new
+ * goal has too few weigh-ins of its own, with a dash). Past the goal or
+ * maintaining: how long the weight has stayed past the target it passed.
+ * With no goal: the pace. An earlier goal has none: nothing in it moves.
  */
 export function goalFacts(s: Status, t: T): Fact[] {
+  if (s.scope.closed) return [];
+  const good = s.scope.good;
   const pace: Fact = {
     label: t.kPace,
-    value: s.rate != null ? <Delta value={s.rate} unit={t.kPaceUnit} decimals={2} band={RATE_BAND} /> : dash,
-    caption: s.rate == null ? t.kNoData : t.kPaceCap,
+    value:
+      s.rate != null ? (
+        <Delta value={s.rate} unit={t.kPaceUnit} decimals={2} band={RATE_BAND} good={good} />
+      ) : (
+        dash
+      ),
+    // A young goal says since when; after four weeks it is the usual window.
+    caption: s.rate == null ? t.kNoData : s.rateSince ? t.kSince(t.fmtShort(s.rateSince)) : t.kPaceCap,
   };
+  // With a target pace: is it being kept, then the target itself. Quicker than
+  // planned is a warning too (muscle lost on a cut, fat gained on a bulk).
+  if (s.pace) {
+    const st = s.pace.state;
+    const waiting = pace.caption;
+    pace.caption = (
+      <>
+        <span
+          className={cn(
+            'block',
+            st === 'on' ? 'text-positive' : st ? 'text-pill-warn-ink' : undefined,
+          )}
+        >
+          {st === 'on' ? t.kPaceOn : st === 'slow' ? t.kPaceSlow : st === 'fast' ? t.kPaceFast : waiting}
+        </span>
+        <span className="num block whitespace-normal">{t.kPaceTarget(signed(s.pace.target, 2))}</span>
+      </>
+    );
+  }
 
   if (s.phase === 'reach' && s.goal) {
     const left: Fact = {
@@ -46,13 +76,17 @@ export function goalFacts(s: Status, t: T): Fact[] {
       ),
     };
     const p = s.projection;
-    if (!p || s.rate == null) return [left, { ...pace, caption: s.rate != null ? t.kAway : t.kNoData }];
+    const against = s.rate != null && (s.goal.mode === 'lose' ? s.rate > 0.01 : s.rate < -0.01);
+    if (!p) {
+      return [left, { label: t.kEta, value: dash }, against && !s.pace ? { ...pace, caption: t.kAway } : pace];
+    }
     // The forecast is a range: one date only when both ends agree, "after"
     // when the slow end never arrives.
     const eta: Fact = {
       label: t.kEta,
       value: (
-        <span className="num">
+        // A range across two months is long: it may break at the dash on phones.
+        <span className="num whitespace-normal">
           {!p.late
             ? t.kEtaFrom(t.fmtShort(p.early))
             : p.late === p.early
@@ -61,10 +95,10 @@ export function goalFacts(s: Status, t: T): Fact[] {
         </span>
       ),
     };
-    return [left, eta, p.late ? pace : { ...pace, caption: t.kUnsteady }];
+    return [left, eta, p.late || s.pace ? pace : { ...pace, caption: t.kUnsteady }];
   }
 
-  if (s.phase === 'maintain' || s.phase === 'reached') {
+  if (s.phase === 'reached' || (s.phase === 'maintain' && s.stay)) {
     // How long the weight has stayed past the target it passed: under it
     // after losing, over it after gaining.
     const g = s.goal;
