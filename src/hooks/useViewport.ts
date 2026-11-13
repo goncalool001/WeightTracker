@@ -35,6 +35,20 @@ export function useElementWidth(ref: RefObject<HTMLElement>): number {
   return width;
 }
 
+/** Height of an element, tracked with a ResizeObserver. */
+export function useElementHeight(ref: RefObject<HTMLElement>): number {
+  const [height, setHeight] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([e]) => setHeight(e.contentRect.height));
+    ro.observe(el);
+    setHeight(el.getBoundingClientRect().height);
+    return () => ro.disconnect();
+  }, [ref]);
+  return height;
+}
+
 /**
  * Height of the on-screen keyboard (iOS Safari keeps fixed elements under it).
  * The bottom log bar lifts by this much while typing.

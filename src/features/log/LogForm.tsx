@@ -6,7 +6,7 @@ import { cn } from '@/lib/cn';
 import { useT } from '@/i18n';
 import { useStore } from '@/store/useStore';
 import { useChangeDirection } from '@/store/selectors';
-import { useKeyboardInset } from '@/hooks/useViewport';
+import { useElementHeight, useKeyboardInset } from '@/hooks/useViewport';
 import { Button } from '@/components/ui/Button';
 import { Delta } from '@/components/ui/Delta';
 import { NoteSheet } from '@/features/notes/NoteSheet';
@@ -39,6 +39,9 @@ export function LogForm({ variant }: { variant: 'bar' | 'panel' }) {
   const [touched, setTouched] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  // The room left under the button on the desktop panel, for the latest weigh-ins.
+  const recentRef = useRef<HTMLDivElement>(null);
+  const recentRoom = useElementHeight(recentRef);
   const inset = useKeyboardInset();
   const ids = { weight: useId(), date: useId(), msg: useId(), title: useId() };
 
@@ -94,6 +97,8 @@ export function LogForm({ variant }: { variant: 'bar' | 'panel' }) {
         .reverse(),
     [entries],
   );
+  // Rows are 32px under 8px of padding and the 1px rule.
+  const recentFit = Math.max(0, Math.floor((recentRoom - 9) / 32));
   const buttonLabel = noteOnly ? t.saveNote : existing ? t.replaceBtn(kg(existing.weight)) : t.save;
   const summary = noteText({ tags, note }, t);
   const count = tags.length + (note.trim() ? 1 : 0);
@@ -176,10 +181,12 @@ export function LogForm({ variant }: { variant: 'bar' | 'panel' }) {
           {buttonLabel}
         </Button>
         {/* The latest weigh-ins fill what is left of the panel's height and
-            never add to it: rows that do not fit wrap into a hidden column. */}
-        <div className="relative mt-4 min-h-0 flex-1 border-t border-rule">
-          <ul aria-label={t.recentTitle} className="absolute inset-0 flex flex-col flex-wrap overflow-hidden pt-2">
-            {recent.map((e) => (
+            never add to it: only the rows that fit whole are drawn, and with
+            no room for one (a short panel beside it) nothing is, rule included. */}
+        <div ref={recentRef} className={cn('relative mt-4 min-h-0 flex-1', recentFit > 0 && 'border-t border-rule')}>
+          {recentFit > 0 && (
+          <ul aria-label={t.recentTitle} className="absolute inset-0 flex flex-col overflow-hidden pt-2">
+            {recent.slice(0, recentFit).map((e) => (
               <li key={e.date} className="flex h-8 w-full items-baseline justify-between gap-2 text-[13px]">
                 <span className="num text-muted">{t.fmtShort(e.date)}</span>
                 <span className="num ml-auto text-text">{kg(e.weight)}</span>
@@ -189,6 +196,7 @@ export function LogForm({ variant }: { variant: 'bar' | 'panel' }) {
               </li>
             ))}
           </ul>
+          )}
         </div>
         {sheet}
       </form>
