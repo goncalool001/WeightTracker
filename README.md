@@ -8,21 +8,33 @@ English and Portuguese, with light and dark themes.
 ## What it does
 
 **Today**
-- Four cards: last weigh-in, total lost (or gained) since the start, week on
-  week and month on month. Weeks and months are calendar periods (weeks start
-  on Monday): this period so far against the whole period before.
+- A pill at the top says what the screen covers: the goal in force since it
+  was set (the default), an earlier goal, or the whole history. A goal that
+  changes direction (a cut, then a bulk) starts a new stretch, so the weight
+  lost before a bulk never counts against it; goals in a row with the same
+  direction are one stretch. With the whole history shown, a loss counts as
+  progress.
+- Four cards: last weigh-in, total lost or gained since the stretch began,
+  week on week and month on month. Weeks and months are calendar periods
+  (weeks start on Monday): this period so far against the whole period
+  before. A change that runs across two goals is shown without a verdict.
 - Way to the goal: a scale from the start weight to the goal, with what is
-  left, the expected arrival (a date range from the last 4 weeks' pace) and
-  the weekly pace. While maintaining, it shows the range and how many days
-  the weight has stayed past the goal it passed, with an early warning when
-  the 7-day average is drifting towards a limit.
+  left, the expected arrival (a date range, once the goal has two weeks of
+  its own weigh-ins) and the weekly pace. With a target pace set, it says
+  whether you are on, below or above it. While maintaining, it shows the
+  range and how many days the weight has stayed past the goal it passed,
+  with an early warning when the 7-day average is drifting towards a limit.
+- An earlier goal is shown as it ended: final weigh-in, total, how long it
+  ran and its average pace.
 - Last 30 days: one cell per day, green when the weigh-in moved towards the
-  goal, red when it moved away, empty when there was no weigh-in. Press and
-  slide across it to read each day's weight and change.
-- Daily chart with the 7-day average (calendar window, at least 2 weigh-ins;
-  gaps are drawn dashed, nothing is interpolated) or a trend line, ranges
-  from 7 days to all time or custom dates, and a comparison with the period
-  before.
+  goal in force that day, red when it moved away, empty when there was no
+  weigh-in. Press and slide across it to read each day's weight and change.
+- Daily chart of the stretch being shown, with the 7-day average (calendar
+  window, at least 2 weigh-ins; gaps are drawn dashed, nothing is
+  interpolated) or a trend line, ranges from 7 days to the whole goal or
+  custom dates, each goal's line over its own dates, and a comparison with
+  the period before.
+- Weekly or monthly change as columns, with the target pace as a dashed line.
 - Insights in plain sentences: pace, best week, weekday pattern, and the note
   category most linked to your swings once there is enough data.
 
@@ -34,7 +46,9 @@ English and Portuguese, with light and dark themes.
   sleep and wellbeing, health, context, measurement) plus free text.
 
 **Entries**
-- Every weigh-in, editable, beside weekly or monthly averages.
+- Every weigh-in, editable, beside weekly or monthly averages. Each change is
+  judged by the goal in force at the time (a loss is green during a cut, a
+  gain during a bulk; with no goal, a loss is).
 - "What explains the swings": how far a weigh-in sits from your previous
   7-day average after a day with each category, against days with none, with
   an 80% range and the number of weigh-ins behind it (5–9 is marked
@@ -42,8 +56,12 @@ English and Portuguese, with light and dark themes.
 
 **Goal**
 - Lose weight to a target, gain weight to a target, or maintain a range.
-- A history of every goal; any goal's dates can be edited (periods may not
-  overlap) and any goal deleted, both with undo.
+- An optional target pace in kg per week on goals to lose or gain. On pace
+  means within a quarter of it (at least 0.1 kg a week either way); slower,
+  or the wrong way, is below pace; quicker is above pace, shown as a warning
+  rather than a success.
+- A history of every goal; any goal's target or range, pace and dates can be
+  edited (periods may not overlap) and any goal deleted, both with undo.
 
 **Data**
 - Import CSV or Excel (Date and Weight columns, optional Categories and
@@ -78,7 +96,8 @@ UI (screens, features, components)  ⇄  Store (Zustand)  ⇄  Domain (pure TS)
 ```
 
 - `src/domain` — framework-free, unit-tested logic: calendar averages,
-  goal status and projection, insights, category effects, import checks.
+  goals and what Today covers (`scope.ts`), status and projection, insights,
+  category effects, import checks.
 - `src/data` — file import/export, IndexedDB, Firestore sync, the dev seed.
 - `src/store` — the Zustand store and memoised selectors.
 - `src/screens` — Today, Entries, Goal and Data.
@@ -105,8 +124,9 @@ npm run preview    # serve the production build locally
 In the dev server only, `?seed` loads a sample history of 133 weigh-ins
 (18 Apr – 25 Oct 2026) without touching your saved data:
 
-- `?seed` — maintaining 76–78 kg
-- `?seed=lose` / `?seed=gain` — on the way to a target
+- `?seed` — maintaining 76–78 kg since 26 Sep, after a goal to lose
+- `?seed=lose` — two goals to lose in a row (one stretch), 75 kg ahead
+- `?seed=gain` — a cut that ended on 10 Oct, then a goal to gain to 78 kg
 - add `&tags` for illustrative note categories
 
 The seed is not part of the production build.
